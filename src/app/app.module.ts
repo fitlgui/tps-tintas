@@ -7,6 +7,8 @@ import { ProductCardComponent } from './shareds/product-card/product-card.compon
 import { BannerComponentComponent } from './shareds/banner-component/banner-component.component';
 import { HomeComponent } from './components/home/home.component';
 import { CatalogComponent } from './components/catalog/catalog.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { HeaderComponent } from './components/header/header.component';
 
 @NgModule({
   declarations: [
@@ -14,7 +16,9 @@ import { CatalogComponent } from './components/catalog/catalog.component';
     ProductCardComponent,
     BannerComponentComponent,
     HomeComponent,
-    CatalogComponent
+    CatalogComponent,
+    FooterComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
