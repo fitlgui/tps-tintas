@@ -2,19 +2,19 @@
 
   <!-- Logo Principal -->
   <div class="flex items-center justify-center text-xl font-bold space-x-2">
-    <h1>TPS(LOGO)</h1>
+    <h1 class="cursor-pointer hover:text-2xl transition-all duration-500" (click)="goToHome()">TPS(LOGO)</h1>
     <img class="w-10" src="../../../assets/icons/shoppingCart.svg" alt="">
   </div>
 
   <!-- Links do Cabeçalho -->
   <div class="flex justify-center w-full">
     <div class="flex items-center justify-center gap-4 w-full p-2">
-      <a href="">Coleção</a>
-      <a href="">Categoria A</a>
-      <a href="">Categoria B</a>
-      <a href="">Categoria C</a>
-      <a href="">Contato</a>
-      <a href="">Vendas</a>
+      <a class="hover:text-xl transition-all duration-500" href="/catalog">Coleção</a>
+      <a class="hover:text-xl transition-all duration-500" href="">Categoria A</a>
+      <a class="hover:text-xl transition-all duration-500" href="">Categoria B</a>
+      <a class="hover:text-xl transition-all duration-500" href="">Categoria C</a>
+      <a class="hover:text-xl transition-all duration-500" href="">Contato</a>
+      <a class="hover:text-xl transition-all duration-500" href="">Vendas</a>
       <div>
         <input type="text" class="border border-gray-300 rounded p-1 font-light text-md" placeholder="Pesquisar produtos...">
       </div>

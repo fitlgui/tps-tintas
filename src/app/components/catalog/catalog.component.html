@@ -1,1 +1,37 @@
-<p>catalog works!</p>
+<app-header></app-header>
+
+<!-- Conteúdo Catalogo -->
+<section class="w-full flex flex-col items-center justify-center">
+  <div class="w-9/12 justify-start items-start flex text-sm space-x-1 mt-2">
+    <p class="font-medium">Home</p>
+    <p class="font-normal">></p>
+    <p class="font-light">Catalog</p>
+  </div>
+  <div class="w-9/12 flex-col justify-start items-start flex text-sm space-x-1 mt-2">
+    <p class="font-medium text-2xl p-1">Shop catalog</p>
+    <div class="w-full flex space-x-2">
+      <!-- Primeiro produto - Chamada vendas -->
+      <div class="w-8/12 bg-[#ACCBEE] h-[250px] flex rounded-2xl p-4">
+        <img class="relative object-contain" src="../../../assets/images/largeTintaWEG.svg" alt="">
+        <div class="flex flex-col justify-center items-center p-2 space-y-2">
+          <div>
+            <h1 class="text-2xl font-medium">Tinta</h1>
+            <p>Descrição</p>
+          </div>
+          <button class="flex space-x-2 items-center justify-center p-2 bg-[#F55266] text-white rounded-md">
+            <p>Oferta</p>
+            <img src="../../../assets/icons/buttonHomeBanner.svg" alt="">
+          </button>
+        </div>
+      </div>
+      <!-- Segundo produto - Chamada vendas  -->
+      <div class="w-auto bg-[#FDCBF1] h-[250px] flex flex-col rounded-2xl p-4">
+        <p class="text-center font-light text-md">Chamada Para Oferta</p>
+        <h1 class="font-medium text-center text-xl">Tinta</h1>
+        <img class="w-full h-4/5 mt-3" src="../../../assets/images/largeTintaWEG.svg" alt="">
+      </div>
+    </div>
+  </div>
+</section>
+
+<app-footer></app-footer>
