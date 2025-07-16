@@ -1,0 +1,153 @@
+<div class="max-w-7xl mx-auto">
+  <!-- Header -->
+  <div class="mb-8">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900">Gerenciar Produtos</h1>
+        <p class="text-gray-600 mt-2">Visualize e gerencie todos os produtos</p>
+      </div>
+      <div class="mt-4 sm:mt-0">
+        <button
+          routerLink="/admin/products/add"
+          class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center space-x-2">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/>
+          </svg>
+          <span>Adicionar Produto</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <!-- Search -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Buscar</label>
+        <div class="relative">
+          <input
+            type="text"
+            [(ngModel)]="searchTerm"
+            (input)="onSearchChange()"
+            placeholder="Buscar por nome ou marca..."
+            class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+          <svg class="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Category Filter -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Categoria</label>
+        <select
+          [(ngModel)]="selectedCategory"
+          (change)="onCategoryChange()"
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+          <option value="all">Todas as Categorias</option>
+          <option *ngFor="let category of categories" [value]="category.name">
+            {{category.name}} ({{category.qtd}})
+          </option>
+        </select>
+      </div>
+
+      <!-- Results Count -->
+      <div class="flex items-end">
+        <div class="text-sm text-gray-600">
+          <span class="font-medium">{{filteredProducts.length}}</span> produtos encontrados
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="flex justify-center items-center py-12">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+  </div>
+
+  <!-- Products Grid -->
+  <div *ngIf="!loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div *ngFor="let product of filteredProducts" class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+      <!-- Product Image -->
+      <div class="h-48 bg-gray-100 flex items-center justify-center">
+        <img [src]="product.image" [alt]="product.name" class="h-32 w-32 object-contain">
+      </div>
+
+      <!-- Product Info -->
+      <div class="p-6">
+        <div class="flex items-start justify-between mb-2">
+          <h3 class="text-lg font-semibold text-gray-900 truncate">{{product.name}}</h3>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+            {{product.category}}
+          </span>
+        </div>
+
+        <div class="space-y-2 mb-4">
+          <div class="flex justify-between text-sm">
+            <span class="text-gray-600">Marca:</span>
+            <span class="font-medium">{{product.brand}}</span>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="text-gray-600">Tamanho:</span>
+            <span class="font-medium">{{product.size}}</span>
+          </div>
+          <div class="flex justify-between text-sm">
+            <span class="text-gray-600">Cor:</span>
+            <div class="flex items-center space-x-2">
+              <span class="font-medium">{{product.color}}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Price -->
+        <div class="mb-4">
+          <div class="flex items-center space-x-2">
+            <span class="text-2xl font-bold text-gray-900">R$ {{product.price.toFixed(2)}}</span>
+            <span *ngIf="product.descont > 0" class="text-sm text-green-600 bg-green-100 px-2 py-1 rounded">
+              {{product.descont}}% OFF
+            </span>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="flex space-x-2">
+          <button
+            (click)="editProduct(product.id)"
+            class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg font-medium transition-colors flex items-center justify-center space-x-2">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
+            </svg>
+            <span>Editar</span>
+          </button>
+
+          <button
+            (click)="deleteProduct(product.id)"
+            class="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-lg font-medium transition-colors flex items-center justify-center space-x-2">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" clip-rule="evenodd"/>
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414L7.586 12l-1.293 1.293a1 1 0 101.414 1.414L9 13.414l2.293 2.293a1 1 0 001.414-1.414L11.414 12l1.293-1.293z" clip-rule="evenodd"/>
+            </svg>
+            <span>Excluir</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && filteredProducts.length === 0" class="text-center py-12">
+    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2M4 13h2m6 0h6m6 0H4"/>
+    </svg>
+    <h3 class="mt-2 text-sm font-medium text-gray-900">Nenhum produto encontrado</h3>
+    <p class="mt-1 text-sm text-gray-500">Tente ajustar os filtros ou adicionar novos produtos.</p>
+    <div class="mt-6">
+      <button
+        routerLink="/admin/products/add"
+        class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
+        Adicionar Primeiro Produto
+      </button>
+    </div>
+  </div>
+</div>

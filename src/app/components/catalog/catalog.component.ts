@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { ProductsService } from 'src/app/services/products/products.service';
+import { Component, OnInit, inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { ProductsService, Product } from 'src/app/services/products/products.service';
+import { CartService } from 'src/app/services/cart/cart.service';
 
 @Component({
   selector: 'app-catalog',
@@ -28,15 +30,26 @@ export class CatalogComponent implements OnInit {
   public selectedSizes: Set<string> = new Set();
   public selectedColors: Set<string> = new Set();
 
+  // Filtros de preço
+  public minPrice: number = 0;
+  public maxPrice: number = 0;
 
-  constructor(private readonly productsService: ProductsService) {}
+  // Injetar o serviço do carrinho
+  cartService = inject(CartService);
+
+  constructor(
+    private readonly productsService: ProductsService,
+    private router: Router
+  ) {}
 
   ngOnInit(){
 
     // Buscando Todos os Produtos
     this.productsService.getProducts().subscribe((data: any[]) => {
       this.allProducts = data;
-      this.products = data
+      this.products = data;
+      // Definir preços mínimo e máximo automaticamente
+      this.setDefaultPriceRange();
     })
 
     // Buscar Todas as Categorias
@@ -62,6 +75,14 @@ export class CatalogComponent implements OnInit {
     });
   }
 
+  private setDefaultPriceRange() {
+    if (this.allProducts.length > 0) {
+      const prices = this.allProducts.map(product => product.price);
+      this.minPrice = Math.min(...prices);
+      this.maxPrice = Math.max(...prices);
+    }
+  }
+
   private applyFilters() {
     let filteredProducts = [...this.allProducts];
 
@@ -82,6 +103,48 @@ export class CatalogComponent implements OnInit {
     }
 
     this.products = filteredProducts;
+  }
+
+  // Filtrar por preço
+  filterByPrice(minPrice: number, maxPrice: number) {
+    if (minPrice < 0) minPrice = 0;
+    if (maxPrice <= 0) maxPrice = this.getMaxPrice();
+    if (minPrice > maxPrice) {
+      // Trocar valores se mínimo for maior que máximo
+      [minPrice, maxPrice] = [maxPrice, minPrice];
+    }
+
+    let filteredProducts = [...this.allProducts];
+
+    // Aplicar filtros existentes primeiro
+    if (this.selectedCategories.size > 0) {
+      filteredProducts = filteredProducts.filter(product => this.selectedCategories.has(product.category));
+    }
+
+    if (this.selectedBrands.size > 0) {
+      filteredProducts = filteredProducts.filter(product => this.selectedBrands.has(product.brand));
+    }
+
+    if (this.selectedSizes.size > 0) {
+      filteredProducts = filteredProducts.filter(product => this.selectedSizes.has(product.size));
+    }
+
+    if (this.selectedColors.size > 0) {
+      filteredProducts = filteredProducts.filter(product => this.selectedColors.has(product.color));
+    }
+
+    // Aplicar filtro de preço
+    filteredProducts = filteredProducts.filter(product =>
+      product.price >= minPrice && product.price <= maxPrice
+    );
+
+    this.products = filteredProducts;
+  }
+
+  // Pegar preço máximo dos produtos
+  getMaxPrice(): number {
+    if (this.allProducts.length === 0) return 1000;
+    return Math.max(...this.allProducts.map(product => product.price));
   }
 
   // Mostrar os produtos por categoria
@@ -129,11 +192,38 @@ export class CatalogComponent implements OnInit {
 
   // Mostrar o numero de produtos por Tamanho
   getNumberOfProductsBySize(size: string): number {
-    return this.products.filter(product => product.size === size).length;
+    return this.allProducts.filter(product => product.size === size).length;
   }
 
   // Mostrar o numero de produtos por Cor
   getNumberOfProductsByColor(color: string): number {
-    return this.products.filter(product => product.color === color).length;
+    return this.allProducts.filter(product => product.color === color).length;
+  }
+
+  // Navegar para detalhes do produto
+  viewProductDetails(productId: number) {
+    this.router.navigate(['/catalog', productId]);
+  }
+
+  // Limpar todos os filtros
+  clearAllFilters() {
+    this.selectedCategories.clear();
+    this.selectedBrands.clear();
+    this.selectedSizes.clear();
+    this.selectedColors.clear();
+    this.products = [...this.allProducts];
+    this.setDefaultPriceRange();
+  }
+
+  // Adicionar produto ao carrinho
+  addToCart(product: Product) {
+    this.cartService.addToCart(product, 1);
+    // Opcional: mostrar toast de sucesso
+    console.log('Produto adicionado ao carrinho:', product.name);
+  }
+
+  // Navegar para página de detalhes do produto
+  goToProduct(productId: number) {
+    this.router.navigate(['/catalog', productId]);
   }
 }

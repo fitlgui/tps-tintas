@@ -1,0 +1,64 @@
+<div class="max-w-7xl mx-auto">
+  <!-- Header -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">Dashboard Admin</h1>
+    <p class="text-gray-600 mt-2">Bem-vindo ao painel de administração</p>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <div class="flex items-center">
+        <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 2L3 7v11a1 1 0 001 1h12a1 1 0 001-1V7l-7-5zM6 16V9h8v7H6z" clip-rule="evenodd"/>
+          </svg>
+        </div>
+        <div class="ml-4">
+          <h3 class="text-lg font-semibold text-gray-900">Total Produtos</h3>
+          <p class="text-2xl font-bold text-blue-600">245</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <div class="flex items-center">
+        <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+          </svg>
+        </div>
+        <div class="ml-4">
+          <h3 class="text-lg font-semibold text-gray-900">Clicks</h3>
+          <p class="text-2xl font-bold text-yellow-600">89</p>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="grid grid-cols-1 lg:grid-cols-1 gap-6">
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h2 class="text-xl font-bold text-gray-900 mb-4">Ações Rápidas</h2>
+      <div class="space-y-3">
+        <a routerLink="/admin/products/add"
+           class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+          <svg class="w-5 h-5 text-blue-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/>
+          </svg>
+          <span class="font-medium">Adicionar Novo Produto</span>
+        </a>
+
+        <a routerLink="/admin/produtos"
+           class="flex items-center p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors">
+          <svg class="w-5 h-5 text-green-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 2L3 7v11a1 1 0 001 1h12a1 1 0 001-1V7l-7-5zM6 16V9h8v7H6z" clip-rule="evenodd"/>
+          </svg>
+          <span class="font-medium">Gerenciar Produtos</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

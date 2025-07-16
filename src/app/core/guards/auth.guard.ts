@@ -8,12 +8,17 @@ export const authGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  // Verificamos o status de login usando nosso serviço
-  if (authService.isLoggedIn()) {
-    return true; // Se estiver logado, permite o acesso à rota
+  // Verificamos o status de login e se a sessão ainda é válida
+  if (authService.isLoggedIn() && authService.isSessionValid()) {
+    return true; // Se estiver logado e sessão válida, permite o acesso à rota
   }
 
-  // Se não estiver logado, redireciona para a página de login
+  // Se não estiver logado ou sessão expirada, faz logout e redireciona para login
+  if (authService.isLoggedIn() && !authService.isSessionValid()) {
+    console.log('Sessão expirada. Fazendo logout automático...');
+    authService.logout();
+  }
+
   console.log('Acesso negado. Redirecionando para /login...');
   router.navigate(['/login']);
   return false; // E bloqueia o acesso à rota atual

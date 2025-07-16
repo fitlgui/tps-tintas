@@ -1,0 +1,215 @@
+<div class="max-w-4xl mx-auto">
+  <!-- Header -->
+  <div class="mb-8">
+    <div class="flex items-center space-x-4">
+      <button
+        (click)="onCancel()"
+        class="text-gray-600 hover:text-gray-900 transition-colors">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+        </svg>
+      </button>
+      <div>
+        <h1 class="text-3xl font-bold text-gray-900">Adicionar Produto</h1>
+        <p class="text-gray-600 mt-2">Preencha as informações do novo produto</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form -->
+  <form (ngSubmit)="onSubmit()" #productForm="ngForm" class="space-y-6">
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h2 class="text-xl font-semibold text-gray-900 mb-6">Informações Básicas</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Nome do Produto -->
+        <div class="md:col-span-2">
+          <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+            Nome do Produto <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            [(ngModel)]="product.name"
+            required
+            placeholder="Ex: W-THANE PDA 520"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            [class.border-red-500]="errors.name">
+          <p *ngIf="errors.name" class="text-red-500 text-sm mt-1">{{errors.name}}</p>
+        </div>
+
+        <!-- Preço -->
+        <div>
+          <label for="price" class="block text-sm font-medium text-gray-700 mb-2">
+            Preço (R$) <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="number"
+            id="price"
+            name="price"
+            [(ngModel)]="product.price"
+            required
+            min="0"
+            step="0.01"
+            placeholder="0.00"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            [class.border-red-500]="errors.price">
+          <p *ngIf="errors.price" class="text-red-500 text-sm mt-1">{{errors.price}}</p>
+        </div>
+
+        <!-- Desconto -->
+        <div>
+          <label for="descont" class="block text-sm font-medium text-gray-700 mb-2">
+            Desconto (%)
+          </label>
+          <input
+            type="number"
+            id="descont"
+            name="descont"
+            [(ngModel)]="product.descont"
+            min="0"
+            max="100"
+            placeholder="0"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            [class.border-red-500]="errors.descont">
+          <p *ngIf="errors.descont" class="text-red-500 text-sm mt-1">{{errors.descont}}</p>
+        </div>
+
+        <!-- Categoria -->
+        <div>
+          <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
+            Categoria <span class="text-red-500">*</span>
+          </label>
+          <select
+            id="category"
+            name="category"
+            [(ngModel)]="product.category"
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            [class.border-red-500]="errors.category">
+            <option value="">Selecione uma categoria</option>
+            <option *ngFor="let category of categories" [value]="category.name">
+              {{category.name}}
+            </option>
+          </select>
+          <p *ngIf="errors.category" class="text-red-500 text-sm mt-1">{{errors.category}}</p>
+        </div>
+
+        <!-- Marca -->
+        <div>
+          <label for="brand" class="block text-sm font-medium text-gray-700 mb-2">
+            Marca <span class="text-red-500">*</span>
+          </label>
+          <select
+            id="brand"
+            name="brand"
+            [(ngModel)]="product.brand"
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            [class.border-red-500]="errors.brand">
+            <option value="">Selecione uma marca</option>
+            <option *ngFor="let brand of brands" [value]="brand">
+              {{brand}}
+            </option>
+          </select>
+          <p *ngIf="errors.brand" class="text-red-500 text-sm mt-1">{{errors.brand}}</p>
+        </div>
+
+        <!-- Tamanho -->
+        <div>
+          <label for="size" class="block text-sm font-medium text-gray-700 mb-2">
+            Tamanho <span class="text-red-500">*</span>
+          </label>
+          <select
+            id="size"
+            name="size"
+            [(ngModel)]="product.size"
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            [class.border-red-500]="errors.size">
+            <option value="">Selecione um tamanho</option>
+            <option *ngFor="let size of sizes" [value]="size.name">
+              {{size.name}}
+            </option>
+          </select>
+          <p *ngIf="errors.size" class="text-red-500 text-sm mt-1">{{errors.size}}</p>
+        </div>
+
+        <!-- Cor -->
+        <div>
+          <label for="color" class="block text-sm font-medium text-gray-700 mb-2">
+            Cor <span class="text-red-500">*</span>
+          </label>
+          <select
+            id="color"
+            name="color"
+            [(ngModel)]="product.color"
+            required
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            [class.border-red-500]="errors.color">
+            <option value="">Selecione uma cor</option>
+            <option *ngFor="let color of colors" [value]="color.name">
+              {{color.name}}
+            </option>
+          </select>
+          <p *ngIf="errors.color" class="text-red-500 text-sm mt-1">{{errors.color}}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Preview -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h2 class="text-xl font-semibold text-gray-900 mb-6">Preview do Produto</h2>
+
+      <div class="max-w-sm mx-auto">
+        <div class="bg-gray-50 rounded-lg p-6 text-center">
+          <div class="h-32 flex items-center justify-center mb-4">
+            <img [src]="product.image" alt="Preview" class="h-24 w-24 object-contain">
+          </div>
+
+          <h3 class="text-lg font-semibold text-gray-900 mb-2">
+            {{product.name || 'Nome do Produto'}}
+          </h3>
+
+          <div class="space-y-1 text-sm text-gray-600 mb-4">
+            <p><span class="font-medium">Marca:</span> {{product.brand || 'N/A'}}</p>
+            <p><span class="font-medium">Categoria:</span> {{product.category || 'N/A'}}</p>
+            <p><span class="font-medium">Tamanho:</span> {{product.size || 'N/A'}}</p>
+            <p><span class="font-medium">Cor:</span> {{product.color || 'N/A'}}</p>
+          </div>
+
+          <div class="flex items-center justify-center space-x-2">
+            <span class="text-2xl font-bold text-gray-900">
+              R$ {{product.price ? product.price.toFixed(2) : '0.00'}}
+            </span>
+            <span *ngIf="product.descont > 0" class="text-sm text-green-600 bg-green-100 px-2 py-1 rounded">
+              {{product.descont}}% OFF
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex justify-end space-x-4">
+      <button
+        type="button"
+        (click)="onCancel()"
+        class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium">
+        Cancelar
+      </button>
+
+      <button
+        type="submit"
+        [disabled]="loading || productForm.invalid"
+        class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2">
+        <svg *ngIf="loading" class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        <span>{{loading ? 'Salvando...' : 'Adicionar Produto'}}</span>
+      </button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,82 @@
+<aside class="fixed left-0 top-0 h-screen w-64 bg-gradient-to-b from-slate-900 to-slate-800 shadow-2xl z-50 flex flex-col">
+  <!-- Header -->
+  <div class="p-6 border-b border-slate-700">
+    <div class="flex items-center space-x-3">
+      <img src="assets/images/logoWEG.svg" alt="WEG Logo" class="w-10 h-10 rounded-lg">
+      <div>
+        <h2 class="text-xl font-bold text-white">Admin Panel</h2>
+        <p class="text-sm text-slate-400">Dashboard</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="flex-1 p-4">
+    <ul class="space-y-2">
+      <li>
+        <a routerLink="/admin/home"
+           routerLinkActive="bg-blue-600 text-white shadow-lg"
+           class="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-700 hover:text-white transition-all duration-200 group">
+          <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+          </svg>
+          <span class="font-medium">Home</span>
+        </a>
+      </li>
+
+      <li>
+        <a routerLink="/admin/produtos"
+           routerLinkActive="bg-blue-600 text-white shadow-lg"
+           class="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-700 hover:text-white transition-all duration-200 group">
+          <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 2L3 7v11a1 1 0 001 1h12a1 1 0 001-1V7l-7-5zM6 16V9h8v7H6z" clip-rule="evenodd"/>
+          </svg>
+          <span class="font-medium">Produtos</span>
+        </a>
+      </li>
+
+      <li>
+        <a routerLink="/admin/products/add"
+           routerLinkActive="bg-blue-600 text-white shadow-lg"
+           class="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-700 hover:text-white transition-all duration-200 group">
+          <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/>
+          </svg>
+          <span class="font-medium">Adicionar Produto</span>
+        </a>
+      </li>
+
+      <!-- <li>
+        <a routerLink="/admin/profile"
+           routerLinkActive="bg-blue-600 text-white shadow-lg"
+           class="flex items-center space-x-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-700 hover:text-white transition-all duration-200 group">
+          <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clip-rule="evenodd"/>
+          </svg>
+          <span class="font-medium">Perfil</span>
+        </a>
+      </li> -->
+    </ul>
+  </nav>
+
+  <!-- Footer -->
+  <div class="p-4 border-t border-slate-700">
+    <div class="flex items-center space-x-3 px-4 py-3 rounded-lg bg-slate-800">
+      <div class="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold">
+        A
+      </div>
+      <div class="flex-1">
+        <p class="text-sm font-medium text-white">Admin</p>
+        <p class="text-xs text-slate-400">Administrador</p>
+      </div>
+      <button
+        (click)="logout()"
+        class="text-slate-400 hover:text-white transition-colors"
+        title="Sair do sistema">
+        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" clip-rule="evenodd"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</aside>

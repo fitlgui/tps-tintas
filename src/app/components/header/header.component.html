@@ -1,23 +1,73 @@
-<header class="w-full flex flex-col items-center bg-white shadow-md justify-center p-1">
+<header class="w-full bg-white shadow-md sticky top-0 z-50">
+  <!-- Desktop Header -->
+  <div class="hidden lg:flex flex-col items-center justify-center p-4">
+    <!-- Logo Principal -->
+    <div class="flex items-center justify-center text-2xl font-bold space-x-3 mb-4">
+      <h1 class="cursor-pointer hover:text-3xl transition-all duration-300 text-gray-800" (click)="goToHome()">TPS(LOGO)</h1>
+      <div class="relative">
+        <img (click)="cartService.toggleCart()" class="w-7 h-7 cursor-pointer hover:scale-110 transition-transform duration-300" src="../../../assets/icons/shoppingCart.svg" alt="Carrinho">
+        <!-- Badge do contador Desktop -->
+        <span
+          *ngIf="cartService.getTotalItems() > 0"
+          class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold header-cart-badge">
+          {{ cartService.getTotalItems() > 99 ? '99+' : cartService.getTotalItems() }}
+        </span>
+      </div>
+    </div>
 
-  <!-- Logo Principal -->
-  <div class="flex items-center justify-center text-xl font-bold space-x-2">
-    <h1 class="cursor-pointer hover:text-2xl transition-all duration-500" (click)="goToHome()">TPS(LOGO)</h1>
-    <img class="w-10" src="../../../assets/icons/shoppingCart.svg" alt="">
+    <!-- Links do Cabeçalho Desktop -->
+    <div class="flex items-center justify-center gap-8 w-full">
+      <a class="text-gray-700 hover:text-blue-600 hover:scale-105 transition-all duration-300 font-medium" href="/">Inicio</a>
+      <a class="text-gray-700 hover:text-blue-600 hover:scale-105 transition-all duration-300 font-medium" href="/catalog">Coleção</a>
+      <a class="text-gray-700 hover:text-blue-600 hover:scale-105 transition-all duration-300 font-medium" href="/contact">Contato</a>
+      <div class="ml-4">
+        <input type="text" class="border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-64" placeholder="Pesquisar produtos...">
+      </div>
+    </div>
   </div>
 
-  <!-- Links do Cabeçalho -->
-  <div class="flex justify-center w-full">
-    <div class="flex items-center justify-center gap-4 w-full p-2">
-      <a class="hover:text-xl transition-all duration-500" href="/catalog">Coleção</a>
-      <a class="hover:text-xl transition-all duration-500" href="">Categoria A</a>
-      <a class="hover:text-xl transition-all duration-500" href="">Categoria B</a>
-      <a class="hover:text-xl transition-all duration-500" href="">Categoria C</a>
-      <a class="hover:text-xl transition-all duration-500" href="">Contato</a>
-      <a class="hover:text-xl transition-all duration-500" href="">Vendas</a>
-      <div>
-        <input type="text" class="border border-gray-300 rounded p-1 font-light text-md" placeholder="Pesquisar produtos...">
-      </div>
+  <!-- Mobile Header -->
+  <div class="lg:hidden flex items-center justify-between p-4">
+    <!-- Logo e Menu Mobile -->
+    <div class="flex items-center space-x-3">
+      <button #menuToggle (click)="toggleMobileMenu()" class="p-2 rounded-md hover:bg-gray-100 transition-colors duration-200">
+        <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+      <h1 class="text-xl font-bold text-gray-800 cursor-pointer" (click)="goToHome()">TPS</h1>
+    </div>
+
+    <!-- Ações Mobile -->
+    <div class="flex items-center space-x-3">
+      <button class="p-2 rounded-md hover:bg-gray-100 transition-colors duration-200">
+        <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+      </button>
+      <button
+        (click)="cartService.toggleCart()"
+        class="p-2 rounded-md hover:bg-gray-100 transition-colors duration-200 relative">
+        <img class="w-6 h-6" src="../../../assets/icons/shoppingCart.svg" alt="Carrinho">
+        <!-- Badge do contador -->
+        <span
+          *ngIf="cartService.getTotalItems() > 0"
+          class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold header-cart-badge">
+          {{ cartService.getTotalItems() > 99 ? '99+' : cartService.getTotalItems() }}
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu Dropdown -->
+  <div #mobileMenu class="lg:hidden hidden bg-white border-t shadow-lg">
+    <div class="px-4 py-2">
+      <input type="text" class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent mobile-search" placeholder="Pesquisar produtos...">
+    </div>
+    <div class="flex flex-col space-y-2 px-4 pb-4">
+      <a href="/catalog" (click)="closeMobileMenu()" class="text-gray-700 hover:text-blue-600 py-2 border-b border-gray-100 transition-colors duration-200">Inicio</a>
+      <a href="/catalog" (click)="closeMobileMenu()" class="text-gray-700 hover:text-blue-600 py-2 border-b border-gray-100 transition-colors duration-200">Coleção</a>
+      <a href="/catalog" (click)="closeMobileMenu()" class="text-gray-700 hover:text-blue-600 py-2 border-b border-gray-100 transition-colors duration-200">Contato</a>
     </div>
   </div>
 </header>

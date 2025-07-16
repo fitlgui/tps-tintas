@@ -1,121 +1,267 @@
 <app-header></app-header>
 
 <!-- Conteúdo Catalogo -->
-<section class="w-full flex flex-col items-center justify-center">
-  <div class="w-9/12 justify-start items-start flex text-sm p-1 space-x-1 mt-2">
-    <p class="font-medium">Home</p>
-    <p class="font-normal">></p>
-    <p class="font-light">Catalog</p>
-  </div>
-  <div class="w-9/12 flex-col justify-start items-start flex text-sm space-x-1 mt-2">
-    <p class="font-medium text-2xl p-1">Shop catalog</p>
-    <div class="w-full flex space-x-2">
-      <!-- Primeiro produto - Chamada vendas -->
-      <div class="w-8/12 bg-[#ACCBEE] h-[250px] flex rounded-2xl p-4">
-        <img class="relative object-contain" src="../../../assets/images/largeTintaWEG.svg" alt="">
-        <div class="flex flex-col justify-center items-center p-2 space-y-2">
-          <div>
-            <h1 class="text-2xl font-medium">Tinta</h1>
-            <p>Descrição</p>
+<section class="w-full min-h-screen bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    
+    <!-- Breadcrumb -->
+    <nav class="flex text-sm font-medium mb-6" aria-label="Breadcrumb">
+      <ol class="inline-flex items-center space-x-1 md:space-x-3">
+        <li class="inline-flex items-center">
+          <a routerLink="/" class="text-gray-700 hover:text-blue-600">Home</a>
+        </li>
+        <li>
+          <div class="flex items-center">
+            <svg class="w-4 h-4 text-gray-400 mx-1" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+            </svg>
+            <span class="text-gray-500">Catálogo</span>
           </div>
-          <button class="flex space-x-2 items-center justify-center p-2 bg-[#F55266] text-white rounded-md">
-            <p>Oferta</p>
-            <img src="../../../assets/icons/buttonHomeBanner.svg" alt="">
+        </li>
+      </ol>
+    </nav>
+
+    <!-- Título -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">Catálogo de Tintas</h1>
+      <p class="text-gray-600">Encontre a tinta perfeita para seu projeto</p>
+    </div>
+
+    <!-- Banner de Ofertas -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+      <!-- Primeiro produto - Chamada vendas -->
+      <div class="lg:col-span-2 bg-gradient-to-r from-blue-400 to-blue-600 rounded-2xl p-6 text-white relative overflow-hidden">
+        <div class="flex flex-col md:flex-row items-center justify-between h-full">
+          <div class="mb-4 md:mb-0">
+            <h2 class="text-2xl md:text-3xl font-bold mb-2">Tintas Premium WEG</h2>
+            <p class="text-blue-100 mb-4">Qualidade superior para projetos profissionais</p>
+            <button class="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-300 flex items-center space-x-2">
+              <span>Ver Ofertas</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </button>
+          </div>
+          <div class="w-32 h-32 md:w-40 md:h-40">
+            <img class="w-full h-full object-contain" src="assets/images/largeTintaWEG.svg" alt="Tinta WEG">
+          </div>
+        </div>
+      </div>
+      
+      <!-- Segundo produto - Chamada vendas -->
+      <div class="bg-gradient-to-b from-pink-200 to-pink-300 rounded-2xl p-6 text-center">
+        <p class="text-gray-700 text-sm mb-2">Promoção Especial</p>
+        <h3 class="text-xl font-bold text-gray-800 mb-4">Linha Profissional</h3>
+        <div class="w-24 h-24 mx-auto">
+          <img class="w-full h-full object-contain" src="assets/images/largeTintaWEG.svg" alt="Tinta Promoção">
+        </div>
+      </div>
+    </div>
+
+    <!-- Layout Principal -->
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      
+      <!-- Sidebar de Filtros -->
+      <div class="lg:col-span-1">
+        <div class="bg-white rounded-xl shadow-lg p-6 sticky top-6">
+          
+          <!-- Header dos Filtros -->
+          <div class="flex justify-between items-center mb-6">
+            <h2 class="text-lg font-semibold text-gray-900">Filtros</h2>
+            <button 
+              (click)="clearAllFilters()"
+              class="text-sm text-blue-600 hover:text-blue-800 font-medium">
+              Limpar tudo
+            </button>
+          </div>
+
+          <!-- Categorias -->
+          <div class="border-b border-gray-200 pb-6 mb-6">
+            <h3 class="text-md font-medium text-gray-900 mb-4">Categorias</h3>
+            <div class="space-y-3">
+              <div *ngFor="let category of categories" class="flex items-center justify-between">
+                <label class="flex items-center cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    (change)="getProductsCategory($event, category.name)"/>
+                  <span class="ml-3 text-sm text-gray-700 hover:text-gray-900">Tintas de {{ category.name }}</span>
+                </label>
+                <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">{{ category.qtd }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Filtro de Preço -->
+          <div class="border-b border-gray-200 pb-6 mb-6">
+            <h3 class="text-md font-medium text-gray-900 mb-4">Faixa de Preço</h3>
+            <div class="space-y-4">
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-xs text-gray-600 mb-1">Preço mínimo</label>
+                  <input 
+                    type="number" 
+                    [(ngModel)]="minPrice"
+                    placeholder="R$ 0"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"/>
+                </div>
+                <div>
+                  <label class="block text-xs text-gray-600 mb-1">Preço máximo</label>
+                  <input 
+                    type="number" 
+                    [(ngModel)]="maxPrice"
+                    placeholder="R$ 1000"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"/>
+                </div>
+              </div>
+              <button 
+                (click)="filterByPrice(minPrice, maxPrice)"
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg text-sm font-medium transition-colors duration-300">
+                Aplicar Filtro
+              </button>
+            </div>
+          </div>
+
+          <!-- Marcas -->
+          <div class="border-b border-gray-200 pb-6 mb-6">
+            <h3 class="text-md font-medium text-gray-900 mb-4">Marcas</h3>
+            <div class="space-y-3">
+              <label *ngFor="let brand of brands" class="flex items-center cursor-pointer">
+                <input 
+                  type="checkbox" 
+                  class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  (change)="getProductBrand($event, brand)"/>
+                <span class="ml-3 text-sm text-gray-700 hover:text-gray-900">{{brand}}</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Tamanhos -->
+          <div class="border-b border-gray-200 pb-6 mb-6">
+            <h3 class="text-md font-medium text-gray-900 mb-4">Tamanhos</h3>
+            <div class="space-y-3">
+              <div *ngFor="let size of sizes" class="flex items-center justify-between">
+                <label class="flex items-center cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    (change)="getProductSize($event, size.name)"/>
+                  <span class="ml-3 text-sm text-gray-700 hover:text-gray-900">{{size.name}}</span>
+                </label>
+                <span class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">{{ getNumberOfProductsBySize(size.name) }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cores -->
+          <div>
+            <h3 class="text-md font-medium text-gray-900 mb-4">Cores</h3>
+            <div class="space-y-3">
+              <div *ngFor="let color of colors" class="flex items-center cursor-pointer" (click)="getProductColor(color.name)">
+                <div 
+                  class="w-6 h-6 rounded-full border-2 mr-3 transition-all duration-200"
+                  [style]="{'background-color': color.color, 'border-color': selectedColors.has(color.name) ? '#374151' : '#D1D5DB'}">
+                </div>
+                <span class="text-sm text-gray-700 hover:text-gray-900">{{color.name}}</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Grid de Produtos -->
+      <div class="lg:col-span-3">
+        
+        <!-- Header dos Produtos -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+          <div>
+            <h2 class="text-xl font-semibold text-gray-900">Produtos</h2>
+            <p class="text-sm text-gray-600">{{ products.length }} produtos encontrados</p>
+          </div>
+        </div>
+
+        <!-- Grid de Produtos -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div 
+            *ngFor="let item of products" 
+            class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer transform hover:scale-105"
+            (click)="viewProductDetails(item.id)">
+            
+            <!-- Header do Card -->
+            <div class="relative p-4">
+              <div class="flex justify-between items-start mb-4">
+                <span class="bg-red-500 text-white text-xs px-2 py-1 rounded-full font-bold">
+                  -{{item.descont}}%
+                </span>
+                <button class="text-gray-400 hover:text-red-500 transition-colors duration-200">
+                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                  </svg>
+                </button>
+              </div>
+              
+              <!-- Imagem do Produto -->
+              <div class="aspect-square bg-gray-50 rounded-lg flex items-center justify-center mb-4">
+                <img [src]="item.image" [alt]="item.name" class="max-w-full max-h-full object-contain p-4">
+              </div>
+            </div>
+
+            <!-- Informações do Produto -->
+            <div class="px-4 pb-4">
+              <h3 class="font-semibold text-gray-900 mb-2 line-clamp-2">{{item.name}}</h3>
+              <p class="text-sm text-gray-600 mb-3">{{item.brand}}</p>
+              
+              <!-- Preços -->
+              <div class="flex items-center space-x-2 mb-3">
+                <span class="text-lg font-bold text-green-600">
+                  R$ {{(item.price - ((item.price/100) * item.descont)).toFixed(2)}}
+                </span>
+                <span class="text-sm text-gray-400 line-through">
+                  R$ {{(item.price).toFixed(2)}}
+                </span>
+              </div>
+
+              <!-- Especificações -->
+              <div class="flex flex-wrap gap-1 mb-3">
+                <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">{{item.size}}</span>
+                <span class="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded-full">{{item.color}}</span>
+              </div>
+
+              <!-- Botões de Ação -->
+              <div class="space-y-2">
+                <button 
+                  (click)="addToCart(item)"
+                  class="w-full bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-lg text-sm font-medium transition-colors duration-300 flex items-center justify-center space-x-2">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m2.6 8L6 6H4m4 10a2 2 0 100 4 2 2 0 000-4zm10 0a2 2 0 100 4 2 2 0 000-4z"></path>
+                  </svg>
+                  <span>Adicionar ao Carrinho</span>
+                </button>
+                <button 
+                  (click)="goToProduct(item.id)"
+                  class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg text-sm font-medium transition-colors duration-300">
+                  Ver Detalhes
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Estado Vazio -->
+        <div *ngIf="products.length === 0" class="text-center py-12">
+          <div class="text-6xl mb-4">🔍</div>
+          <h3 class="text-xl font-semibold text-gray-900 mb-2">Nenhum produto encontrado</h3>
+          <p class="text-gray-600 mb-4">Tente ajustar os filtros para encontrar o que procura</p>
+          <button 
+            (click)="clearAllFilters()"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-300">
+            Limpar Filtros
           </button>
         </div>
-      </div>
-      <!-- Segundo produto - Chamada vendas  -->
-      <div class="w-auto bg-[#FDCBF1] h-[250px] flex flex-col rounded-2xl p-4">
-        <p class="text-center font-light text-md">Chamada Para Oferta</p>
-        <h1 class="font-medium text-center text-xl">Tinta</h1>
-        <img class="w-full h-4/5 mt-3" src="../../../assets/images/largeTintaWEG.svg" alt="">
+
       </div>
     </div>
-
-    <!-- Catalogo total -->
-    <div class="w-full flex space-x-2">
-    <div class="w-4/12 flex flex-col space-y-3">
-
-      <!-- Categorias -->
-      <div class="border border-gray-400 p-2 rounded-lg mt-2">
-        <h1 class="mb-2 font-medium">Categorias</h1>
-        <div class="flex justify-between cursor-pointer" *ngFor="let category of categories">
-          <div class="flex items-center space-x-2">
-            <input type="checkbox" class="w-4 h-4" (change)="getProductsCategory($event, category.name)"/>
-            <p class="text-gray-700 text-sm hover:text-md transition-colors duration-500">Tintas de {{ category.name }}</p>
-          </div>
-          <p class="text-gray-500 text-xs hover:text-sm transition-colors duration-500">{{ category.qtd }}</p>
-        </div>
-      </div>
-      <!-- Preço -->
-      <div class="border border-gray-400 p-2 rounded-lg mt-2">
-        <div class="flex justify-between cursor-pointer flex-col">
-          <div class="flex items-center space-x-2">
-            <input type="number" class="w-1/2 h-8 border border-gray-400 rounded-lg p-2 text-xs" placeholder="Preço mínimo" />
-            <input type="number" class="w-1/2 h-8 border border-gray-400 rounded-lg p-2 text-xs" placeholder="Preço máximo" />
-          </div>
-          <input type="submit" class="w-full h-8 bg-[#F55266] text-white rounded-lg cursor-pointer mt-2 text-sm" value="Filtrar"/>
-        </div>
-      </div>
-      <!-- Marca -->
-      <div class="border border-gray-400 p-2 rounded-lg mt-2">
-        <h1 class="mb-2 font-medium">Categorias</h1>
-        <div class="flex justify-between cursor-pointer" *ngFor="let brand of brands">
-          <div class="flex items-center space-x-2">
-            <input type="checkbox" class="w-4 h-4" (change)="getProductBrand($event, brand)"/>
-            <p class="text-gray-700 text-sm hover:text-md transition-colors duration-500">{{brand}}</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Tamanho -->
-      <div class="border border-gray-400 p-2 rounded-lg mt-2">
-        <h1 class="mb-2 font-medium">Tamanhos</h1>
-        <div class="flex justify-between cursor-pointer" *ngFor="let size of sizes">
-          <div class="flex items-center space-x-2">
-            <input type="checkbox" class="w-4 h-4" (change)="getProductSize($event, size.name)"/>
-            <p class="text-gray-700 text-sm hover:text-md transition-colors duration-500">{{size.name}}</p>
-          </div>
-          <p class="text-gray-500 text-xs hover:text-sm transition-colors duration-500">{{ getNumberOfProductsBySize(size.name) }}</p>
-        </div>
-      </div>
-
-      <!-- Cores -->
-      <div class="border border-gray-400 p-2 rounded-lg mt-2">
-        <h1 class="mb-2 font-medium">Cores</h1>
-        <div class="flex justify-between cursor-pointer" *ngFor="let color of colors">
-          <div class="flex items-center space-x-2">
-            <p class="w-3 h-3 rounded-full" [style]="{'background-color': color.color, 'border': selectedColors.has(color.name) ? '2px solid black' : 'none'}" (click)="getProductColor(color.name)"></p>
-            <p class="text-gray-700 text-sm hover:text-md transition-colors duration-500">{{color.name}}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="w-8/12">
-      <div class="w-full flex  flex-wrap items-center justify-center space-x-2 mt-2">
-      <!-- Primeira Parte de Produtos -->
-      <div class="h-[360px]" *ngFor="let item of products">
-        <div class="w-[200px] bg-[#f5f7fabb] h-[340px] rounded-lg">
-          <!-- Desconto e Icone Parte de Cima -->
-          <div class="w-full p-1.5">
-            <div class="w-full flex justify-between items-center">
-              <button class="text-xs bg-[#F03D3D] p-0.5 rounded-md">-{{item.descont}}%</button>
-              <img class="w-7 h-7" src="../../../assets/icons/favoriteIconCatalog.svg" alt="">
-            </div>
-          </div>
-          <img class="p-2 rounded-[10px]" [src]="item.image" alt="">
-          <div class="flex flex-col space-y-2 p-2">
-            <h1>{{item.name}}</h1>
-            <div class="flex space-x-3 items-center">
-              <p class="font-medium text-sm">R${{(item.price - ((item.price/100) * item.descont)).toFixed(2)}}</p>
-              <p class="text-gray-400 text-xs line-through">R${{(item.price).toFixed(2)}}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  </div>
   </div>
 </section>
 

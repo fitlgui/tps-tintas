@@ -1,0 +1,56 @@
+/* Animações personalizadas para o header responsivo */
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Estilos para o menu mobile */
+.mobile-menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 40;
+}
+
+/* Estilos para o campo de busca com foco */
+input[type="text"]:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Hover effects para os links */
+a:hover {
+  text-decoration: none;
+}
+
+/* Responsividade adicional */
+@media (max-width: 640px) {
+  .mobile-search {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+/* Sticky header styling */
+header {
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.95);
+}
+
+/* Icon hover effects */
+svg:hover {
+  transform: scale(1.1);
+  transition: transform 0.2s ease-in-out;
+}
