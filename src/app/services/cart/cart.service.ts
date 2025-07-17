@@ -146,7 +146,7 @@ export class CartService {
   }
 
   // Abrir WhatsApp com a mensagem
-  sendToWhatsApp(phoneNumber: string = '5565992148174'): void {
+  sendToWhatsApp(phoneNumber: string = '5565993421407'): void {
     const message = this.generateWhatsAppMessage();
     if (message) {
       const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;

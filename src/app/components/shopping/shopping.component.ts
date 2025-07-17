@@ -11,7 +11,7 @@ export class ShoppingComponent {
   cartService = inject(CartService);
 
   // Número do WhatsApp da empresa (substitua pelo número real)
-  private readonly whatsappNumber = '5565992148174';
+  private readonly whatsappNumber = '5565993421407';
 
   // Calcular preço final com desconto
   getFinalPrice(product: Product): number {
