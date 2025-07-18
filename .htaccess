@@ -1,0 +1,10 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # -- Se o URL solicitado for um arquivo ou diretório existente, use-o diretamente --
+  RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -f [OR]
+  RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI} -d
+  RewriteRule ^ - [L]
+
+  # -- Caso contrário, redirecione todas as outras requisições para o index.html --
+  RewriteRule ^ /index.html [L]
+</IfModule>
