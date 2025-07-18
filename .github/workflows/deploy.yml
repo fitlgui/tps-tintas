@@ -30,7 +30,7 @@ jobs:
       # 4. Faz o build da aplicação Angular para produção
       # O resultado ficará na pasta 'dist/nome-do-seu-projeto/browser'
       - name: Build Angular App
-        run: ng build --configuration production
+        run: npm run build -- --configuration production
 
       # 5. Envia os arquivos da pasta de build para a Hostinger via FTP
       - name: FTP Deploy
