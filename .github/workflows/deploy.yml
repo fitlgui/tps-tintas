@@ -1,0 +1,45 @@
+# Nome do seu workflow de automação
+name: Deploy Angular App to Hostinger
+
+# Gatilho: Este workflow vai rodar toda vez que você fizer um 'push' para a branch 'main'
+on:
+  push:
+    branches:
+      - main # ou 'master', dependendo do nome da sua branch principal
+
+jobs:
+  build-and-deploy:
+    # O tipo de máquina virtual que o robô vai usar
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Baixa o seu código do repositório para a máquina virtual
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Instala o Node.js na versão que você usa no seu projeto
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Mude para a sua versão do Node.js se for diferente
+
+      # 3. Instala as dependências do seu projeto (o mesmo que 'npm install')
+      - name: Install dependencies
+        run: npm install
+
+      # 4. Faz o build da aplicação Angular para produção
+      # O resultado ficará na pasta 'dist/nome-do-seu-projeto/browser'
+      - name: Build Angular App
+        run: ng build --configuration production
+
+      # 5. Envia os arquivos da pasta de build para a Hostinger via FTP
+      - name: FTP Deploy
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }} # Pega o valor do Secret que criamos
+          username: ${{ secrets.FTP_USERNAME }} # Pega o valor do Secret
+          password: ${{ secrets.FTP_PASSWORD }} # Pega o valor do Secret
+          # ATENÇÃO: Mude 'dist/nome-do-seu-projeto/browser' para o caminho correto da sua pasta de build
+          local-dir: ./dist/tps/
+          # Opcional: define para qual pasta na Hostinger os arquivos devem ir (ex: public_html)
+          # server-dir: public_html/
