@@ -5,7 +5,7 @@ name: Deploy Angular App to Hostinger
 on:
   push:
     branches:
-      - main # ou 'master', dependendo do nome da sua branch principal
+      - master # ou 'master', dependendo do nome da sua branch principal
 
 jobs:
   build-and-deploy:
