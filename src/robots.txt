@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://tpstintas.com.br/sitemap.xml
+
+# Disallow admin pages
+Disallow: /admin/
+Disallow: /login/
+
+# Allow important pages
+Allow: /catalog
+Allow: /contact
+Allow: /ourteam
+
+# Crawl-delay for better server performance
+Crawl-delay: 1

@@ -1,7 +1,8 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ProductsService, Product } from 'src/app/services/products/products.service';
 import { CartService } from 'src/app/services/cart/cart.service';
+import { SeoService } from 'src/app/services/seo/seo.service';
 
 @Component({
   selector: 'app-catalog',
@@ -39,10 +40,14 @@ export class CatalogComponent implements OnInit {
 
   constructor(
     private readonly productsService: ProductsService,
-    private router: Router
+    private router: Router,
+    private readonly seoService: SeoService,
+    private readonly route: ActivatedRoute
   ) {}
 
   ngOnInit(){
+    // Configurar SEO para página de catálogo
+    this.setupCatalogSeo();
 
     // Buscando Todos os Produtos
     this.productsService.getProducts().subscribe((data: any[]) => {
@@ -225,5 +230,16 @@ export class CatalogComponent implements OnInit {
   // Navegar para página de detalhes do produto
   goToProduct(productId: number) {
     this.router.navigate(['/catalog', productId]);
+  }
+
+  private setupCatalogSeo() {
+    const routeData = this.route.snapshot.data;
+    this.seoService.updateSeoData({
+      title: routeData['title'] || 'Catálogo de Tintas WEG - TPS Tintas Cuiabá | Industriais e Automotivas',
+      description: routeData['description'] || 'Catálogo completo de tintas WEG industriais, automotivas e residenciais. Cores personalizadas, ferramentas e abrasivos em Cuiabá, Mato Grosso.',
+      keywords: routeData['keywords'] || 'catálogo tintas, tintas weg cuiabá, tintas industriais catálogo, preços tintas, cores personalizadas, ferramentas cuiabá',
+      url: 'https://tpstintas.com.br/catalog',
+      type: 'website'
+    });
   }
 }

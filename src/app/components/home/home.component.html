@@ -1,98 +1,108 @@
 <app-header></app-header>
 
 <!-- Conteudo Home -->
-<section class="w-full flex flex-col items-center justify-center bg-gray-50 min-h-screen">
+<main class="w-full flex flex-col items-center justify-center bg-gray-50 min-h-screen">
 
   <!-- Hero Section -->
-  <section class="w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+  <section class="w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-8" aria-label="Banner principal com ofertas de tintas">
     <!-- Banner Principal -->
     <div class="w-full min-h-[300px] lg:h-[400px] bg-gradient-to-r from-blue-500 to-purple-600 flex flex-col space-y-4 items-start justify-center p-6 lg:p-8 rounded-2xl shadow-lg mb-6">
-      <p class="text-blue-100 text-sm lg:text-base uppercase tracking-wide">Promoção Especial</p>
+      <p class="text-blue-100 text-sm lg:text-base uppercase tracking-wide">Tintas WEG em Cuiabá</p>
       <h1 class="font-bold text-3xl lg:text-5xl text-white leading-tight">
-        Transforme Sua Casa<br>
-        <span class="text-yellow-300">Com Estilo</span>
+        Tudo de Tintas<br>
+        <span class="text-yellow-300">em Mato Grosso</span>
       </h1>
       <p class="text-blue-100 text-sm lg:text-lg max-w-md">
-        Descubra nossa coleção exclusiva de produtos para deixar seu lar ainda mais aconchegante
+        Revenda autorizada WEG com cores personalizadas, ferramentas e abrasivos para indústria e residência
       </p>
-      <button class="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold px-6 py-3 flex items-center space-x-2 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
-        <span class="text-sm lg:text-base">Ver Ofertas</span>
-        <img class="w-4 h-4" src="../../../assets/icons/buttonHomeBanner.svg" alt="">
-      </button>
+      <a href="/catalog" class="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold px-6 py-3 flex items-center space-x-2 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
+         aria-label="Ver catálogo completo de tintas">
+        <span class="text-sm lg:text-base">Ver Catálogo de Tintas</span>
+        <img class="w-4 h-4" src="../../../assets/icons/buttonHomeBanner.svg" alt="Ícone seta direita">
+      </a>
     </div>
 
-    <!-- Cards de Oferta -->
+    <!-- Cards de Diferenciais -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
-      <div class="bg-white rounded-2xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
+      <article class="bg-white rounded-2xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
         <div class="bg-blue-100 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-          <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+          <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
             <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
         </div>
-        <h3 class="font-bold text-lg text-gray-800 mb-2">Qualidade Garantida</h3>
-        <p class="text-gray-600 text-sm">Produtos selecionados com os mais altos padrões de qualidade</p>
-      </div>
+        <h2 class="font-bold text-lg text-gray-800 mb-2">Produtos WEG Originais</h2>
+        <p class="text-gray-600 text-sm">Tintas industriais e automotivas com qualidade garantida pela marca WEG, líder no mercado</p>
+      </article>
 
-      <div class="bg-white rounded-2xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
+      <article class="bg-white rounded-2xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
         <div class="bg-green-100 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-          <svg class="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+          <svg class="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
             <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"></path>
           </svg>
         </div>
-        <h3 class="font-bold text-lg text-gray-800 mb-2">Atendimento Premium</h3>
-        <p class="text-gray-600 text-sm">Suporte especializado para ajudar você a escolher o melhor</p>
-      </div>
+        <h2 class="font-bold text-lg text-gray-800 mb-2">Cores Personalizadas</h2>
+        <p class="text-gray-600 text-sm">Preparação de cores sob medida para suas necessidades específicas em Cuiabá e região</p>
+      </article>
 
-      <div class="bg-white rounded-2xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
+      <article class="bg-white rounded-2xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
         <div class="bg-purple-100 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-          <svg class="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+          <svg class="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
             <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"></path>
           </svg>
         </div>
-        <h3 class="font-bold text-lg text-gray-800 mb-2">Entrega Rápida</h3>
-        <p class="text-gray-600 text-sm">Receba seus produtos com segurança e agilidade</p>
-      </div>
+        <h2 class="font-bold text-lg text-gray-800 mb-2">Atendimento Técnico</h2>
+        <p class="text-gray-600 text-sm">Suporte especializado em tintas com mais de 20 anos de experiência</p>
+      </article>
     </div>
   </section>
 
   <!-- Seção do Catálogo -->
-  <section class="w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
+  <section class="w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-12" aria-label="Catálogo de tintas industriais e automotivas">
     <div class="text-center mb-8">
-      <h2 class="text-3xl lg:text-4xl font-bold text-gray-800 mb-4">Nosso Catálogo</h2>
-      <p class="text-gray-600 max-w-2xl mx-auto">Explore nossa seleção cuidadosamente escolhida de produtos</p>
+      <h2 class="text-3xl lg:text-4xl font-bold text-gray-800 mb-4">Catálogo de Tintas WEG</h2>
+      <p class="text-gray-600 max-w-2xl mx-auto">Tintas industriais, automotivas e residenciais com qualidade WEG para Cuiabá e região metropolitana</p>
     </div>
 
     <!-- Filtros -->
-    <div class="flex flex-wrap justify-center items-center gap-3 mb-8">
-      <button class="px-4 py-2 border-2 border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white focus:bg-blue-500 focus:text-white rounded-full transition-all duration-300 font-medium">
+    <nav class="flex flex-wrap justify-center items-center gap-3 mb-8" aria-label="Filtros de produtos">
+      <button class="px-4 py-2 border-2 border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white focus:bg-blue-500 focus:text-white rounded-full transition-all duration-300 font-medium"
+              aria-label="Filtrar por produtos mais vendidos">
         Mais Vendidos
       </button>
-      <button class="px-4 py-2 border-2 border-gray-300 text-gray-600 hover:border-blue-500 hover:text-blue-500 rounded-full transition-all duration-300 font-medium">
-        Novos Produtos
+      <button class="px-4 py-2 border-2 border-gray-300 text-gray-600 hover:border-blue-500 hover:text-blue-500 rounded-full transition-all duration-300 font-medium"
+              aria-label="Filtrar por novos produtos">
+        Tintas Industriais
       </button>
-      <button class="px-4 py-2 border-2 border-gray-300 text-gray-600 hover:border-blue-500 hover:text-blue-500 rounded-full transition-all duration-300 font-medium">
-        Linha A
+      <button class="px-4 py-2 border-2 border-gray-300 text-gray-600 hover:border-blue-500 hover:text-blue-500 rounded-full transition-all duration-300 font-medium"
+              aria-label="Filtrar por tintas automotivas">
+        Tintas Automotivas
       </button>
-      <button class="px-4 py-2 border-2 border-gray-300 text-gray-600 hover:border-blue-500 hover:text-blue-500 rounded-full transition-all duration-300 font-medium">
-        Linha B
+      <button class="px-4 py-2 border-2 border-gray-300 text-gray-600 hover:border-blue-500 hover:text-blue-500 rounded-full transition-all duration-300 font-medium"
+              aria-label="Filtrar por tintas residenciais">
+        Tintas Residenciais
       </button>
-    </div>
+    </nav>
 
     <!-- Grid de Produtos -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-      <div class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden group" *ngFor="let item of produtos">
+      <article class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden group" *ngFor="let item of produtos">
         <!-- Card do Produto -->
         <div class="relative">
           <div class="absolute top-3 left-3 z-10">
-            <span class="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-lg">-{{item.descont}}%</span>
+            <span class="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-lg"
+                  [attr.aria-label]="'Desconto de ' + item.descont + ' porcento'">-{{item.descont}}%</span>
           </div>
           <div class="absolute top-3 right-3 z-10">
-            <button class="bg-white bg-opacity-80 hover:bg-opacity-100 p-2 rounded-full transition-all duration-300">
-              <img class="w-5 h-5" src="../../../assets/icons/favoriteIconCatalog.svg" alt="Favoritar">
+            <button class="bg-white bg-opacity-80 hover:bg-opacity-100 p-2 rounded-full transition-all duration-300"
+                    [attr.aria-label]="'Adicionar ' + item.name + ' aos favoritos'">
+              <img class="w-5 h-5" src="../../../assets/icons/favoriteIconCatalog.svg" alt="Ícone favoritar">
             </button>
           </div>
           <div class="aspect-square bg-gray-100 p-4">
-            <img class="w-full h-full object-cover rounded-lg group-hover:scale-105 transition-transform duration-300" [src]="item.image" [alt]="item.name">
+            <img class="w-full h-full object-cover rounded-lg group-hover:scale-105 transition-transform duration-300"
+                 [src]="item.image"
+                 [alt]="item.name + ' - Tinta WEG disponível em Cuiabá'"
+                 loading="lazy">
           </div>
         </div>
 
@@ -103,30 +113,35 @@
             <span class="text-sm text-gray-400 line-through">R$ {{(item.price).toFixed(2)}}</span>
           </div>
           <div class="space-y-2">
-            <button 
+            <button
               (click)="addToCart(item)"
-              class="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg transition-colors duration-300 font-medium flex items-center justify-center space-x-2">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              class="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg transition-colors duration-300 font-medium flex items-center justify-center space-x-2"
+              [attr.aria-label]="'Adicionar ' + item.name + ' ao carrinho'">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m2.6 8L6 6H4m4 10a2 2 0 100 4 2 2 0 000-4zm10 0a2 2 0 100 4 2 2 0 000-4z"></path>
               </svg>
               <span>Adicionar ao Carrinho</span>
             </button>
-            <button (click)="goToProduct(item.id)" class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition-colors duration-300 font-medium">
-              Ver Produto
-            </button>
+            <a [routerLink]="['/catalog', item.id]"
+               class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition-colors duration-300 font-medium block text-center"
+               [attr.aria-label]="'Ver detalhes do produto ' + item.name">
+              Ver Detalhes
+            </a>
           </div>
         </div>
-      </div>
+      </article>
     </div>
+
     <!-- Seção de Destaque -->
-    <div class="bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl p-6 lg:p-8 text-white">
+    <div class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl p-6 lg:p-8 text-white mt-12">
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
         <div>
-          <h3 class="text-2xl lg:text-3xl font-bold mb-4">Oferta Imperdível</h3>
-          <p class="text-purple-100 mb-6">Produto em destaque com desconto especial por tempo limitado</p>
-          <button class="bg-white text-purple-600 hover:bg-gray-100 px-6 py-3 rounded-lg font-semibold transition-colors duration-300">
+          <h3 class="text-2xl lg:text-3xl font-bold mb-4">Tintas WEG com Desconto</h3>
+          <p class="text-blue-100 mb-6">Aproveite nossa seleção especial de tintas industriais e automotivas com preços promocionais</p>
+          <a href="/catalog" class="bg-white text-blue-600 hover:bg-gray-100 px-6 py-3 rounded-lg font-semibold transition-colors duration-300 inline-block"
+             aria-label="Ver catálogo completo de tintas">
             Ver Catálogo Completo
-          </button>
+          </a>
         </div>
         <div class="flex justify-center lg:justify-end">
           <div class="bg-white bg-opacity-20 backdrop-blur-sm rounded-2xl p-4 max-w-sm w-full" *ngIf="produtos && produtos.length > 0">
@@ -292,24 +307,27 @@
 
   <!-- Call to Action -->
   <section class="w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
-    <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 lg:p-12 text-center">
+    <!-- Call to Action Final -->
+    <div class="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 lg:p-12 text-center mt-12">
       <h2 class="text-3xl lg:text-4xl font-bold text-white mb-4">
-        Pronto para Transformar Seu Espaço?
+        Precisa de Tintas WEG em Cuiabá?
       </h2>
       <p class="text-blue-100 text-lg mb-8 max-w-2xl mx-auto">
-        Explore nosso catálogo completo e encontre os produtos perfeitos para suas necessidades
+        Explore nosso catálogo completo de tintas industriais, automotivas e residenciais com entrega em toda região metropolitana
       </p>
       <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-        <button class="bg-white text-blue-600 hover:bg-gray-100 px-8 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105">
+        <a href="/catalog" class="bg-white text-blue-600 hover:bg-gray-100 px-8 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 inline-block"
+           aria-label="Ver catálogo completo de tintas WEG">
           Ver Catálogo Completo
-        </button>
-        <button class="border-2 border-white text-white hover:bg-white hover:text-blue-600 px-8 py-3 rounded-lg font-semibold transition-all duration-300">
+        </a>
+        <a href="/contact" class="border-2 border-white text-white hover:bg-white hover:text-blue-600 px-8 py-3 rounded-lg font-semibold transition-all duration-300 inline-block"
+           aria-label="Entrar em contato com especialista em tintas">
           Falar com Especialista
-        </button>
+        </a>
       </div>
     </div>
   </section>
 
-</section>
+</main>
 
 <app-footer></app-footer>

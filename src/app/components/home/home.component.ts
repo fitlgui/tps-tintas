@@ -1,7 +1,8 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ProductsService, Product } from 'src/app/services/products/products.service';
 import { CartService } from 'src/app/services/cart/cart.service';
+import { SeoService } from 'src/app/services/seo/seo.service';
 
 @Component({
   selector: 'app-home',
@@ -13,14 +14,32 @@ export class HomeComponent implements OnInit {
   public produtos: any[] = []
   cartService = inject(CartService);
 
-  constructor(private readonly productsService: ProductsService, private readonly router: Router){}
+  constructor(
+    private readonly productsService: ProductsService,
+    private readonly router: Router,
+    private readonly seoService: SeoService,
+    private readonly route: ActivatedRoute
+  ){}
 
   ngOnInit(){
+    // Configurar SEO para página inicial
+    this.setupHomeSeo();
 
     // Obtendo Produtos do Serviço
     this.productsService.getProducts().subscribe((data: any[])=> {
       this.produtos = data.slice(0, 4); // Limitando a 4 produtos para a exibição inicial
     })
+  }
+
+  private setupHomeSeo() {
+    const routeData = this.route.snapshot.data;
+    this.seoService.updateSeoData({
+      title: routeData['title'] || 'TPS Tintas Cuiabá - Tintas WEG Industriais e Automotivas | Mato Grosso',
+      description: routeData['description'] || 'Revenda autorizada WEG em Cuiabá. Tintas industriais, automotivas e residenciais com cores personalizadas, ferramentas e abrasivos. Atendimento especializado desde 2005.',
+      keywords: routeData['keywords'] || 'tintas cuiabá, tintas industriais mato grosso, WEG tintas cuiabá, tintas automotivas, cores personalizadas, ferramentas cuiabá, abrasivos industriais, TPS tintas',
+      url: 'https://tpstintas.com.br/',
+      type: 'website'
+    });
   }
 
   goToProduct(id: number): void {

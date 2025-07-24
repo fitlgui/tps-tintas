@@ -1,29 +1,64 @@
-<header class="w-full bg-white shadow-md sticky top-0 z-50">
+<header class="w-full bg-white shadow-md sticky top-0 z-50" role="banner">
   <!-- Desktop Header -->
   <div class="hidden lg:flex flex-col items-center justify-center p-4">
     <!-- Logo Principal -->
     <div class="flex items-center justify-center text-2xl font-bold space-x-3 mb-4">
-      <h1 class="cursor-pointer hover:text-3xl transition-all duration-300 text-gray-800" (click)="goToHome()">TPS(LOGO)</h1>
+      <h1 class="cursor-pointer hover:text-3xl transition-all duration-300 text-gray-800"
+          (click)="goToHome()"
+          title="TPS Tintas Cuiabá - Tintas WEG Industriais">
+        TPS Tintas Cuiabá
+      </h1>
       <div class="relative">
-        <img (click)="cartService.toggleCart()" class="w-7 h-7 cursor-pointer hover:scale-110 transition-transform duration-300" src="../../../assets/icons/shoppingCart.svg" alt="Carrinho">
+        <button (click)="cartService.toggleCart()"
+                class="w-7 h-7 cursor-pointer hover:scale-110 transition-transform duration-300"
+                aria-label="Abrir carrinho de compras"
+                title="Carrinho de compras">
+          <img class="w-full h-full" src="../../../assets/icons/shoppingCart.svg" alt="Ícone carrinho de compras">
+        </button>
         <!-- Badge do contador Desktop -->
         <span
           *ngIf="cartService.getTotalItems() > 0"
-          class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold header-cart-badge">
+          class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold header-cart-badge"
+          [attr.aria-label]="cartService.getTotalItems() + ' itens no carrinho'">
           {{ cartService.getTotalItems() > 99 ? '99+' : cartService.getTotalItems() }}
         </span>
       </div>
     </div>
 
     <!-- Links do Cabeçalho Desktop -->
-    <div class="flex items-center justify-center gap-8 w-full">
-      <a class="text-gray-700 hover:text-blue-600 hover:scale-105 transition-all duration-300 font-medium" href="/">Inicio</a>
-      <a class="text-gray-700 hover:text-blue-600 hover:scale-105 transition-all duration-300 font-medium" href="/catalog">Coleção</a>
-      <a class="text-gray-700 hover:text-blue-600 hover:scale-105 transition-all duration-300 font-medium" href="/contact">Contato</a>
+    <nav class="flex items-center justify-center gap-8 w-full" role="navigation" aria-label="Menu principal">
+      <a class="text-gray-700 hover:text-blue-600 hover:scale-105 transition-all duration-300 font-medium"
+         href="/"
+         title="Página inicial - TPS Tintas Cuiabá"
+         aria-label="Ir para página inicial">
+        Início
+      </a>
+      <a class="text-gray-700 hover:text-blue-600 hover:scale-105 transition-all duration-300 font-medium"
+         href="/catalog"
+         title="Catálogo de Tintas WEG - Industriais e Automotivas"
+         aria-label="Ver catálogo de tintas">
+        Catálogo Tintas
+      </a>
+      <a class="text-gray-700 hover:text-blue-600 hover:scale-105 transition-all duration-300 font-medium"
+         href="/contact"
+         title="Contato TPS Tintas Cuiabá - Telefone e Endereço"
+         aria-label="Entrar em contato">
+        Contato
+      </a>
+      <a class="text-gray-700 hover:text-blue-600 hover:scale-105 transition-all duration-300 font-medium"
+         href="/ourteam"
+         title="Sobre TPS Tintas - Nossa História e Parceria WEG"
+         aria-label="Conhecer nossa empresa">
+        Quem Somos
+      </a>
       <div class="ml-4">
-        <input type="text" class="border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-64" placeholder="Pesquisar produtos...">
+        <input type="search"
+               class="border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-64"
+               placeholder="Buscar tintas WEG, cores..."
+               aria-label="Pesquisar produtos no catálogo"
+               title="Pesquisar tintas, cores e produtos">
       </div>
-    </div>
+    </nav>
   </div>
 
   <!-- Mobile Header -->
@@ -67,7 +102,8 @@
     <div class="flex flex-col space-y-2 px-4 pb-4">
       <a href="/catalog" (click)="closeMobileMenu()" class="text-gray-700 hover:text-blue-600 py-2 border-b border-gray-100 transition-colors duration-200">Inicio</a>
       <a href="/catalog" (click)="closeMobileMenu()" class="text-gray-700 hover:text-blue-600 py-2 border-b border-gray-100 transition-colors duration-200">Coleção</a>
-      <a href="/catalog" (click)="closeMobileMenu()" class="text-gray-700 hover:text-blue-600 py-2 border-b border-gray-100 transition-colors duration-200">Contato</a>
+      <a href="/contact" (click)="closeMobileMenu()" class="text-gray-700 hover:text-blue-600 py-2 border-b border-gray-100 transition-colors duration-200">Contato</a>
+      <a href="/ourteam" (click)="closeMobileMenu()" class="text-gray-700 hover:text-blue-600 py-2 border-b border-gray-100 transition-colors duration-200">Quem Somos</a>
     </div>
   </div>
 </header>
