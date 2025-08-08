@@ -31,12 +31,29 @@
             type="text"
             id="name"
             name="name"
-            [(ngModel)]="product.name"
+            [(ngModel)]="product.descricao"
             required
             placeholder="Ex: W-THANE PDA 520"
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             [class.border-red-500]="errors.name">
           <p *ngIf="errors.name" class="text-red-500 text-sm mt-1">{{errors.name}}</p>
+        </div>
+
+        <!-- Codigo do Produto -->
+        <div class="md:col-span-2">
+          <label for="codigo" class="block text-sm font-medium text-gray-700 mb-2">
+            Código do Produto <span class="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            id="codigo"
+            name="codigo"
+            [(ngModel)]="product.codigo"
+            required
+            placeholder="Ex: 232325252"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            [class.border-red-500]="errors.codigo">
+          <p *ngIf="errors.codigo" class="text-red-500 text-sm mt-1">{{errors.codigo}}</p>
         </div>
 
         <!-- Preço -->
@@ -48,32 +65,34 @@
             type="number"
             id="price"
             name="price"
-            [(ngModel)]="product.price"
+            [(ngModel)]="product.preco"
             required
             min="0"
             step="0.01"
             placeholder="0.00"
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            [class.border-red-500]="errors.price">
-          <p *ngIf="errors.price" class="text-red-500 text-sm mt-1">{{errors.price}}</p>
+            [class.border-red-500]="errors.preco">
+          <p *ngIf="errors.preco" class="text-red-500 text-sm mt-1">{{errors.preco}}</p>
         </div>
 
-        <!-- Desconto -->
+        <!-- Quantidade por Fardo -->
         <div>
-          <label for="descont" class="block text-sm font-medium text-gray-700 mb-2">
-            Desconto (%)
+          <label for="quantity-fardo" class="block text-sm font-medium text-gray-700 mb-2">
+            Quantidade por Fardo <span class="text-red-500">*</span>
           </label>
           <input
             type="number"
-            id="descont"
-            name="descont"
-            [(ngModel)]="product.descont"
-            min="0"
-            max="100"
-            placeholder="0"
+            id="quantity-fardo"
+            name="quantity-fardo"
+            [(ngModel)]="product.quantidade_por_fardo"
+            required
+            min="1"
+            step="1"
+            placeholder="1"
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            [class.border-red-500]="errors.descont">
-          <p *ngIf="errors.descont" class="text-red-500 text-sm mt-1">{{errors.descont}}</p>
+            [class.border-red-500]="errors.quantidade_por_fardo">
+          <p *ngIf="errors.quantidade_por_fardo" class="text-red-500 text-sm mt-1">{{errors.quantidade_por_fardo}}</p>
+          <p class="text-xs text-gray-500 mt-1">Quantidade de produtos por fardo</p>
         </div>
 
         <!-- Categoria -->
@@ -84,36 +103,16 @@
           <select
             id="category"
             name="category"
-            [(ngModel)]="product.category"
+            [(ngModel)]="product.familia_tintas"
             required
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             [class.border-red-500]="errors.category">
             <option value="">Selecione uma categoria</option>
-            <option *ngFor="let category of categories" [value]="category.name">
-              {{category.name}}
+            <option *ngFor="let category of categories" [value]="category">
+              {{category}}
             </option>
           </select>
           <p *ngIf="errors.category" class="text-red-500 text-sm mt-1">{{errors.category}}</p>
-        </div>
-
-        <!-- Marca -->
-        <div>
-          <label for="brand" class="block text-sm font-medium text-gray-700 mb-2">
-            Marca <span class="text-red-500">*</span>
-          </label>
-          <select
-            id="brand"
-            name="brand"
-            [(ngModel)]="product.brand"
-            required
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            [class.border-red-500]="errors.brand">
-            <option value="">Selecione uma marca</option>
-            <option *ngFor="let brand of brands" [value]="brand">
-              {{brand}}
-            </option>
-          </select>
-          <p *ngIf="errors.brand" class="text-red-500 text-sm mt-1">{{errors.brand}}</p>
         </div>
 
         <!-- Tamanho -->
@@ -124,13 +123,13 @@
           <select
             id="size"
             name="size"
-            [(ngModel)]="product.size"
+            [(ngModel)]="product.conteudo_embalagem"
             required
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             [class.border-red-500]="errors.size">
             <option value="">Selecione um tamanho</option>
-            <option *ngFor="let size of sizes" [value]="size.name">
-              {{size.name}}
+            <option *ngFor="let size of sizes" [value]="size">
+              {{size}}
             </option>
           </select>
           <p *ngIf="errors.size" class="text-red-500 text-sm mt-1">{{errors.size}}</p>
@@ -144,16 +143,95 @@
           <select
             id="color"
             name="color"
-            [(ngModel)]="product.color"
+            [(ngModel)]="product.cor_comercial_tinta"
             required
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             [class.border-red-500]="errors.color">
             <option value="">Selecione uma cor</option>
-            <option *ngFor="let color of colors" [value]="color.name">
-              {{color.name}}
+            <option *ngFor="let color of colors" [value]="color">
+              {{color}}
             </option>
           </select>
           <p *ngIf="errors.color" class="text-red-500 text-sm mt-1">{{errors.color}}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upload de Imagem -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h2 class="text-xl font-semibold text-gray-900 mb-6">Imagem do Produto</h2>
+
+      <div class="space-y-4">
+        <!-- Upload Input -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            Foto do Produto
+          </label>
+          <div class="flex items-center justify-center w-full">
+            <label for="photo-upload" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+              <div *ngIf="!imagePreview" class="flex flex-col items-center justify-center pt-5 pb-6">
+                <svg class="w-10 h-10 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                </svg>
+                <p class="mb-2 text-sm text-gray-500">
+                  <span class="font-semibold">Clique para upload</span> ou arraste e solte
+                </p>
+                <p class="text-xs text-gray-500">PNG, JPG ou JPEG (MAX. 2MB)</p>
+                <p class="text-xs text-gray-400 mt-1">Imagens serão automaticamente comprimidas</p>
+              </div>
+              <div *ngIf="imagePreview" class="relative w-full h-full">
+                <img [src]="imagePreview" alt="Preview" class="w-full h-full object-contain rounded-lg">
+                <button
+                  type="button"
+                  (click)="removeImage(); $event.stopPropagation()"
+                  class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                  </svg>
+                </button>
+              </div>
+              <input
+                id="photo-upload"
+                type="file"
+                accept="image/*"
+                (change)="onFileSelected($event)"
+                class="hidden">
+            </label>
+          </div>
+        </div>
+
+        <!-- Informações do arquivo -->
+        <div *ngIf="selectedFile" class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <h4 class="text-sm font-medium text-blue-800 mb-2">Arquivo selecionado:</h4>
+          <div class="text-sm text-blue-700">
+            <p><span class="font-medium">Nome:</span> {{selectedFile.name}}</p>
+            <p><span class="font-medium">Tamanho:</span> {{(selectedFile.size / 1024 / 1024).toFixed(2)}} MB</p>
+            <p><span class="font-medium">Tipo:</span> {{selectedFile.type}}</p>
+            <div *ngIf="compressingImage" class="mt-2 flex items-center space-x-2">
+              <svg class="animate-spin h-4 w-4 text-blue-600" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              <span class="text-blue-600 font-medium">Comprimindo imagem...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- URL alternativa -->
+        <div>
+          <label for="photo_url" class="block text-sm font-medium text-gray-700 mb-2">
+            URL da Imagem (alternativa)
+          </label>
+          <input
+            type="url"
+            id="photo_url"
+            name="photo_url"
+            [(ngModel)]="product.photo_url"
+            placeholder="https://exemplo.com/imagem.jpg"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+          <p class="text-xs text-gray-500 mt-1">
+            Use este campo apenas se não fizer upload de uma imagem acima
+          </p>
         </div>
       </div>
     </div>
@@ -165,26 +243,27 @@
       <div class="max-w-sm mx-auto">
         <div class="bg-gray-50 rounded-lg p-6 text-center">
           <div class="h-32 flex items-center justify-center mb-4">
-            <img [src]="product.image" alt="Preview" class="h-24 w-24 object-contain">
+            <img 
+              [src]="imagePreview || product.photo_url || '/assets/images/cartShoppingTinta.svg'" 
+              alt="Preview" 
+              class="h-24 w-24 object-contain"
+              onerror="this.src='/assets/images/placeholder-product.jpg'">
           </div>
 
           <h3 class="text-lg font-semibold text-gray-900 mb-2">
-            {{product.name || 'Nome do Produto'}}
+            {{product.descricao || 'Nome do Produto'}}
           </h3>
 
           <div class="space-y-1 text-sm text-gray-600 mb-4">
-            <p><span class="font-medium">Marca:</span> {{product.brand || 'N/A'}}</p>
-            <p><span class="font-medium">Categoria:</span> {{product.category || 'N/A'}}</p>
-            <p><span class="font-medium">Tamanho:</span> {{product.size || 'N/A'}}</p>
-            <p><span class="font-medium">Cor:</span> {{product.color || 'N/A'}}</p>
+            <p><span class="font-medium">Categoria:</span> {{product.familia_tintas || 'N/A'}}</p>
+            <p><span class="font-medium">Tamanho:</span> {{product.conteudo_embalagem || 'N/A'}}</p>
+            <p><span class="font-medium">Cor:</span> {{product.cor_tinta || 'N/A'}}</p>
+            <p><span class="font-medium">Qtd por Fardo:</span> {{product.quantidade_por_fardo || 1}} unidades</p>
           </div>
 
           <div class="flex items-center justify-center space-x-2">
             <span class="text-2xl font-bold text-gray-900">
-              R$ {{product.price ? product.price.toFixed(2) : '0.00'}}
-            </span>
-            <span *ngIf="product.descont > 0" class="text-sm text-green-600 bg-green-100 px-2 py-1 rounded">
-              {{product.descont}}% OFF
+              R$ {{product.preco || '0,00'}}
             </span>
           </div>
         </div>
@@ -200,9 +279,17 @@
         Cancelar
       </button>
 
+      <!-- Botão de teste -->
+      <button
+        type="button"
+        (click)="onSubmit()"
+        class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm">
+        Teste Manual
+      </button>
+
       <button
         type="submit"
-        [disabled]="loading || productForm.invalid"
+        [disabled]="loading"
         class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2">
         <svg *ngIf="loading" class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>

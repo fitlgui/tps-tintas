@@ -18,15 +18,15 @@
       <a href="/catalog" class="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold px-6 py-3 flex items-center space-x-2 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
          aria-label="Ver catálogo completo de tintas">
         <span class="text-sm lg:text-base">Ver Catálogo de Tintas</span>
-        <img class="w-4 h-4" src="../../../assets/icons/buttonHomeBanner.svg" alt="Ícone seta direita">
+        <img class="w-6 h-6 icon-enhanced" src="../../../assets/icons/buttonHomeBanner.svg" alt="Ícone seta direita">
       </a>
     </div>
 
     <!-- Cards de Diferenciais -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
       <article class="bg-white rounded-2xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
-        <div class="bg-blue-100 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-          <svg class="w-6 h-6 text-blue-600" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+        <div class="bg-blue-100 w-16 h-16 rounded-lg flex items-center justify-center mb-4">
+          <svg class="w-8 h-8 text-blue-600" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true" style="image-rendering: -webkit-optimize-contrast;">
             <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
           </svg>
         </div>
@@ -35,8 +35,8 @@
       </article>
 
       <article class="bg-white rounded-2xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
-        <div class="bg-green-100 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-          <svg class="w-6 h-6 text-green-600" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+        <div class="bg-green-100 w-16 h-16 rounded-lg flex items-center justify-center mb-4">
+          <svg class="w-8 h-8 text-green-600" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true" style="image-rendering: -webkit-optimize-contrast;">
             <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"></path>
           </svg>
         </div>
@@ -45,8 +45,8 @@
       </article>
 
       <article class="bg-white rounded-2xl p-6 shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100">
-        <div class="bg-purple-100 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-          <svg class="w-6 h-6 text-purple-600" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+        <div class="bg-purple-100 w-16 h-16 rounded-lg flex items-center justify-center mb-4">
+          <svg class="w-8 h-8 text-purple-600" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true" style="image-rendering: -webkit-optimize-contrast;">
             <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"></path>
           </svg>
         </div>
@@ -88,43 +88,38 @@
       <article class="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden group" *ngFor="let item of produtos">
         <!-- Card do Produto -->
         <div class="relative">
-          <div class="absolute top-3 left-3 z-10">
-            <span class="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-lg"
-                  [attr.aria-label]="'Desconto de ' + item.descont + ' porcento'">-{{item.descont}}%</span>
-          </div>
           <div class="absolute top-3 right-3 z-10">
             <button class="bg-white bg-opacity-80 hover:bg-opacity-100 p-2 rounded-full transition-all duration-300"
-                    [attr.aria-label]="'Adicionar ' + item.name + ' aos favoritos'">
-              <img class="w-5 h-5" src="../../../assets/icons/favoriteIconCatalog.svg" alt="Ícone favoritar">
+                    [attr.aria-label]="'Adicionar ' + item.descricao + ' aos favoritos'">
+              <img class="w-6 h-6 icon-enhanced" src="../../../assets/icons/favoriteIconCatalog.svg" alt="Ícone favoritar">
             </button>
           </div>
           <div class="aspect-square bg-gray-100 p-4">
-            <img class="w-full h-full object-cover rounded-lg group-hover:scale-105 transition-transform duration-300"
-                 [src]="item.image"
-                 [alt]="item.name + ' - Tinta WEG disponível em Cuiabá'"
+            <img class="w-full h-full object-cover rounded-lg product-image transition-transform duration-300"
+                 [src]="item | productImage"
+                 [alt]="item.descricao + ' - Tinta WEG disponível em Cuiabá'"
                  loading="lazy">
           </div>
         </div>
 
         <div class="p-4">
-          <h3 class="font-semibold text-gray-800 mb-2 line-clamp-2">{{item.name}}</h3>
+          <h3 class="font-semibold text-gray-800 mb-2 line-clamp-2">{{item.descricao}}</h3>
           <div class="flex items-center space-x-2 mb-3">
-            <span class="text-lg font-bold text-blue-600">R$ {{(item.price - ((item.price/100) * item.descont)).toFixed(2)}}</span>
-            <span class="text-sm text-gray-400 line-through">R$ {{(item.price).toFixed(2)}}</span>
+            <span class="text-lg font-bold text-blue-600">R$ {{(item.preco)}}</span>
           </div>
           <div class="space-y-2">
             <button
               (click)="addToCart(item)"
               class="w-full bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg transition-colors duration-300 font-medium flex items-center justify-center space-x-2"
-              [attr.aria-label]="'Adicionar ' + item.name + ' ao carrinho'">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              [attr.aria-label]="'Adicionar ' + item.descricao + ' ao carrinho'">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" style="image-rendering: -webkit-optimize-contrast;">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m2.6 8L6 6H4m4 10a2 2 0 100 4 2 2 0 000-4zm10 0a2 2 0 100 4 2 2 0 000-4z"></path>
               </svg>
               <span>Adicionar ao Carrinho</span>
             </button>
             <a [routerLink]="['/catalog', item.id]"
                class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition-colors duration-300 font-medium block text-center"
-               [attr.aria-label]="'Ver detalhes do produto ' + item.name">
+               [attr.aria-label]="'Ver detalhes do produto ' + item.descricao">
               Ver Detalhes
             </a>
           </div>
@@ -146,12 +141,14 @@
         <div class="flex justify-center lg:justify-end">
           <div class="bg-white bg-opacity-20 backdrop-blur-sm rounded-2xl p-4 max-w-sm w-full" *ngIf="produtos && produtos.length > 0">
             <div class="aspect-square bg-white bg-opacity-30 rounded-lg mb-4 p-4">
-              <img class="w-full h-full object-cover rounded-lg" [src]="produtos[0].image" [alt]="produtos[0].name">
+              <img class="w-full h-full object-cover rounded-lg product-image" 
+                   [src]="produtos[0] | productImage" 
+                   [alt]="produtos[0].descricao">
             </div>
-            <h4 class="font-semibold mb-2">{{produtos[0].name}}</h4>
+            <h4 class="font-semibold mb-2">{{produtos[0].descricao}}</h4>
             <div class="flex items-center space-x-2">
-              <span class="text-xl font-bold">R$ {{(produtos[0].price - ((produtos[0].price/100) * produtos[0].descont)).toFixed(2)}}</span>
-              <span class="text-sm line-through text-purple-200">R$ {{produtos[0].price.toFixed(2)}}</span>
+              <span class="text-xl font-bold">R$ {{(produtos[0].preco)}}</span>
+              <span class="text-sm line-through text-purple-200">R$ {{produtos[0].preco}}</span>
             </div>
           </div>
         </div>
@@ -185,10 +182,10 @@
             <!-- Navegação -->
             <div class="flex items-center space-x-4">
               <button class="bg-white bg-opacity-20 hover:bg-opacity-30 p-3 rounded-full transition-all duration-300">
-                <img class="w-5 h-5 filter invert" src="../../../assets/icons/btnPrevious.svg" alt="Anterior">
+                <img class="w-6 h-6 filter invert icon-enhanced" src="../../../assets/icons/btnPrevious.svg" alt="Anterior">
               </button>
               <button class="bg-white bg-opacity-20 hover:bg-opacity-30 p-3 rounded-full transition-all duration-300">
-                <img class="w-5 h-5 filter invert" src="../../../assets/icons/btnNext.svg" alt="Próximo">
+                <img class="w-6 h-6 filter invert icon-enhanced" src="../../../assets/icons/btnNext.svg" alt="Próximo">
               </button>
               <span class="text-green-100 text-sm ml-4">1 de 3</span>
             </div>
@@ -197,19 +194,19 @@
           <div class="flex justify-center" *ngIf="produtos && produtos.length > 1">
             <div class="bg-white rounded-2xl p-6 shadow-2xl max-w-sm w-full transform hover:scale-105 transition-transform duration-300">
               <div class="relative mb-4">
-                <span class="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-lg z-10">
-                  -{{produtos[1].descont}}%
-                </span>
                 <div class="aspect-square bg-gray-100 rounded-lg p-4">
-                  <img class="w-full h-full object-cover rounded-lg" [src]="produtos[1].image" [alt]="produtos[1].name">
+                  <img class="w-full h-full object-cover rounded-lg" 
+                       [src]="produtos[3] | productImage" 
+                       [alt]="produtos[3].descricao"
+                       style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;">
                 </div>
               </div>
-              <h4 class="font-semibold text-gray-800 mb-2">{{produtos[1].name}}</h4>
+              <h4 class="font-semibold text-gray-800 mb-2">{{produtos[3].descricao}}</h4>
               <div class="flex items-center space-x-2 mb-4">
                 <span class="text-xl font-bold text-green-600">
-                  R$ {{(produtos[1].price - ((produtos[1].price/100) * produtos[1].descont)).toFixed(2)}}
+                  R$ {{(produtos[3].preco)}}
                 </span>
-                <span class="text-sm text-gray-400 line-through">R$ {{produtos[1].price.toFixed(2)}}</span>
+                <span class="text-sm text-gray-400 line-through">R$ {{produtos[3].preco}}</span>
               </div>
               <button class="w-full bg-green-500 hover:bg-green-600 text-white py-3 px-4 rounded-lg font-semibold transition-colors duration-300">
                 Comprar Agora
@@ -233,8 +230,9 @@
         <!-- Marca 1 -->
         <div class="p-8 flex items-center justify-center hover:bg-gray-50 transition-colors duration-300 group">
           <div class="text-center">
-            <img class="h-16 w-auto mx-auto mb-2 group-hover:scale-110 transition-transform duration-300 filter grayscale group-hover:grayscale-0"
-                 src="../../../assets/images/logoWEG.svg" alt="WEG">
+            <img class="h-20 w-auto mx-auto mb-2 brand-logo group-hover:scale-110 transition-transform duration-300 filter grayscale group-hover:grayscale-0"
+                 src="../../../assets/images/logoWEG.svg" 
+                 alt="WEG">
             <span class="text-sm font-medium text-gray-600 group-hover:text-gray-800">WEG</span>
           </div>
         </div>
@@ -242,8 +240,9 @@
         <!-- Marca 2 -->
         <div class="p-8 flex items-center justify-center hover:bg-gray-50 transition-colors duration-300 group">
           <div class="text-center">
-            <img class="h-16 w-auto mx-auto mb-2 group-hover:scale-110 transition-transform duration-300 filter grayscale group-hover:grayscale-0"
-                 src="../../../assets/images/logoWEG.svg" alt="Marca 2">
+            <img class="h-20 w-auto mx-auto mb-2 brand-logo group-hover:scale-110 transition-transform duration-300 filter grayscale group-hover:grayscale-0"
+                 src="../../../assets/images/logoWEG.svg" 
+                 alt="Marca 2">
             <span class="text-sm font-medium text-gray-600 group-hover:text-gray-800">Marca 2</span>
           </div>
         </div>
@@ -251,8 +250,9 @@
         <!-- Marca 3 -->
         <div class="p-8 flex items-center justify-center hover:bg-gray-50 transition-colors duration-300 group">
           <div class="text-center">
-            <img class="h-16 w-auto mx-auto mb-2 group-hover:scale-110 transition-transform duration-300 filter grayscale group-hover:grayscale-0"
-                 src="../../../assets/images/logoWEG.svg" alt="Marca 3">
+            <img class="h-20 w-auto mx-auto mb-2 brand-logo group-hover:scale-110 transition-transform duration-300 filter grayscale group-hover:grayscale-0"
+                 src="../../../assets/images/logoWEG.svg" 
+                 alt="Marca 3">
             <span class="text-sm font-medium text-gray-600 group-hover:text-gray-800">Marca 3</span>
           </div>
         </div>
@@ -260,8 +260,9 @@
         <!-- Marca 4 -->
         <div class="p-8 flex items-center justify-center hover:bg-gray-50 transition-colors duration-300 group">
           <div class="text-center">
-            <img class="h-16 w-auto mx-auto mb-2 group-hover:scale-110 transition-transform duration-300 filter grayscale group-hover:grayscale-0"
-                 src="../../../assets/images/logoWEG.svg" alt="Marca 4">
+            <img class="h-20 w-auto mx-auto mb-2 brand-logo group-hover:scale-110 transition-transform duration-300 filter grayscale group-hover:grayscale-0"
+                 src="../../../assets/images/logoWEG.svg" 
+                 alt="Marca 4">
             <span class="text-sm font-medium text-gray-600 group-hover:text-gray-800">Marca 4</span>
           </div>
         </div>
@@ -269,8 +270,9 @@
         <!-- Marca 5 -->
         <div class="p-8 flex items-center justify-center hover:bg-gray-50 transition-colors duration-300 group">
           <div class="text-center">
-            <img class="h-16 w-auto mx-auto mb-2 group-hover:scale-110 transition-transform duration-300 filter grayscale group-hover:grayscale-0"
-                 src="../../../assets/images/logoWEG.svg" alt="Marca 5">
+            <img class="h-20 w-auto mx-auto mb-2 brand-logo group-hover:scale-110 transition-transform duration-300 filter grayscale group-hover:grayscale-0"
+                 src="../../../assets/images/logoWEG.svg" 
+                 alt="Marca 5">
             <span class="text-sm font-medium text-gray-600 group-hover:text-gray-800">Marca 5</span>
           </div>
         </div>
@@ -278,8 +280,9 @@
         <!-- Marca 6 -->
         <div class="p-8 flex items-center justify-center hover:bg-gray-50 transition-colors duration-300 group">
           <div class="text-center">
-            <img class="h-16 w-auto mx-auto mb-2 group-hover:scale-110 transition-transform duration-300 filter grayscale group-hover:grayscale-0"
-                 src="../../../assets/images/logoWEG.svg" alt="Marca 6">
+            <img class="h-20 w-auto mx-auto mb-2 brand-logo group-hover:scale-110 transition-transform duration-300 filter grayscale group-hover:grayscale-0"
+                 src="../../../assets/images/logoWEG.svg" 
+                 alt="Marca 6">
             <span class="text-sm font-medium text-gray-600 group-hover:text-gray-800">Marca 6</span>
           </div>
         </div>
@@ -287,8 +290,9 @@
         <!-- Marca 7 -->
         <div class="p-8 flex items-center justify-center hover:bg-gray-50 transition-colors duration-300 group">
           <div class="text-center">
-            <img class="h-16 w-auto mx-auto mb-2 group-hover:scale-110 transition-transform duration-300 filter grayscale group-hover:grayscale-0"
-                 src="../../../assets/images/logoWEG.svg" alt="Marca 7">
+            <img class="h-20 w-auto mx-auto mb-2 brand-logo group-hover:scale-110 transition-transform duration-300 filter grayscale group-hover:grayscale-0"
+                 src="../../../assets/images/logoWEG.svg" 
+                 alt="Marca 7">
             <span class="text-sm font-medium text-gray-600 group-hover:text-gray-800">Marca 7</span>
           </div>
         </div>
@@ -296,8 +300,9 @@
         <!-- Marca 8 -->
         <div class="p-8 flex items-center justify-center hover:bg-gray-50 transition-colors duration-300 group">
           <div class="text-center">
-            <img class="h-16 w-auto mx-auto mb-2 group-hover:scale-110 transition-transform duration-300 filter grayscale group-hover:grayscale-0"
-                 src="../../../assets/images/logoWEG.svg" alt="Marca 8">
+            <img class="h-20 w-auto mx-auto mb-2 brand-logo group-hover:scale-110 transition-transform duration-300 filter grayscale group-hover:grayscale-0"
+                 src="../../../assets/images/logoWEG.svg" 
+                 alt="Marca 8">
             <span class="text-sm font-medium text-gray-600 group-hover:text-gray-800">Marca 8</span>
           </div>
         </div>

@@ -11,8 +11,8 @@ import { SeoService } from 'src/app/services/seo/seo.service';
 })
 export class CatalogComponent implements OnInit {
   // Variavel para armazenar os produtos
-  public allProducts: any[] = [];
-  public products: any[] = [];
+  public allProducts: Product[] = [];
+  public products: Product[] = [];
 
   // Variavel para armazenar as categorias
   public categories: any[] = [];
@@ -35,6 +35,9 @@ export class CatalogComponent implements OnInit {
   public minPrice: number = 0;
   public maxPrice: number = 0;
 
+  // Paginação
+  public indexPage: number = 1;
+
   // Injetar o serviço do carrinho
   cartService = inject(CartService);
 
@@ -49,25 +52,25 @@ export class CatalogComponent implements OnInit {
     // Configurar SEO para página de catálogo
     this.setupCatalogSeo();
 
-    // Buscando Todos os Produtos
-    this.productsService.getProducts().subscribe((data: any[]) => {
-      this.allProducts = data;
-      this.products = data;
+    // Buscando Todos os Produtos e filtrando apenas produtos em estoque
+    this.productsService.getAllProducts().subscribe((data: Product[]) => {
+      // Filtrar apenas produtos que têm quantidade_por_fardo >= 1 (em estoque)
+      this.allProducts = data.filter(product => product.quantidade_por_fardo >= 1);
       // Definir preços mínimo e máximo automaticamente
       this.setDefaultPriceRange();
     })
+
+    this.productsService.getProducts(this.indexPage.toString()).subscribe((data: Product[]) => {
+      // Filtrar apenas produtos que têm quantidade_por_fardo >= 1 (em estoque)
+      this.products = data.filter(product => product.quantidade_por_fardo >= 1);
+      // Definir preços mínimo e máximo automaticamente
+      this.setDefaultPriceRange();
+    });
 
     // Buscar Todas as Categorias
     this.productsService.getCategories().subscribe((data: any[]) => {
       this.categories = data
     })
-
-    // Buscar Todas as Marcas
-    this.productsService.getProducts().subscribe((data: any[]) => {
-      // Se for igual retirar a repetição
-      this.brands = [...new Set(data.map(product => product.brand))];
-      return this.brands;
-    });
 
     // Buscar Todos os Tamanhos
     this.productsService.getSize().subscribe((data: any[]) => {
@@ -82,7 +85,7 @@ export class CatalogComponent implements OnInit {
 
   private setDefaultPriceRange() {
     if (this.allProducts.length > 0) {
-      const prices = this.allProducts.map(product => product.price);
+      const prices = this.allProducts.map(product => product.preco);
       this.minPrice = Math.min(...prices);
       this.maxPrice = Math.max(...prices);
     }
@@ -92,19 +95,15 @@ export class CatalogComponent implements OnInit {
     let filteredProducts = [...this.allProducts];
 
     if (this.selectedCategories.size > 0) {
-      filteredProducts = filteredProducts.filter(product => this.selectedCategories.has(product.category));
-    }
-
-    if (this.selectedBrands.size > 0) {
-      filteredProducts = filteredProducts.filter(product => this.selectedBrands.has(product.brand));
+      filteredProducts = filteredProducts.filter(product => this.selectedCategories.has(product.familia_tintas));
     }
 
     if (this.selectedSizes.size > 0) {
-      filteredProducts = filteredProducts.filter(product => this.selectedSizes.has(product.size));
+      filteredProducts = filteredProducts.filter(product => this.selectedSizes.has(product.conteudo_embalagem));
     }
 
     if (this.selectedColors.size > 0) {
-      filteredProducts = filteredProducts.filter(product => this.selectedColors.has(product.color));
+      filteredProducts = filteredProducts.filter(product => this.selectedColors.has(product.cor_comercial_tinta));
     }
 
     this.products = filteredProducts;
@@ -123,24 +122,24 @@ export class CatalogComponent implements OnInit {
 
     // Aplicar filtros existentes primeiro
     if (this.selectedCategories.size > 0) {
-      filteredProducts = filteredProducts.filter(product => this.selectedCategories.has(product.category));
+      filteredProducts = filteredProducts.filter(product => this.selectedCategories.has(product.familia_tintas));
     }
 
     if (this.selectedBrands.size > 0) {
-      filteredProducts = filteredProducts.filter(product => this.selectedBrands.has(product.brand));
+      filteredProducts = filteredProducts.filter(product => this.selectedBrands.has(product.linha_produtos_tintas));
     }
 
     if (this.selectedSizes.size > 0) {
-      filteredProducts = filteredProducts.filter(product => this.selectedSizes.has(product.size));
+      filteredProducts = filteredProducts.filter(product => this.selectedSizes.has(product.conteudo_embalagem));
     }
 
     if (this.selectedColors.size > 0) {
-      filteredProducts = filteredProducts.filter(product => this.selectedColors.has(product.color));
+      filteredProducts = filteredProducts.filter(product => this.selectedColors.has(product.cor_comercial_tinta));
     }
 
     // Aplicar filtro de preço
     filteredProducts = filteredProducts.filter(product =>
-      product.price >= minPrice && product.price <= maxPrice
+      product.preco >= minPrice && product.preco <= maxPrice
     );
 
     this.products = filteredProducts;
@@ -149,7 +148,7 @@ export class CatalogComponent implements OnInit {
   // Pegar preço máximo dos produtos
   getMaxPrice(): number {
     if (this.allProducts.length === 0) return 1000;
-    return Math.max(...this.allProducts.map(product => product.price));
+    return Math.max(...this.allProducts.map(product => product.preco));
   }
 
   // Mostrar os produtos por categoria
@@ -159,17 +158,6 @@ export class CatalogComponent implements OnInit {
       this.selectedCategories.add(category);
     } else {
       this.selectedCategories.delete(category);
-    }
-    this.applyFilters();
-  }
-
-  // Mostrar os produtos por marca
-  getProductBrand(event: any, brand: string) {
-    const isChecked = event.target.checked;
-    if (isChecked) {
-      this.selectedBrands.add(brand);
-    } else {
-      this.selectedBrands.delete(brand);
     }
     this.applyFilters();
   }
@@ -197,12 +185,17 @@ export class CatalogComponent implements OnInit {
 
   // Mostrar o numero de produtos por Tamanho
   getNumberOfProductsBySize(size: string): number {
-    return this.allProducts.filter(product => product.size === size).length;
+    return this.allProducts.filter(product => product.conteudo_embalagem === size).length;
+  }
+
+  // Mostrar o numero de produtos por Categoria
+  getNumberOfProductsByCategory(category: string): number {
+    return this.allProducts.filter(product => product.familia_tintas === category).length;
   }
 
   // Mostrar o numero de produtos por Cor
   getNumberOfProductsByColor(color: string): number {
-    return this.allProducts.filter(product => product.color === color).length;
+    return this.allProducts.filter(product => product.cor_comercial_tinta === color).length;
   }
 
   // Navegar para detalhes do produto
@@ -213,7 +206,6 @@ export class CatalogComponent implements OnInit {
   // Limpar todos os filtros
   clearAllFilters() {
     this.selectedCategories.clear();
-    this.selectedBrands.clear();
     this.selectedSizes.clear();
     this.selectedColors.clear();
     this.products = [...this.allProducts];
@@ -224,7 +216,7 @@ export class CatalogComponent implements OnInit {
   addToCart(product: Product) {
     this.cartService.addToCart(product, 1);
     // Opcional: mostrar toast de sucesso
-    console.log('Produto adicionado ao carrinho:', product.name);
+    console.log('Produto adicionado ao carrinho:', product.descricao);
   }
 
   // Navegar para página de detalhes do produto
@@ -241,5 +233,34 @@ export class CatalogComponent implements OnInit {
       url: 'https://tpstintas.com.br/catalog',
       type: 'website'
     });
+  }
+
+  // Métodos de Paginação
+  nextPage() {
+    this.indexPage++;
+    this.productsService.getProducts(this.indexPage.toString()).subscribe((data: Product[]) => {
+      // Filtrar apenas produtos que têm quantidade_por_fardo >= 1 (em estoque)
+      this.products = data.filter(product => product.quantidade_por_fardo >= 1);
+      // Definir preços mínimo e máximo automaticamente
+      this.setDefaultPriceRange();
+    }, error => {
+      console.error('Erro ao carregar produtos da próxima página:', error);
+      this.indexPage--; // Reverter a página em caso de erro
+    });
+  }
+
+  previousPage() {
+    if (this.indexPage > 1) {
+      this.indexPage--;
+      this.productsService.getProducts(this.indexPage.toString()).subscribe((data: Product[]) => {
+        // Filtrar apenas produtos que têm quantidade_por_fardo >= 1 (em estoque)
+        this.products = data.filter(product => product.quantidade_por_fardo >= 1);
+        // Definir preços mínimo e máximo automaticamente
+        this.setDefaultPriceRange();
+      }, error => {
+        console.error('Erro ao carregar produtos da página anterior:', error);
+        this.indexPage++; // Reverter a página em caso de erro
+      });
+    }
   }
 }

@@ -50,4 +50,19 @@ export class SidebarComponent implements OnInit, OnDestroy {
       this.router.navigate(['/login']);
     }
   }
+
+  // Método para verificar se o usuário pode editar
+  canEdit(): boolean {
+    return this.authService.canEdit();
+  }
+
+  // Método para obter informações do usuário atual
+  getCurrentUserInfo() {
+    return this.authService.getCurrentUserInfo();
+  }
+
+  // Método para obter nome do usuário atual
+  getCurrentUsername(): string {
+    return this.authService.getCurrentUsername();
+  }
 }

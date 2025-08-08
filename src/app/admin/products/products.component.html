@@ -8,6 +8,7 @@
       </div>
       <div class="mt-4 sm:mt-0">
         <button
+          *ngIf="canEdit()"
           routerLink="/admin/products/add"
           class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center space-x-2">
           <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -15,6 +16,13 @@
           </svg>
           <span>Adicionar Produto</span>
         </button>
+        <div *ngIf="!canEdit()" class="text-sm text-gray-500 bg-gray-100 px-6 py-3 rounded-lg flex items-center space-x-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+          </svg>
+          <span>Modo Visualização</span>
+        </div>
       </div>
     </div>
   </div>
@@ -30,7 +38,7 @@
             type="text"
             [(ngModel)]="searchTerm"
             (input)="onSearchChange()"
-            placeholder="Buscar por nome ou marca..."
+            placeholder="Buscar por descrição, código ou marca..."
             class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
           <svg class="w-5 h-5 text-gray-400 absolute left-3 top-2.5" fill="currentColor" viewBox="0 0 20 20">
             <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/>
@@ -46,8 +54,8 @@
           (change)="onCategoryChange()"
           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
           <option value="all">Todas as Categorias</option>
-          <option *ngFor="let category of categories" [value]="category.name">
-            {{category.name}} ({{category.qtd}})
+          <option *ngFor="let category of categories" [value]="category">
+            {{category}}
           </option>
         </select>
       </div>
@@ -71,31 +79,32 @@
     <div *ngFor="let product of filteredProducts" class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
       <!-- Product Image -->
       <div class="h-48 bg-gray-100 flex items-center justify-center">
-        <img [src]="product.image" [alt]="product.name" class="h-32 w-32 object-contain">
+        <img [src]="getProductImageUrl(product)" [alt]="product.descricao" class="h-32 w-32 object-contain">
       </div>
 
       <!-- Product Info -->
       <div class="p-6">
         <div class="flex items-start justify-between mb-2">
-          <h3 class="text-lg font-semibold text-gray-900 truncate">{{product.name}}</h3>
+          <h3 class="text-lg font-semibold text-gray-900 truncate">{{product.descricao}}</h3>
           <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-            {{product.category}}
+            {{product.familia_tintas}}
           </span>
         </div>
 
         <div class="space-y-2 mb-4">
-          <div class="flex justify-between text-sm">
+          <div class="flex justify-between text-sm" *ngIf="product.linha_produtos_tintas">
             <span class="text-gray-600">Marca:</span>
-            <span class="font-medium">{{product.brand}}</span>
+            <span class="font-medium">{{product.linha_produtos_tintas}}</span>
           </div>
           <div class="flex justify-between text-sm">
             <span class="text-gray-600">Tamanho:</span>
-            <span class="font-medium">{{product.size}}</span>
+            <span class="font-medium">{{product.conteudo_embalagem}}</span>
           </div>
           <div class="flex justify-between text-sm">
             <span class="text-gray-600">Cor:</span>
             <div class="flex items-center space-x-2">
-              <span class="font-medium">{{product.color}}</span>
+              <span class="font-medium" *ngIf="product.cor_comercial_tinta || product.cor_comercial_tinta != ''">{{product.cor_comercial_tinta}}</span>
+              <span class="text-gray-400" *ngIf="!product.cor_comercial_tinta || product.cor_comercial_tinta == '' || product.cor_comercial_tinta === '-'">Sem cor definida</span>
             </div>
           </div>
         </div>
@@ -103,16 +112,14 @@
         <!-- Price -->
         <div class="mb-4">
           <div class="flex items-center space-x-2">
-            <span class="text-2xl font-bold text-gray-900">R$ {{product.price.toFixed(2)}}</span>
-            <span *ngIf="product.descont > 0" class="text-sm text-green-600 bg-green-100 px-2 py-1 rounded">
-              {{product.descont}}% OFF
-            </span>
+            <span class="text-2xl font-bold text-gray-900">R$ {{product.preco}}</span>
           </div>
         </div>
 
         <!-- Actions -->
         <div class="flex space-x-2">
           <button
+            *ngIf="canEdit()"
             (click)="editProduct(product.id)"
             class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg font-medium transition-colors flex items-center justify-center space-x-2">
             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -122,6 +129,7 @@
           </button>
 
           <button
+            *ngIf="canEdit()"
             (click)="deleteProduct(product.id)"
             class="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-lg font-medium transition-colors flex items-center justify-center space-x-2">
             <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
@@ -130,6 +138,15 @@
             </svg>
             <span>Excluir</span>
           </button>
+
+          <!-- Modo visualização para usuários sem permissão -->
+          <div *ngIf="!canEdit()" class="flex-1 bg-gray-100 text-gray-600 py-2 px-4 rounded-lg font-medium flex items-center justify-center space-x-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+            </svg>
+            <span>Visualizar</span>
+          </div>
         </div>
       </div>
     </div>
@@ -144,10 +161,14 @@
     <p class="mt-1 text-sm text-gray-500">Tente ajustar os filtros ou adicionar novos produtos.</p>
     <div class="mt-6">
       <button
+        *ngIf="canEdit()"
         routerLink="/admin/products/add"
         class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-colors">
         Adicionar Primeiro Produto
       </button>
+      <div *ngIf="!canEdit()" class="text-sm text-gray-500">
+        Apenas administradores podem adicionar produtos.
+      </div>
     </div>
   </div>
 </div>

@@ -13,14 +13,6 @@ export class ShoppingComponent {
   // Número do WhatsApp da empresa (substitua pelo número real)
   private readonly whatsappNumber = '5565993421407';
 
-  // Calcular preço final com desconto
-  getFinalPrice(product: Product): number {
-    if (product.descont > 0) {
-      return product.price - (product.price * product.descont / 100);
-    }
-    return product.price;
-  }
-
   // Atualizar quantidade de um item
   updateQuantity(productId: number, quantity: number): void {
     this.cartService.updateQuantity(productId, quantity);
@@ -36,6 +28,10 @@ export class ShoppingComponent {
     if (confirm('Tem certeza que deseja limpar todo o carrinho?')) {
       this.cartService.clearCart();
     }
+  }
+
+  getFinalPrice(product: Product): number {
+    return product.preco;
   }
 
   // Enviar para WhatsApp

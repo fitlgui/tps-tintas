@@ -4,4 +4,38 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Melhorias na qualidade de imagens */
+@layer base {
+  img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+  
+  .high-quality-image {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
+    filter: contrast(1.1) brightness(1.05);
+  }
+}
+
+/* Utilities para melhor renderização */
+@layer utilities {
+  .image-crisp {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+  
+  .image-smooth {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: auto;
+  }
+  
+  .icon-sharp {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    filter: contrast(1.2);
+  }
+}
+
 /* O resto do seu CSS global pode vir depois */

@@ -1,11 +1,26 @@
 // src/app/core/services/auth.service.ts
 import { Injectable, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable, catchError, map, of, tap, timeout } from 'rxjs';
+import { environment } from 'src/environment/enviroment';
 
 interface UserCredentials {
   username: string;
   password: string;
   name?: string;
   email?: string;
+  role?: string;
+}
+
+interface ApiUser {
+  id: number;
+  name: string;
+  email: string;
+  age: number;
+  password: string;
+  role: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 @Injectable({
@@ -16,8 +31,12 @@ export class AuthService {
   private loggedIn = signal<boolean>(false);
   private sessionTimeout: any;
   private readonly SESSION_DURATION = 60 * 60 * 1000; // 60 minutos em millisegundos
+  private currentUser: ApiUser | null = null;
 
-  // Credenciais padrão do sistema
+  // API URL base
+  private readonly apiUrl = environment.apiUrl;
+
+  // Credenciais padrão do sistema (fallback)
   private defaultCredentials: UserCredentials = {
     username: 'admin',
     password: '1234',
@@ -25,10 +44,13 @@ export class AuthService {
     email: 'admin@weg.com'
   };
 
-  constructor() {
+  constructor(private http: HttpClient) {
     // Para persistir o login entre reloads da página, podemos verificar o localStorage
     this.checkStoredSession();
     this.loadStoredCredentials();
+    
+    // Expor o serviço globalmente para debug
+    (window as any).authService = this;
   }
 
   private loadStoredCredentials(): void {
@@ -49,19 +71,127 @@ export class AuthService {
   private checkStoredSession(): void {
     const storedStatus = localStorage.getItem('isLoggedIn');
     const loginTime = localStorage.getItem('loginTime');
+    const storedUser = localStorage.getItem('currentUserData');
 
-    if (storedStatus === 'true' && loginTime) {
+    if (storedStatus === 'true' && loginTime && storedUser) {
       const currentTime = new Date().getTime();
       const timeElapsed = currentTime - parseInt(loginTime);
 
       if (timeElapsed < this.SESSION_DURATION) {
-        this.loggedIn.set(true);
-        this.setSessionTimeout(this.SESSION_DURATION - timeElapsed);
+        try {
+          this.currentUser = JSON.parse(storedUser);
+          this.loggedIn.set(true);
+          this.setSessionTimeout(this.SESSION_DURATION - timeElapsed);
+        } catch (error) {
+          console.error('Erro ao carregar dados do usuário:', error);
+          this.clearSession();
+        }
       } else {
         // Sessão expirada
         this.clearSession();
       }
     }
+  }
+
+  // Método para buscar todos os usuários da API
+  private getUsers(): Observable<ApiUser[]> {
+    console.log('🌐 Chamando API de usuários:', `${this.apiUrl}/users`);
+    console.log('🔧 Fazendo requisição HTTP GET...');
+    
+    return this.http.get<any>(`${this.apiUrl}/users`).pipe(
+      timeout(3000), // 30 segundos de timeout
+      tap((response) => {
+        console.log('✅ Resposta recebida da API:', response);
+      }),
+      map((response) => {
+        console.log('Resposta completa da API /users:', response);
+        
+        // Verificar diferentes estruturas de resposta
+        let users: ApiUser[] = [];
+        
+        if (Array.isArray(response)) {
+          // Se a resposta é um array direto
+          users = response;
+        } else if (response.users && Array.isArray(response.users)) {
+          // Se tem propriedade 'users'
+          users = response.users;
+        } else if (response.items && Array.isArray(response.items)) {
+          // Se tem propriedade 'items' (paginação)
+          users = response.items;
+        } else if (response.data && Array.isArray(response.data)) {
+          // Se tem propriedade 'data'
+          users = response.data;
+        } else {
+          console.error('Estrutura de resposta não reconhecida:', response);
+          return [];
+        }
+        
+        console.log('Usuários extraídos:', users);
+        console.log('Total de usuários:', users.length);
+        
+        return users;
+      }),
+      catchError((error) => {
+        console.error('❌ Erro ao buscar usuários da API:', error);
+        console.error('Status do erro:', error.status);
+        console.error('Mensagem do erro:', error.message);
+        console.error('Error completo:', JSON.stringify(error, null, 2));
+        console.error('URL tentada:', `${this.apiUrl}/users`);
+        
+        if (error.status === 0) {
+          console.error('❌ Erro de CORS ou rede - API inacessível');
+          console.error('Isso geralmente indica problema de CORS ou timeout');
+        } else if (error.status === 404) {
+          console.error('❌ Endpoint /users não encontrado');
+        } else if (error.status >= 500) {
+          console.error('❌ Erro interno do servidor');
+        }
+        
+        return of([]);
+      })
+    );
+  }
+
+  // Método para validar credenciais na API
+  private validateUserCredentials(username: string, password: string): Observable<ApiUser | null> {
+    
+    return this.getUsers().pipe(
+      map((users: ApiUser[]) => {
+        
+        // Verificar se users é um array
+        if (!Array.isArray(users)) {
+          console.error('Resposta da API não é um array:', users);
+          return null;
+        }
+
+        const user = users.find(u => {
+          const nameMatch = u.name?.toLowerCase() === username.toLowerCase();
+          const emailMatch = u.email?.toLowerCase() === username.toLowerCase();
+          const isAdmin = u.role === 'admin' || u.role === 'user';
+          const passwordMatch = u.password === password;
+          
+          return (nameMatch || emailMatch) && isAdmin;
+        });
+
+        if (user) {
+          console.log('Usuário encontrado:', user);
+          if (user.password === password) {
+            return user;
+          } else {
+            console.warn('Senha ou usuário incorretos');
+            return null;
+          }
+        } else {
+          console.log('Usuário não encontrado ou não é admin');
+        }
+
+        return null;
+      }),
+      catchError((error) => {
+        console.error('Erro na validação de credenciais:', error);
+        return of(null);
+      })
+    );
   }
 
   private setSessionTimeout(duration: number): void {
@@ -89,6 +219,9 @@ export class AuthService {
   private clearSession(): void {
     localStorage.removeItem('isLoggedIn');
     localStorage.removeItem('loginTime');
+    localStorage.removeItem('currentUserData');
+    localStorage.removeItem('currentUser');
+    this.currentUser = null;
     this.loggedIn.set(false);
     this.clearSessionTimeout();
   }
@@ -118,12 +251,60 @@ export class AuthService {
     const timeElapsed = currentTime - parseInt(loginTime);
     const timeRemaining = this.SESSION_DURATION - timeElapsed;
 
-    return Math.max(0, Math.floor(timeRemaining / (60 * 1000))); // retorna em minutos
+    return Math.max(0, Math.floor(timeRemaining / (60 * 100))); // retorna em minutos
   }
 
-  // Método que sua página de login chamaria
-  login(user: string, pass: string): boolean {
-    // Verifica com as credenciais atuais
+  // Método que sua página de login chamaria - agora retorna Observable
+  login(user: string, pass: string): Observable<boolean> {
+    return this.validateUserCredentials(user, pass).pipe(
+      map((apiUser: ApiUser | null) => {
+        if (apiUser) {
+          const currentTime = new Date().getTime();
+
+          this.currentUser = apiUser;
+          this.loggedIn.set(true);
+          localStorage.setItem('isLoggedIn', 'true');
+          localStorage.setItem('loginTime', currentTime.toString());
+          localStorage.setItem('currentUser', apiUser.name || apiUser.email);
+          localStorage.setItem('currentUserData', JSON.stringify(apiUser));
+
+          // Configurar timeout para expiração
+          this.setSessionTimeout(this.SESSION_DURATION);
+
+          console.info(`✅ Login realizado para usuário: ${apiUser.name}. Sessão expira em 60 minutos.`);
+          return true;
+        } else {
+          console.warn('❌ Usuário não encontrado na API, tentando credenciais padrão...');
+          // Fallback para credenciais padrão (apenas em desenvolvimento)
+          if (user === this.defaultCredentials.username && pass === this.defaultCredentials.password) {
+            const currentTime = new Date().getTime();
+
+            this.loggedIn.set(true);
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('loginTime', currentTime.toString());
+            localStorage.setItem('currentUser', user);
+
+            // Configurar timeout para expiração
+            this.setSessionTimeout(this.SESSION_DURATION);
+
+            console.info('✅ Login realizado com credenciais padrão. Sessão expira em 60 minutos.');
+            return true;
+          }
+          console.warn('❌ Credenciais inválidas');
+          return false;
+        }
+      }),
+      catchError((error) => {
+        console.error('❌ Erro durante o login:', error);
+        return of(false);
+      })
+    );
+  }
+
+  // Método sincronizado para compatibilidade (deprecated)
+  loginSync(user: string, pass: string): boolean {
+    console.warn('loginSync está deprecated. Use login() que retorna Observable.');
+    // Verifica com as credenciais padrão apenas
     if (user === this.defaultCredentials.username && pass === this.defaultCredentials.password) {
       const currentTime = new Date().getTime();
 
@@ -134,8 +315,6 @@ export class AuthService {
 
       // Configurar timeout para expiração
       this.setSessionTimeout(this.SESSION_DURATION);
-
-      console.log('Login realizado. Sessão expira em 60 minutos.');
       return true;
     }
     return false;
@@ -160,32 +339,123 @@ export class AuthService {
 
   // Métodos para gerenciar perfil
   getCurrentUser(): UserCredentials {
+    if (this.currentUser) {
+      return {
+        username: this.currentUser.name, // Usar name como username já que não tem username na API
+        password: '***', // Não expor senha
+        name: this.currentUser.name,
+        email: this.currentUser.email
+      };
+    }
     return { ...this.defaultCredentials };
   }
 
-  updateProfile(newData: Partial<UserCredentials>): boolean {
-    try {
-      this.defaultCredentials = { ...this.defaultCredentials, ...newData };
-      this.saveCredentials();
-      console.log('Perfil atualizado com sucesso');
-      return true;
-    } catch (error) {
-      console.error('Erro ao atualizar perfil:', error);
-      return false;
-    }
+  getCurrentApiUser(): ApiUser | null {
+    return this.currentUser;
   }
 
-  changePassword(currentPassword: string, newPassword: string): boolean {
-    if (currentPassword === this.defaultCredentials.password) {
-      this.defaultCredentials.password = newPassword;
-      this.saveCredentials();
-      console.log('Senha alterada com sucesso');
-      return true;
-    }
-    return false;
+  // Método para verificar se usuário é admin
+  isAdmin(): boolean {
+    return this.currentUser?.role === 'admin' || this.currentUser?.role === 'user' || this.isLoggedIn();
   }
+
+  // Método para verificar se usuário pode editar (apenas admin)
+  canEdit(): boolean {
+    // Se não há usuário atual mas está logado, pode ser fallback para credenciais padrão (admin)
+    if (!this.currentUser && this.isLoggedIn()) {
+      return true; // Fallback para credenciais padrão
+    }
+    return this.currentUser?.role === 'admin';
+  }
+
+  // Método para verificar se usuário pode apenas visualizar
+  canView(): boolean {
+    return this.isLoggedIn() && (this.currentUser?.role === 'admin' || this.currentUser?.role === 'user');
+  }
+
+  // Método para obter informações do usuário atual
+  getCurrentUserInfo(): { name: string; email: string; role: string; age: number } | null {
+    if (this.currentUser) {
+      return {
+        name: this.currentUser.name,
+        email: this.currentUser.email,
+        role: this.currentUser.role,
+        age: this.currentUser.age
+      };
+    }
+    return null;
+  }
+
+  
 
   getCurrentUsername(): string {
-    return localStorage.getItem('currentUser') || this.defaultCredentials.username;
+    if (this.currentUser) {
+      return this.currentUser.name || this.currentUser.email;
+    }
+    return localStorage.getItem('currentUser') || this.defaultCredentials.name || 'Usuário';
+  }
+
+  // Método para listar todos os administradores
+  getAdminUsers(): Observable<ApiUser[]> {
+    return this.getUsers().pipe(
+      map(users => users.filter(user => user.role === 'admin'))
+    );
+  }
+
+  // Método público para debug - listar todos os usuários
+  getAllUsersForDebug(): Observable<ApiUser[]> {
+    console.log('🔍 Método de debug - buscando todos os usuários...');
+    return this.getUsers();
+  }
+
+  // Método público para testar conexão com API
+  testApiConnection(): Observable<boolean> {
+    console.log('🔗 Testando conexão com API...');
+    console.log('URL completa:', `${this.apiUrl}/users`);
+    
+    return this.http.get(`${this.apiUrl}/users`).pipe(
+      timeout(30000), // 30 segundos de timeout
+      tap((response) => {
+        console.log('✅ Teste de API bem-sucedido. Resposta:', response);
+      }),
+      map((response) => {
+        console.log('✅ API respondeu:', response);
+        return true;
+      }),
+      catchError((error) => {
+        console.error('❌ Teste de API falhou:', error);
+        console.error('Detalhes do erro:', {
+          status: error.status,
+          statusText: error.statusText,
+          message: error.message,
+          url: error.url,
+          headers: error.headers
+        });
+        return of(false);
+      })
+    );
+  }
+
+  // Método de debug para ser chamado manualmente
+  debugApiCall(): void {
+    console.log('🐛 Iniciando debug da API...');
+    this.testApiConnection().subscribe({
+      next: (success) => {
+        if (success) {
+          console.log('🎉 API funcionando! Agora testando getUsers...');
+          this.getAllUsersForDebug().subscribe({
+            next: (users) => {
+              console.log('👥 Usuários recebidos:', users);
+              const adminUsers = users.filter(u => u.role === 'admin');
+              console.log('👑 Usuários admin:', adminUsers);
+            },
+            error: (err) => console.error('❌ Erro no getUsers:', err)
+          });
+        } else {
+          console.error('💥 API não está acessível');
+        }
+      },
+      error: (err) => console.error('💥 Erro no teste:', err)
+    });
   }
 }

@@ -30,7 +30,7 @@ const routes: Routes = [
     path: 'catalog',
     component: CatalogComponent,
     data: {
-      title: 'Catálogo de Tintas WEG - TPS Tintas Cuiabá | Industriais e Automotivas',
+      title: 'Catálogo de Tintas - TPS Tintas Cuiabá | Industriais e Automotivas',
       description: 'Catálogo completo de tintas WEG industriais, automotivas e residenciais. Cores personalizadas em Cuiabá.',
       keywords: 'catálogo tintas, tintas weg cuiabá, tintas industriais catálogo, preços tintas'
     }

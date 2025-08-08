@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
-
+import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ProductCardComponent } from './shareds/product-card/product-card.component';
@@ -13,6 +13,8 @@ import { LoginComponent } from './auth/login/login.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { ShoppingComponent } from './components/shopping/shopping.component';
 import { OurteamComponent } from './components/ourteam/ourteam.component';
+import { SharedPipesModule } from './shareds/shared-pipes.module';
+import { ProductImagePipe } from './pipes/product-image.pipe';
 
 @NgModule({
   declarations: [
@@ -26,11 +28,14 @@ import { OurteamComponent } from './components/ourteam/ourteam.component';
     ContactComponent,
     ShoppingComponent,
     OurteamComponent,
+    ProductImagePipe
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule,
+    SharedPipesModule
   ],
   providers: [],
   bootstrap: [AppComponent]

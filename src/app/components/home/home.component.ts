@@ -11,7 +11,7 @@ import { SeoService } from 'src/app/services/seo/seo.service';
 })
 export class HomeComponent implements OnInit {
 
-  public produtos: any[] = []
+  public produtos: Product[] = []
   cartService = inject(CartService);
 
   constructor(
@@ -26,7 +26,7 @@ export class HomeComponent implements OnInit {
     this.setupHomeSeo();
 
     // Obtendo Produtos do Serviço
-    this.productsService.getProducts().subscribe((data: any[])=> {
+    this.productsService.getProducts('6').subscribe((data: Product[])=> {
       this.produtos = data.slice(0, 4); // Limitando a 4 produtos para a exibição inicial
     })
   }
@@ -48,6 +48,6 @@ export class HomeComponent implements OnInit {
 
   addToCart(product: Product): void {
     this.cartService.addToCart(product, 1);
-    console.log('Produto adicionado ao carrinho:', product.name);
+    console.log('Produto adicionado ao carrinho:', product.descricao);
   }
 }

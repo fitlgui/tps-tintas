@@ -48,7 +48,7 @@
               <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
               </svg>
-              <span class="ml-1 text-gray-500 md:ml-2">{{ product.name }}</span>
+              <span class="ml-1 text-gray-500 md:ml-2">{{ product.descricao }}</span>
             </div>
           </li>
         </ol>
@@ -64,7 +64,7 @@
       <div class="space-y-4">
         <!-- Main Image -->
         <div class="aspect-square bg-white rounded-2xl shadow-lg p-8 flex items-center justify-center">
-          <img [src]="productImages[selectedImage]" [alt]="product.name" class="max-w-full max-h-full object-contain">
+          <img [src]="productImages[selectedImage]" [alt]="product.descricao" class="max-w-full max-h-full object-contain">
         </div>
         
         <!-- Thumbnail Gallery -->
@@ -84,38 +84,48 @@
       <div class="space-y-6">
         <!-- Title and Category -->
         <div>
-          <span class="inline-block bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full font-medium">{{ product.category }}</span>
-          <h1 class="text-3xl font-bold text-gray-900 mt-2">{{ product.name }}</h1>
-          <p class="text-lg text-gray-600 mt-1">{{ product.brand }}</p>
+          <span class="inline-block bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full font-medium">{{ product.familia_tintas }}</span>
+          <h1 class="text-3xl font-bold text-gray-900 mt-2">{{ product.descricao }}</h1>
+          <p class="text-lg text-gray-600 mt-1">{{ product.linha_produtos_tintas }}</p>
         </div>
 
         <!-- Price -->
         <div class="bg-gradient-to-r from-green-50 to-blue-50 rounded-xl p-6 border border-green-200">
           <div class="flex items-baseline space-x-3">
             <span class="text-3xl font-bold text-green-600">R$ {{ getFinalPrice() | number:'1.2-2' }}</span>
-            <span *ngIf="product.descont > 0" class="text-lg text-gray-500 line-through">R$ {{ product.price | number:'1.2-2' }}</span>
-            <span *ngIf="product.descont > 0" class="bg-red-500 text-white text-sm px-2 py-1 rounded-full font-bold">-{{ product.descont }}%</span>
           </div>
-          <p *ngIf="getSavings() > 0" class="text-green-600 font-medium mt-1">Você economiza R$ {{ getSavings() | number:'1.2-2' }}</p>
           <p class="text-sm text-gray-600 mt-2">💳 Em até 12x sem juros no cartão</p>
         </div>
 
         <!-- Product Specs -->
         <div class="grid grid-cols-2 gap-4">
           <div class="bg-white rounded-lg p-4 shadow-sm border">
-            <span class="text-sm text-gray-500">Cor</span>
-            <p class="font-semibold text-gray-900">{{ product.color }}</p>
+            <span class="text-sm text-gray-500">Código</span>
+            <p class="font-semibold text-gray-900">{{ product.codigo || 'N/A' }}</p>
           </div>
           <div class="bg-white rounded-lg p-4 shadow-sm border">
-            <span class="text-sm text-gray-500">Tamanho</span>
-            <p class="font-semibold text-gray-900">{{ product.size }}</p>
+            <span class="text-sm text-gray-500">Cor Comercial</span>
+            <p class="font-semibold text-gray-900">{{ product.cor_comercial_tinta || 'N/A' }}</p>
+          </div>
+          <div class="bg-white rounded-lg p-4 shadow-sm border">
+            <span class="text-sm text-gray-500">Tamanho/Embalagem</span>
+            <p class="font-semibold text-gray-900">{{ product.conteudo_embalagem || 'N/A' }}</p>
+          </div>
+          <div class="bg-white rounded-lg p-4 shadow-sm border">
+            <span class="text-sm text-gray-500">Quantidade por Fardo</span>
+            <p class="font-semibold text-gray-900">{{ product.quantidade_por_fardo || 'N/A' }}</p>
           </div>
         </div>
 
         <!-- Stock Status -->
-        <div class="flex items-center space-x-2">
+        <div class="flex items-center space-x-2" *ngIf="product.inStock">
           <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-          <span class="text-green-600 font-medium">{{ product.stockQuantity }} unidades em estoque</span>
+          <span class="text-green-600 font-medium">{{ product.stockQuantity }} unidades por fardo disponíveis</span>
+        </div>
+        
+        <div class="flex items-center space-x-2" *ngIf="!product.inStock">
+          <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+          <span class="text-red-600 font-medium">Produto fora de estoque</span>
         </div>
 
         <!-- Quantity Selector -->
@@ -139,7 +149,7 @@
         </div>
 
         <!-- Action Buttons -->
-        <div class="space-y-3">
+        <div class="space-y-3" *ngIf="product.inStock">
           <button 
             (click)="buyNow()"
             class="w-full bg-gradient-to-r from-green-600 to-green-700 text-white py-4 px-6 rounded-xl font-bold text-lg hover:from-green-700 hover:to-green-800 transform hover:scale-105 transition-all duration-200 shadow-lg">
@@ -150,6 +160,16 @@
             class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-4 px-6 rounded-xl font-bold text-lg hover:from-blue-700 hover:to-blue-800 transform hover:scale-105 transition-all duration-200 shadow-lg">
             🛒 Adicionar ao Carrinho
           </button>
+        </div>
+        
+        <!-- Out of Stock Button -->
+        <div class="space-y-3" *ngIf="!product.inStock">
+          <button 
+            disabled
+            class="w-full bg-gray-400 text-white py-4 px-6 rounded-xl font-bold text-lg cursor-not-allowed opacity-50">
+            Produto Indisponível
+          </button>
+          <p class="text-sm text-gray-600 text-center">Este produto está temporariamente fora de estoque</p>
         </div>
 
         <!-- Trust Badges -->
@@ -182,9 +202,94 @@
             <p class="text-gray-600 leading-relaxed">{{ product.description }}</p>
           </div>
 
+          <!-- Technical Specifications -->
+          <div class="mb-8" *ngIf="product.massa_especifica || product.tempo_secagem || product.tempo_cura || product.metodo_aplicacao || product.temperatura_aplicacao">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Especificações Técnicas</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div *ngIf="product.massa_especifica" class="bg-gray-50 p-4 rounded-lg">
+                <span class="block text-sm text-gray-600 mb-1">Massa Específica</span>
+                <span class="font-semibold text-gray-900">{{ product.massa_especifica }}</span>
+              </div>
+              <div *ngIf="product.tempo_secagem" class="bg-gray-50 p-4 rounded-lg">
+                <span class="block text-sm text-gray-600 mb-1">Tempo de Secagem</span>
+                <span class="font-semibold text-gray-900">{{ product.tempo_secagem }}</span>
+              </div>
+              <div *ngIf="product.tempo_cura" class="bg-gray-50 p-4 rounded-lg">
+                <span class="block text-sm text-gray-600 mb-1">Tempo de Cura</span>
+                <span class="font-semibold text-gray-900">{{ product.tempo_cura }}</span>
+              </div>
+              <div *ngIf="product.metodo_aplicacao" class="bg-gray-50 p-4 rounded-lg">
+                <span class="block text-sm text-gray-600 mb-1">Método de Aplicação</span>
+                <span class="font-semibold text-gray-900">{{ product.metodo_aplicacao }}</span>
+              </div>
+              <div *ngIf="product.temperatura_aplicacao" class="bg-gray-50 p-4 rounded-lg">
+                <span class="block text-sm text-gray-600 mb-1">Temperatura de Aplicação</span>
+                <span class="font-semibold text-gray-900">{{ product.temperatura_aplicacao }}</span>
+              </div>
+              <div *ngIf="product.ambiente_aplicacao" class="bg-gray-50 p-4 rounded-lg">
+                <span class="block text-sm text-gray-600 mb-1">Ambiente de Aplicação</span>
+                <span class="font-semibold text-gray-900">{{ product.ambiente_aplicacao }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Product Properties -->
+          <div class="mb-8" *ngIf="product.acabamento_pintura || product.brilho || product.funcao_tinta || product.relacao_resina || product.cura">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Propriedades do Produto</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div *ngIf="product.acabamento_pintura" class="bg-blue-50 p-4 rounded-lg">
+                <span class="block text-sm text-blue-600 mb-1">Acabamento</span>
+                <span class="font-semibold text-gray-900">{{ product.acabamento_pintura }}</span>
+              </div>
+              <div *ngIf="product.brilho" class="bg-blue-50 p-4 rounded-lg">
+                <span class="block text-sm text-blue-600 mb-1">Brilho</span>
+                <span class="font-semibold text-gray-900">{{ product.brilho }}</span>
+              </div>
+              <div *ngIf="product.funcao_tinta" class="bg-blue-50 p-4 rounded-lg">
+                <span class="block text-sm text-blue-600 mb-1">Função da Tinta</span>
+                <span class="font-semibold text-gray-900">{{ product.funcao_tinta }}</span>
+              </div>
+              <div *ngIf="product.relacao_resina" class="bg-blue-50 p-4 rounded-lg">
+                <span class="block text-sm text-blue-600 mb-1">Resina</span>
+                <span class="font-semibold text-gray-900">{{ product.relacao_resina }}</span>
+              </div>
+              <div *ngIf="product.cura" class="bg-blue-50 p-4 rounded-lg">
+                <span class="block text-sm text-blue-600 mb-1">Cura</span>
+                <span class="font-semibold text-gray-900">{{ product.cura }}</span>
+              </div>
+              <div *ngIf="product.sistema_resina" class="bg-blue-50 p-4 rounded-lg">
+                <span class="block text-sm text-blue-600 mb-1">Sistema de Resina</span>
+                <span class="font-semibold text-gray-900">{{ product.sistema_resina }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Application Information -->
+          <div class="mb-8" *ngIf="product.camadas || product.metodo_preparo || product.processo_pintura || product.diluente_etq">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Informações de Aplicação</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div *ngIf="product.camadas" class="bg-green-50 p-4 rounded-lg">
+                <span class="block text-sm text-green-600 mb-1">Camadas</span>
+                <span class="font-semibold text-gray-900">{{ product.camadas }}</span>
+              </div>
+              <div *ngIf="product.metodo_preparo" class="bg-green-50 p-4 rounded-lg">
+                <span class="block text-sm text-green-600 mb-1">Método de Preparo</span>
+                <span class="font-semibold text-gray-900">{{ product.metodo_preparo }}</span>
+              </div>
+              <div *ngIf="product.processo_pintura" class="bg-green-50 p-4 rounded-lg">
+                <span class="block text-sm text-green-600 mb-1">Processo de Pintura</span>
+                <span class="font-semibold text-gray-900">{{ product.processo_pintura }}</span>
+              </div>
+              <div *ngIf="product.diluente_etq" class="bg-green-50 p-4 rounded-lg">
+                <span class="block text-sm text-green-600 mb-1">Diluente</span>
+                <span class="font-semibold text-gray-900">{{ product.diluente_etq }}</span>
+              </div>
+            </div>
+          </div>
+
           <!-- Features -->
           <div>
-            <h3 class="text-lg font-semibold text-gray-800 mb-3">Características</h3>
+            <h3 class="text-lg font-semibold text-gray-800 mb-3">Características Adicionais</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div *ngFor="let feature of product.features" class="flex items-center space-x-3">
                 <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -206,17 +311,14 @@
              class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:scale-105"
              (click)="viewRelatedProduct(relatedProduct.id)">
           <div class="aspect-square bg-gray-50 p-6 flex items-center justify-center">
-            <img [src]="relatedProduct.image" [alt]="relatedProduct.name" class="max-w-full max-h-full object-contain">
+            <img [src]="relatedProduct | productImage" [alt]="relatedProduct.descricao" class="max-w-full max-h-full object-contain">
           </div>
           <div class="p-4">
-            <h3 class="font-semibold text-gray-900 mb-1 truncate">{{ relatedProduct.name }}</h3>
-            <p class="text-sm text-gray-600 mb-2">{{ relatedProduct.brand }}</p>
+            <h3 class="font-semibold text-gray-900 mb-1 truncate">{{ relatedProduct.descricao }}</h3>
+            <p class="text-sm text-gray-600 mb-2">{{ relatedProduct.linha_produtos_tintas }}</p>
             <div class="flex items-center justify-between">
               <span class="text-lg font-bold text-green-600">
-                R$ {{ (relatedProduct.price - (relatedProduct.price * relatedProduct.descont / 100)) | number:'1.2-2' }}
-              </span>
-              <span *ngIf="relatedProduct.descont > 0" class="text-xs bg-red-500 text-white px-2 py-1 rounded-full">
-                -{{ relatedProduct.descont }}%
+                R$ {{ relatedProduct.preco | number:'1.2-2' }}
               </span>
             </div>
           </div>

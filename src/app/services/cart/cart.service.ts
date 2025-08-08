@@ -112,9 +112,7 @@ export class CartService {
   // Calcular total do carrinho
   getTotalPrice(): number {
     return this.cartItems().reduce((total, item) => {
-      const finalPrice = item.product.descont > 0
-        ? item.product.price - (item.product.price * item.product.descont / 100)
-        : item.product.price;
+      const finalPrice = item.product.preco;
       return total + (finalPrice * item.quantity);
     }, 0);
   }
@@ -129,11 +127,9 @@ export class CartService {
     let message = '*🛒 Pedido do Carrinho de Compras*\n\n';
 
     items.forEach((item, index) => {
-      const finalPrice = item.product.descont > 0
-        ? item.product.price - (item.product.price * item.product.descont / 100)
-        : item.product.price;
+      const finalPrice = item.product.preco;
 
-      message += `*${index + 1}. ${item.product.name}*\n`;
+      message += `*${index + 1}. ${item.product.descricao}*\n`;
       message += `   • Quantidade: ${item.quantity}\n`;
       message += `   • Preço unitário: R$ ${finalPrice.toFixed(2)}\n`;
       message += `   • Subtotal: R$ ${(finalPrice * item.quantity).toFixed(2)}\n\n`;
