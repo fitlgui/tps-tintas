@@ -61,8 +61,12 @@ export class EditToolComponent implements OnInit {
 
     this.toolsService.getToolById(this.toolId).subscribe({
       next: (tool) => {
-        this.currentTool = tool;
-        this.populateForm(tool);
+        if (tool) {
+          this.currentTool = tool;
+          this.populateForm(tool);
+        } else {
+          this.error = 'Ferramenta não encontrada';
+        }
         this.loadingTool = false;
       },
       error: (error) => {

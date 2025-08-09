@@ -26,8 +26,12 @@ export class HomeComponent implements OnInit {
     this.setupHomeSeo();
 
     // Obtendo Produtos do Serviço
-    this.productsService.getProducts('6').subscribe((data: Product[])=> {
-      this.produtos = data.slice(0, 4); // Limitando a 4 produtos para a exibição inicial
+    this.productsService.getAllProducts().subscribe((data: Product[])=> {
+      for(let x = 0; x < data.length && this.produtos.length < 4; x++) {
+        if(data[x].quantidade_por_fardo >= 1 && data[x].preco > 0) {
+          this.produtos.push(data[x]);
+        }
+      }
     })
   }
 

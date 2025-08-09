@@ -1,9 +1,17 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductsService, Product } from '../../services/products/products.service';
+import { ToolsService, Tool } from '../../services/tools/tools.service';
 import { CartService } from '../../services/cart/cart.service';
 
 interface ExtendedProduct extends Product {
+  description?: string;
+  features?: string[];
+  inStock: boolean;
+  stockQuantity: number;
+}
+
+interface ExtendedTool extends Tool {
   description?: string;
   features?: string[];
   inStock: boolean;
@@ -17,30 +25,72 @@ interface ExtendedProduct extends Product {
 })
 export class ProductCardComponent implements OnInit {
   product: ExtendedProduct | null = null;
+  tool: ExtendedTool | null = null;
+  isToolView: boolean = false;
   loading = true;
   error = '';
   cartService = inject(CartService);
   quantity = 1;
   selectedImage = 0;
 
-  // Imagens do produto (serão carregadas dinamicamente)
+  // Imagens do item (serão carregadas dinamicamente)
   productImages: string[] = [];
 
-  // Produtos relacionados
-  relatedProducts: Product[] = [];
+  // Produtos/ferramentas relacionados
+  relatedItems: (Product | Tool)[] = [];
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private productsService: ProductsService
+    private productsService: ProductsService,
+    private toolsService: ToolsService
   ) {}
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      const productId = +params['id'];
-      if (productId) {
-        this.loadProduct(productId);
-        this.loadRelatedProducts();
+      const id = +params['id'];
+      const url = this.router.url;
+      
+      // Detectar se é uma ferramenta pela URL
+      this.isToolView = url.includes('/tools/');
+      
+      if (id) {
+        if (this.isToolView) {
+          this.loadTool(id);
+        } else {
+          this.loadProduct(id);
+        }
+        this.loadRelatedItems();
+      }
+    });
+  }
+
+  loadTool(id: number): void {
+    this.loading = true;
+    this.error = '';
+
+    this.toolsService.getToolById(id).subscribe({
+      next: (tool) => {
+        if (tool) {
+          this.tool = {
+            ...tool,
+            description: this.generateToolDescription(tool),
+            features: this.generateToolFeatures(tool),
+            inStock: true, // Ferramentas sempre disponíveis
+            stockQuantity: 999
+          };
+
+          // Carregar imagens da ferramenta
+          this.loadToolImages(tool);
+        } else {
+          this.error = 'Ferramenta não encontrada';
+        }
+        this.loading = false;
+      },
+      error: (err) => {
+        this.error = 'Erro ao carregar ferramenta';
+        this.loading = false;
+        console.error(err);
       }
     });
   }
@@ -78,6 +128,23 @@ export class ProductCardComponent implements OnInit {
     });
   }
 
+  loadToolImages(tool: Tool): void {
+    // Se há imagem da ferramenta, usar ela
+    if (tool.photo && tool.photo !== '') {
+      const imageUrl = `data:image/jpeg;base64,${tool.photo}`;
+      this.productImages = [imageUrl];
+    } else {
+      // Usar imagens padrão se não houver imagem da ferramenta
+      this.productImages = [
+        'assets/images/cartShoppingTinta.svg',
+        'assets/images/logoWEG.svg'
+      ];
+    }
+    
+    // Reset para primeira imagem
+    this.selectedImage = 0;
+  }
+
   loadProductImages(product: Product): void {
     // Carregar imagem real do produto
     const productImageUrl = this.productsService.getProductImageUrl(product);
@@ -102,7 +169,7 @@ export class ProductCardComponent implements OnInit {
     this.productsService.getAllProducts().subscribe({
       next: (products) => {
         // Filtrar apenas produtos em estoque e diferentes do produto atual
-        this.relatedProducts = products
+        this.relatedItems = products
           .filter(p => p.id !== this.product?.id && p.quantidade_por_fardo >= 1)
           .slice(0, 4);
       },
@@ -110,6 +177,54 @@ export class ProductCardComponent implements OnInit {
         console.error('Erro ao carregar produtos relacionados:', err);
       }
     });
+  }
+
+  loadRelatedItems(): void {
+    if (this.isToolView) {
+      this.loadRelatedTools();
+    } else {
+      this.loadRelatedProducts();
+    }
+  }
+
+  loadRelatedTools(): void {
+    this.toolsService.getTools().subscribe({
+      next: (tools) => {
+        // Filtrar ferramentas diferentes da ferramenta atual
+        this.relatedItems = tools
+          .filter(t => t.id !== this.tool?.id)
+          .slice(0, 4);
+      },
+      error: (err) => {
+        console.error('Erro ao carregar ferramentas relacionadas:', err);
+      }
+    });
+  }
+
+  generateToolDescription(tool: Tool): string {
+    return `${tool.nome} é uma ferramenta profissional que oferece ${tool.descricao}. 
+    Com informações técnicas detalhadas e qualidade garantida, esta ferramenta é ideal 
+    para projetos que exigem precisão e confiabilidade. ${tool.info_tecnica ? 
+    'Características técnicas: ' + tool.info_tecnica : ''}`;
+  }
+
+  generateToolFeatures(tool: Tool): string[] {
+    const features = [];
+    
+    // Características básicas
+    features.push('Ferramenta profissional de alta qualidade');
+    features.push('Ideal para projetos com tintas WEG');
+    
+    // Informações específicas da ferramenta
+    if (tool.nome) features.push(`Nome: ${tool.nome}`);
+    if (tool.descricao) features.push(`Descrição: ${tool.descricao}`);
+    if (tool.info_tecnica) features.push(`Informação técnica: ${tool.info_tecnica}`);
+    if (tool.preco) features.push(`Preço: R$ ${tool.preco }`);
+    
+    features.push('Garantia de qualidade');
+    features.push('Suporte técnico especializado');
+    
+    return features;
   }
 
   generateDescription(product: Product): string {
@@ -155,20 +270,35 @@ export class ProductCardComponent implements OnInit {
     if (product.diluente_etq) features.push(`Diluente: ${product.diluente_etq}`);
     
     // Informações de estoque
-    features.push(`Quantidade por fardo: ${product.quantidade_por_fardo}`);
+    features.push(`Quantidade em estoque: ${product.quantidade_por_fardo}`);
     features.push('Garantia de qualidade WEG');
     
     return features;
   }
 
   getFinalPrice(): number {
-    if (!this.product) return 0;
-    return this.product.preco;
+    if (this.isToolView && this.tool) {
+      return this.tool.preco;
+    }
+    if (!this.isToolView && this.product) {
+      return this.product.preco;
+    }
+    return 0;
+  }
+
+  getCurrentItem(): ExtendedProduct | ExtendedTool | null {
+    return this.isToolView ? this.tool : this.product;
   }
 
   increaseQuantity(): void {
-    if (this.quantity < (this.product?.stockQuantity || 1)) {
-      this.quantity++;
+    if (this.isToolView) {
+      if (this.quantity < (this.tool?.stockQuantity || 1)) {
+        this.quantity++;
+      }
+    } else {
+      if (this.quantity < (this.product?.stockQuantity || 1)) {
+        this.quantity++;
+      }
     }
   }
 
@@ -179,19 +309,35 @@ export class ProductCardComponent implements OnInit {
   }
 
   addToCart(): void {
+    if (this.isToolView && this.tool) {
+      // Adicionar ferramenta ao carrinho
+      this.cartService.addToolToCart(this.tool as Tool, this.quantity);
+      
+      // Abrir o carrinho para mostrar o produto adicionado
+      this.cartService.openCart();
+      return;
+    }
+
     if (!this.product || !this.product.inStock) return;
 
-    // Adicionar ao carrinho usando o serviço
+    // Adicionar produto ao carrinho usando o serviço
     this.cartService.addToCart(this.product as Product, this.quantity);
-    
-    // Feedback visual
-    console.log(`Adicionado ao carrinho: ${this.quantity}x ${this.product.descricao}`);
     
     // Abrir o carrinho para mostrar o produto adicionado
     this.cartService.openCart();
   }
 
   buyNow(): void {
+    if (this.isToolView && this.tool) {
+      // Adicionar ferramenta ao carrinho e enviar para WhatsApp
+      this.cartService.addToolToCart(this.tool as Tool, this.quantity);
+      
+      // Enviar direto para WhatsApp
+      this.cartService.sendToWhatsApp();
+      
+      return;
+    }
+
     if (!this.product || !this.product.inStock) return;
 
     // Adicionar ao carrinho e enviar para WhatsApp
@@ -200,7 +346,6 @@ export class ProductCardComponent implements OnInit {
     // Enviar direto para WhatsApp
     this.cartService.sendToWhatsApp();
     
-    console.log(`Compra direta: ${this.quantity}x ${this.product.descricao}`);
   }
 
   selectImage(index: number): void {
@@ -208,10 +353,73 @@ export class ProductCardComponent implements OnInit {
   }
 
   goToCatalog(): void {
-    this.router.navigate(['/catalog']);
+    if (this.isToolView) {
+      this.router.navigate(['/tools']);
+    } else {
+      this.router.navigate(['/catalog']);
+    }
   }
 
   viewRelatedProduct(productId: number): void {
     this.router.navigate(['/catalog', productId]);
+  }
+
+  viewRelatedTool(toolId: number): void {
+    this.router.navigate(['/tools', toolId]);
+  }
+
+  viewRelatedItem(item: Product | Tool): void {
+    // Verificar se é produto ou ferramenta baseado nas propriedades
+    if ('familia_tintas' in item) {
+      // É um produto
+      this.viewRelatedProduct(item.id);
+    } else {
+      // É uma ferramenta
+      this.viewRelatedTool(item.id!);
+    }
+  }
+
+  // Métodos auxiliares para templates
+  getItemName(item: Product | Tool): string {
+    return 'nome' in item ? item.nome : item.descricao;
+  }
+
+  getItemImageUrl(item: Product | Tool): string {
+    if ('nome' in item) {
+      // É uma ferramenta
+      return this.getToolImageUrl(item as Tool);
+    } else {
+      // É um produto
+      return this.getProductImageUrl(item as Product);
+    }
+  }
+
+  getToolImageUrl(tool: Tool): string {
+    if (tool.photo && typeof tool.photo === 'string') {
+      if (tool.photo.startsWith('data:image/')) {
+        return tool.photo;
+      }
+      return `data:image/jpeg;base64,${tool.photo}`;
+    }
+    return 'assets/images/cartShoppingTinta.svg';
+  }
+
+  getProductImageUrl(product: Product): string {
+    if (product.photo && typeof product.photo === 'string') {
+      if (product.photo.startsWith('data:image/')) {
+        return product.photo;
+      }
+      return `data:image/jpeg;base64,${product.photo}`;
+    }
+    
+    if (product.photo_url) {
+      return product.photo_url;
+    }
+    
+    return 'assets/images/cartShoppingTinta.svg';
+  }
+
+  getItemSubtitle(item: Product | Tool): string {
+    return 'linha_produtos_tintas' in item ? item.linha_produtos_tintas : '';
   }
 }

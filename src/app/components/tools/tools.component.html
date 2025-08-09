@@ -1,0 +1,184 @@
+<app-header></app-header>
+
+<!-- Conteúdo Ferramentas -->
+<section class="w-full min-h-screen bg-gray-50">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    
+    <!-- Breadcrumb -->
+    <nav class="flex text-sm font-medium mb-6" aria-label="Breadcrumb">
+      <ol class="inline-flex items-center space-x-1 md:space-x-3">
+        <li class="inline-flex items-center">
+          <a routerLink="/" class="text-gray-700 hover:text-blue-600">Home</a>
+        </li>
+        <li>
+          <div class="flex items-center">
+            <svg class="w-4 h-4 text-gray-400 mx-1" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+            </svg>
+            <span class="text-gray-500">Ferramentas</span>
+          </div>
+        </li>
+      </ol>
+    </nav>
+
+    <!-- Título e Descrição -->
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">Ferramentas e Recursos</h1>
+      <p class="text-gray-600">Descubra nossas ferramentas para facilitar seu projeto</p>
+    </div>
+
+    <!-- Banner de Destaque -->
+    <div class="bg-gradient-to-r from-blue-400 to-purple-600 rounded-2xl p-6 mb-8 text-white">
+      <div class="flex flex-col md:flex-row items-center justify-between">
+        <div class="mb-4 md:mb-0">
+          <h2 class="text-2xl md:text-3xl font-bold mb-2">Ferramentas Profissionais</h2>
+          <p class="text-blue-100 mb-4">Recursos e utilitários para seus projetos com tintas WEG</p>
+        </div>
+        <div class="w-24 h-24 md:w-32 md:h-32">
+          <svg class="w-full h-full text-white" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Barra de Busca -->
+    <div class="bg-white rounded-xl shadow-lg p-6 mb-8">
+      <div class="flex flex-col sm:flex-row gap-4">
+        <div class="flex-1">
+          <label for="search" class="block text-sm font-medium text-gray-700 mb-2">
+            Buscar Ferramentas
+          </label>
+          <div class="relative">
+            <input
+              id="search"
+              type="text"
+              [(ngModel)]="searchTerm"
+              (input)="searchTools()"
+              placeholder="Digite o nome da ferramenta ou palavra-chave..."
+              class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm">
+            <svg class="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+          </div>
+        </div>
+        <div class="flex gap-2">
+          <button
+            (click)="clearSearch()"
+            *ngIf="searchTerm"
+            class="px-4 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg font-medium transition-colors duration-300">
+            Limpar
+          </button>
+          <button
+            (click)="reloadTools()"
+            class="px-4 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors duration-300 flex items-center space-x-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+            </svg>
+            <span>Atualizar</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Estado de Carregamento -->
+    <div *ngIf="isLoading" class="flex justify-center items-center py-12">
+      <div class="text-center">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+        <p class="text-gray-600">Carregando ferramentas...</p>
+      </div>
+    </div>
+
+    <!-- Estado de Erro -->
+    <div *ngIf="error && !isLoading" class="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+      <div class="text-red-500 text-5xl mb-4">⚠️</div>
+      <h3 class="text-lg font-semibold text-red-800 mb-2">Ops! Algo deu errado</h3>
+      <p class="text-red-600 mb-4">{{ error }}</p>
+      <button
+        (click)="reloadTools()"
+        class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-300">
+        Tentar Novamente
+      </button>
+    </div>
+
+    <!-- Resultados da Busca -->
+    <div *ngIf="!isLoading && !error" class="mb-6">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+        <div>
+          <h2 class="text-xl font-semibold text-gray-900">
+            {{ searchTerm ? 'Resultados da Busca' : 'Todas as Ferramentas' }}
+          </h2>
+          <p class="text-sm text-gray-600">
+            {{ filteredTools.length }} {{ filteredTools.length === 1 ? 'ferramenta encontrada' : 'ferramentas encontradas' }}
+            <span *ngIf="searchTerm"> para "{{ searchTerm }}"</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grid de Ferramentas -->
+    <div *ngIf="!isLoading && !error && filteredTools.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div 
+        *ngFor="let tool of filteredTools" 
+        class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer transform hover:scale-105"
+        (click)="viewToolDetails(tool.id!)">
+        
+        <!-- Header do Card -->
+        <div class="relative p-4">
+          <div class="flex justify-between items-start mb-4">
+            <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full font-medium">
+              Ferramenta
+            </span>
+          </div>
+          
+          <!-- Imagem da Ferramenta -->
+          <div class="aspect-square bg-gray-50 rounded-lg flex items-center justify-center mb-4">
+            <img [src]="tool | toolImage" [alt]="tool.nome" class="max-w-full max-h-full object-contain p-4">
+          </div>
+        </div>
+
+        <!-- Informações da Ferramenta -->
+        <div class="px-4 pb-4">
+          <h3 class="font-semibold text-gray-900 mb-2 line-clamp-2">{{ tool.nome }}</h3>
+          
+          <!-- Preço -->
+          <div class="flex items-center space-x-2 mb-3">
+            <span class="text-lg font-bold text-purple-600">
+              R$ {{ tool.preco }}
+            </span>
+          </div>
+
+          <!-- Descrição -->
+          <p class="text-sm text-gray-600 mb-3 line-clamp-3">{{ tool.descricao }}</p>
+
+          <!-- Botão de Ação -->
+          <button 
+            (click)="viewToolDetails(tool.id!); $event.stopPropagation()"
+            class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-lg text-sm font-medium transition-colors duration-300">
+            Ver Detalhes
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Estado Vazio -->
+    <div *ngIf="!isLoading && !error && filteredTools.length === 0" class="text-center py-12">
+      <div class="text-6xl mb-4">🔧</div>
+      <h3 class="text-xl font-semibold text-gray-900 mb-2">
+        {{ searchTerm ? 'Nenhuma ferramenta encontrada' : 'Nenhuma ferramenta disponível' }}
+      </h3>
+      <p class="text-gray-600 mb-4">
+        {{ searchTerm ? 'Tente ajustar sua busca ou remover filtros' : 'Em breve teremos ferramentas disponíveis' }}
+      </p>
+      <button 
+        *ngIf="searchTerm"
+        (click)="clearSearch()"
+        class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-lg font-medium transition-colors duration-300">
+        Limpar Busca
+      </button>
+    </div>
+
+  </div>
+</section>
+
+<app-footer></app-footer>

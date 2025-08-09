@@ -1,9 +1,12 @@
 import { Injectable, signal } from '@angular/core';
 import { Product } from '../products/products.service';
+import { Tool } from '../tools/tools.service';
 
 export interface CartItem {
-  product: Product;
+  product?: Product;
+  tool?: Tool;
   quantity: number;
+  type: 'product' | 'tool';
 }
 
 @Injectable({
@@ -45,7 +48,9 @@ export class CartService {
   // Adicionar produto ao carrinho
   addToCart(product: Product, quantity: number = 1): void {
     const currentItems = this.cartItems();
-    const existingItemIndex = currentItems.findIndex(item => item.product.id === product.id);
+    const existingItemIndex = currentItems.findIndex(item => 
+      item.type === 'product' && item.product?.id === product.id
+    );
 
     if (existingItemIndex >= 0) {
       // Se já existe, aumenta a quantidade
@@ -54,32 +59,61 @@ export class CartService {
       this.cartItems.set(updatedItems);
     } else {
       // Se não existe, adiciona novo item
-      this.cartItems.set([...currentItems, { product, quantity }]);
+      this.cartItems.set([...currentItems, { product, quantity, type: 'product' }]);
+    }
+
+    this.saveCartToStorage();
+  }
+
+  // Adicionar ferramenta ao carrinho
+  addToolToCart(tool: Tool, quantity: number = 1): void {
+    const currentItems = this.cartItems();
+    const existingItemIndex = currentItems.findIndex(item => 
+      item.type === 'tool' && item.tool?.id === tool.id
+    );
+
+    if (existingItemIndex >= 0) {
+      // Se já existe, aumenta a quantidade
+      const updatedItems = [...currentItems];
+      updatedItems[existingItemIndex].quantity += quantity;
+      this.cartItems.set(updatedItems);
+    } else {
+      // Se não existe, adiciona novo item
+      this.cartItems.set([...currentItems, { tool, quantity, type: 'tool' }]);
     }
 
     this.saveCartToStorage();
   }
 
   // Remover produto do carrinho
-  removeFromCart(productId: number): void {
-    const updatedItems = this.cartItems().filter(item => item.product.id !== productId);
+  removeFromCart(itemId: number, type: 'product' | 'tool'): void {
+    const updatedItems = this.cartItems().filter(item => {
+      if (type === 'product') {
+        return !(item.type === 'product' && item.product?.id === itemId);
+      } else {
+        return !(item.type === 'tool' && item.tool?.id === itemId);
+      }
+    });
     this.cartItems.set(updatedItems);
     this.saveCartToStorage();
   }
 
   // Atualizar quantidade de um produto
-  updateQuantity(productId: number, quantity: number): void {
+  updateQuantity(itemId: number, quantity: number, type: 'product' | 'tool'): void {
     if (quantity <= 0) {
-      this.removeFromCart(productId);
+      this.removeFromCart(itemId, type);
       return;
     }
 
     const currentItems = this.cartItems();
-    const updatedItems = currentItems.map(item =>
-      item.product.id === productId
-        ? { ...item, quantity }
-        : item
-    );
+    const updatedItems = currentItems.map(item => {
+      if (type === 'product' && item.type === 'product' && item.product?.id === itemId) {
+        return { ...item, quantity };
+      } else if (type === 'tool' && item.type === 'tool' && item.tool?.id === itemId) {
+        return { ...item, quantity };
+      }
+      return item;
+    });
 
     this.cartItems.set(updatedItems);
     this.saveCartToStorage();
@@ -112,7 +146,12 @@ export class CartService {
   // Calcular total do carrinho
   getTotalPrice(): number {
     return this.cartItems().reduce((total, item) => {
-      const finalPrice = item.product.preco;
+      let finalPrice = 0;
+      if (item.type === 'product' && item.product) {
+        finalPrice = item.product.preco;
+      } else if (item.type === 'tool' && item.tool) {
+        finalPrice = item.tool.preco;
+      }
       return total + (finalPrice * item.quantity);
     }, 0);
   }
@@ -127,15 +166,29 @@ export class CartService {
     let message = '*🛒 Pedido do Carrinho de Compras*\n\n';
 
     items.forEach((item, index) => {
-      const finalPrice = item.product.preco;
+      let finalPrice = 0;
+      let itemName = '';
+      let itemType = '';
 
-      message += `*${index + 1}. ${item.product.descricao}*\n`;
-      message += `   • Quantidade: ${item.quantity}\n`;
-      message += `   • Preço unitário: R$ ${finalPrice.toFixed(2)}\n`;
-      message += `   • Subtotal: R$ ${(finalPrice * item.quantity).toFixed(2)}\n\n`;
+      if (item.type === 'product' && item.product) {
+        finalPrice = item.product.preco;
+        itemName = item.product.descricao;
+        itemType = '🎨 Tinta';
+      } else if (item.type === 'tool' && item.tool) {
+        finalPrice = item.tool.preco;
+        itemName = item.tool.nome;
+        itemType = '🔧 Ferramenta';
+      }
+
+      if (itemName && finalPrice > 0) {
+        message += `*${index + 1}. ${itemType}: ${itemName}*\n`;
+        message += `   • Quantidade: ${item.quantity}\n`;
+        message += `   • Preço unitário: R$ ${finalPrice}\n`;
+        message += `   • Subtotal: R$ ${(finalPrice * item.quantity)}\n\n`;
+      }
     });
 
-    message += `*💰 Total do Pedido: R$ ${this.getTotalPrice().toFixed(2)}*\n\n`;
+    message += `*💰 Total do Pedido: R$ ${this.getTotalPrice()}*\n\n`;
     message += `Gostaria de finalizar este pedido. Aguardo contato para confirmação! 😊`;
 
     return encodeURIComponent(message);

@@ -53,7 +53,6 @@ export class UsersService {
     
     // Se não há userInfo mas está logado, pode ser fallback para credenciais padrão (admin)
     if (!userInfo) {
-      console.log('✅ Acesso admin liberado - usuário logado sem userInfo (fallback admin)');
       return;
     }
     
@@ -71,24 +70,19 @@ export class UsersService {
 
     // Debug: verificar informações do usuário
     const userInfo = this.adminService.getCurrentUserInfo();
-    console.log('🔍 Verificando acesso - UserInfo:', userInfo);
     
     // Se não há userInfo mas está logado, pode ser fallback para credenciais padrão (admin)
     if (!userInfo) {
-      console.log('✅ Acesso liberado - usuário logado sem userInfo (fallback admin)');
       return;
     }
     
     const userRole = userInfo.role;
-    console.log('🔍 Verificando acesso - Role:', userRole);
     
     // Permite acesso para admin e user
     if (userRole !== 'admin' && userRole !== 'user') {
       console.warn('❌ Role não permitido:', userRole);
       throw new Error('Acesso negado: você não tem permissão para visualizar usuários');
     }
-    
-    console.log('✅ Acesso liberado para role:', userRole);
   }
 
   getUsers(): Observable<User[]> {
@@ -164,7 +158,6 @@ export class UsersService {
   getUserById(id: number): Observable<User> {
     this.checkViewAccess(); // Permite visualização para admin e user
     const url = `${environment.apiUrl}/users/${id}`;
-    console.log('🔍 GET Request URL:', url);
     
     return this.http.get<User>(url).pipe(
       catchError((error) => {

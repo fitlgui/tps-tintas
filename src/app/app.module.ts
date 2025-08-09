@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -15,6 +15,8 @@ import { ShoppingComponent } from './components/shopping/shopping.component';
 import { OurteamComponent } from './components/ourteam/ourteam.component';
 import { SharedPipesModule } from './shareds/shared-pipes.module';
 import { ProductImagePipe } from './pipes/product-image.pipe';
+import { ToolImagePipe } from './pipes/tool-image.pipe';
+import { ToolsComponent } from './components/tools/tools.component';
 
 @NgModule({
   declarations: [
@@ -28,12 +30,15 @@ import { ProductImagePipe } from './pipes/product-image.pipe';
     ContactComponent,
     ShoppingComponent,
     OurteamComponent,
-    ProductImagePipe
+    ProductImagePipe,
+    ToolImagePipe,
+    ToolsComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpClientModule,
     SharedPipesModule
   ],

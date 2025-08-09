@@ -7,6 +7,7 @@ import { CatalogComponent } from './components/catalog/catalog.component';
 import { LoginComponent } from './auth/login/login.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { OurteamComponent } from './components/ourteam/ourteam.component';
+import { ToolsComponent } from './components/tools/tools.component';
 
 const routes: Routes = [
   {
@@ -59,6 +60,24 @@ const routes: Routes = [
       title: 'Quem Somos - TPS Tintas Cuiabá | Nossa História e Valores',
       description: 'Conheça a história da TPS Tintas, parceira WEG em Cuiabá desde 2005. Missão, visão e valores.',
       keywords: 'sobre tps tintas, história empresa tintas, parceiro weg cuiabá'
+    }
+  },
+  {
+    path: 'tools',
+    component: ToolsComponent,
+    data: {
+      title: 'Ferramentas - TPS Tintas Cuiabá',
+      description: 'Explore as ferramentas disponíveis para facilitar sua experiência com tintas WEG.',
+      keywords: 'ferramentas tps tintas, tintas weg ferramentas, recursos tintas'
+    }
+  },
+  {
+    path: 'tools/:id',
+    component: ProductCardComponent,
+    data: {
+      title: 'Detalhes da Ferramenta - TPS Tintas Cuiabá',
+      description: 'Veja todos os detalhes da ferramenta selecionada.',
+      keywords: 'detalhes ferramenta tps tintas, ferramenta específica, tintas weg ferramentas'
     }
   },
   {

@@ -10,14 +10,12 @@ export const adminEditGuard: CanActivateFn = (route, state) => {
 
   // Verificamos se está logado e se a sessão ainda é válida
   if (!authService.isLoggedIn() || !authService.isSessionValid()) {
-    console.log('Usuário não logado ou sessão expirada. Redirecionando para /login...');
     router.navigate(['/login']);
     return false;
   }
 
   // Verificamos se o usuário pode editar (apenas admin)
   if (!authService.canEdit()) {
-    console.log('Usuário não tem permissão para editar. Redirecionando para área de visualização...');
     // Redireciona para uma página de visualização baseada na rota atual
     const currentPath = state.url;
     

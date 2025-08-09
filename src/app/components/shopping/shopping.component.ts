@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CartService } from '../../services/cart/cart.service';
 import { Product } from '../../services/products/products.service';
+import { Tool } from '../../services/tools/tools.service';
 
 @Component({
   selector: 'app-shopping',
@@ -14,13 +15,13 @@ export class ShoppingComponent {
   private readonly whatsappNumber = '5565993421407';
 
   // Atualizar quantidade de um item
-  updateQuantity(productId: number, quantity: number): void {
-    this.cartService.updateQuantity(productId, quantity);
+  updateQuantity(itemId: number, quantity: number, type: 'product' | 'tool'): void {
+    this.cartService.updateQuantity(itemId, quantity, type);
   }
 
   // Remover item do carrinho
-  removeItem(productId: number): void {
-    this.cartService.removeFromCart(productId);
+  removeItem(itemId: number, type: 'product' | 'tool'): void {
+    this.cartService.removeFromCart(itemId, type);
   }
 
   // Limpar todo o carrinho
@@ -30,8 +31,19 @@ export class ShoppingComponent {
     }
   }
 
-  getFinalPrice(product: Product): number {
-    return product.preco;
+  // Obter preço final do item
+  getFinalPrice(item: Product | Tool): number {
+    return item.preco;
+  }
+
+  // Obter nome do item
+  getItemName(item: Product | Tool): string {
+    return 'nome' in item ? item.nome : item.descricao;
+  }
+
+  // Obter ID do item
+  getItemId(item: Product | Tool): number {
+    return item.id!;
   }
 
   // Enviar para WhatsApp

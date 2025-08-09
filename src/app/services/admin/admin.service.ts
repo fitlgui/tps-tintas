@@ -38,9 +38,10 @@ export class AuthService {
 
   // Credenciais padrão do sistema (fallback)
   private defaultCredentials: UserCredentials = {
-    username: 'admin',
-    password: '1234',
-    name: 'Administrador',
+    username: 'adm_tpstintas',
+    password: 'adm@tpstintas',
+    name: 'Admin TPS',
+    role: 'admin',
     email: 'admin@weg.com'
   };
 
@@ -95,16 +96,10 @@ export class AuthService {
 
   // Método para buscar todos os usuários da API
   private getUsers(): Observable<ApiUser[]> {
-    console.log('🌐 Chamando API de usuários:', `${this.apiUrl}/users`);
-    console.log('🔧 Fazendo requisição HTTP GET...');
     
     return this.http.get<any>(`${this.apiUrl}/users`).pipe(
       timeout(3000), // 30 segundos de timeout
-      tap((response) => {
-        console.log('✅ Resposta recebida da API:', response);
-      }),
       map((response) => {
-        console.log('Resposta completa da API /users:', response);
         
         // Verificar diferentes estruturas de resposta
         let users: ApiUser[] = [];
@@ -126,21 +121,12 @@ export class AuthService {
           return [];
         }
         
-        console.log('Usuários extraídos:', users);
-        console.log('Total de usuários:', users.length);
-        
         return users;
       }),
       catchError((error) => {
-        console.error('❌ Erro ao buscar usuários da API:', error);
-        console.error('Status do erro:', error.status);
-        console.error('Mensagem do erro:', error.message);
-        console.error('Error completo:', JSON.stringify(error, null, 2));
-        console.error('URL tentada:', `${this.apiUrl}/users`);
         
         if (error.status === 0) {
           console.error('❌ Erro de CORS ou rede - API inacessível');
-          console.error('Isso geralmente indica problema de CORS ou timeout');
         } else if (error.status === 404) {
           console.error('❌ Endpoint /users não encontrado');
         } else if (error.status >= 500) {
@@ -160,7 +146,6 @@ export class AuthService {
         
         // Verificar se users é um array
         if (!Array.isArray(users)) {
-          console.error('Resposta da API não é um array:', users);
           return null;
         }
 
@@ -174,7 +159,6 @@ export class AuthService {
         });
 
         if (user) {
-          console.log('Usuário encontrado:', user);
           if (user.password === password) {
             return user;
           } else {
@@ -209,7 +193,6 @@ export class AuthService {
   }
 
   private expireSession(): void {
-    console.log('Sessão expirada após 60 minutos');
     this.logout();
     // Aqui você pode adicionar uma notificação para o usuário
     alert('Sua sessão expirou. Você será redirecionado para a página de login.');
@@ -271,10 +254,8 @@ export class AuthService {
           // Configurar timeout para expiração
           this.setSessionTimeout(this.SESSION_DURATION);
 
-          console.info(`✅ Login realizado para usuário: ${apiUser.name}. Sessão expira em 60 minutos.`);
           return true;
         } else {
-          console.warn('❌ Usuário não encontrado na API, tentando credenciais padrão...');
           // Fallback para credenciais padrão (apenas em desenvolvimento)
           if (user === this.defaultCredentials.username && pass === this.defaultCredentials.password) {
             const currentTime = new Date().getTime();
@@ -287,10 +268,8 @@ export class AuthService {
             // Configurar timeout para expiração
             this.setSessionTimeout(this.SESSION_DURATION);
 
-            console.info('✅ Login realizado com credenciais padrão. Sessão expira em 60 minutos.');
             return true;
           }
-          console.warn('❌ Credenciais inválidas');
           return false;
         }
       }),
@@ -303,7 +282,6 @@ export class AuthService {
 
   // Método sincronizado para compatibilidade (deprecated)
   loginSync(user: string, pass: string): boolean {
-    console.warn('loginSync está deprecated. Use login() que retorna Observable.');
     // Verifica com as credenciais padrão apenas
     if (user === this.defaultCredentials.username && pass === this.defaultCredentials.password) {
       const currentTime = new Date().getTime();
@@ -324,7 +302,6 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem('currentUser');
     this.clearSession();
-    console.log('Logout realizado');
   }
 
   // Método para renovar a sessão (opcional)
@@ -333,7 +310,6 @@ export class AuthService {
       const currentTime = new Date().getTime();
       localStorage.setItem('loginTime', currentTime.toString());
       this.setSessionTimeout(this.SESSION_DURATION);
-      console.log('Sessão renovada por mais 60 minutos');
     }
   }
 
@@ -404,33 +380,19 @@ export class AuthService {
 
   // Método público para debug - listar todos os usuários
   getAllUsersForDebug(): Observable<ApiUser[]> {
-    console.log('🔍 Método de debug - buscando todos os usuários...');
     return this.getUsers();
   }
 
   // Método público para testar conexão com API
   testApiConnection(): Observable<boolean> {
-    console.log('🔗 Testando conexão com API...');
-    console.log('URL completa:', `${this.apiUrl}/users`);
     
     return this.http.get(`${this.apiUrl}/users`).pipe(
       timeout(30000), // 30 segundos de timeout
-      tap((response) => {
-        console.log('✅ Teste de API bem-sucedido. Resposta:', response);
-      }),
       map((response) => {
-        console.log('✅ API respondeu:', response);
         return true;
       }),
       catchError((error) => {
         console.error('❌ Teste de API falhou:', error);
-        console.error('Detalhes do erro:', {
-          status: error.status,
-          statusText: error.statusText,
-          message: error.message,
-          url: error.url,
-          headers: error.headers
-        });
         return of(false);
       })
     );
@@ -438,16 +400,12 @@ export class AuthService {
 
   // Método de debug para ser chamado manualmente
   debugApiCall(): void {
-    console.log('🐛 Iniciando debug da API...');
     this.testApiConnection().subscribe({
       next: (success) => {
         if (success) {
-          console.log('🎉 API funcionando! Agora testando getUsers...');
           this.getAllUsersForDebug().subscribe({
             next: (users) => {
-              console.log('👥 Usuários recebidos:', users);
               const adminUsers = users.filter(u => u.role === 'admin');
-              console.log('👑 Usuários admin:', adminUsers);
             },
             error: (err) => console.error('❌ Erro no getUsers:', err)
           });

@@ -198,7 +198,6 @@ export class ProductsService {
   getProducts(page: string): Observable<Product[]> {
     return this.http.get<any>(`${this.environment.apiUrl}/products?limit=10&page=${page}`).pipe(
       map((data) => {
-        console.log(data.items);
         const products = data.items;
         return this.processProductsImages(products);
       })
@@ -233,7 +232,6 @@ export class ProductsService {
   getProductById(id: number): Observable<Product | null> {
     return this.http.get<Product | null>(`${this.environment.apiUrl}/products/${id}`).pipe(
       map((data: Product | null) => {
-        console.log(data);
         if (data) {
           // Se photo é um buffer, converter para string base64
           if (data.photo && typeof data.photo === 'object') {
@@ -252,21 +250,14 @@ export class ProductsService {
 
   // Criar rota de adicionar produto
   addProduct(product: Product): Observable<any> {
-    console.log('addProduct chamado no service com:', product);
     
     // Remover campos que não devem ser enviados na criação e garantir que photo seja string base64
     const { id, createdAt, updatedAt, ...productToSend } = product;
     
-    console.log('Produto após remoção de campos:', productToSend);
-    
     if (productToSend.photo && typeof productToSend.photo === 'string' && productToSend.photo.startsWith('data:image/')) {
       // Extrair apenas a parte base64
       productToSend.photo = productToSend.photo.split(',')[1];
-      console.log('Photo processado (prefixo removido)');
     }
-    
-    console.log('Enviando para API:', `${this.environment.apiUrl}/products`);
-    console.log('Dados finais:', productToSend);
     
     return this.http.post<Product>(`${this.environment.apiUrl}/products`, productToSend);
   }
@@ -304,7 +295,6 @@ export class ProductsService {
           }
           
         }
-        console.log('Categorias:', allCategories);
         return allCategories;
       })
     );
@@ -324,7 +314,6 @@ export class ProductsService {
           }
           
         }
-        console.log('Tamanhos:', allSizes);
         return allSizes;
       })
     )
@@ -345,7 +334,6 @@ export class ProductsService {
           }
           
         }
-        console.log('Cores:', allColors);
         return allColors;
       })
     );

@@ -53,30 +53,42 @@
         *ngFor="let item of cartService.cartItems()"
         class="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:shadow-md transition-shadow cart-product-item">
 
-        <!-- Produto Info -->
+        <!-- Item Info -->
         <div class="flex items-start space-x-3">
-          <!-- Imagem do Produto -->
+          <!-- Imagem do Item -->
           <div class="w-20 h-20 bg-gradient-to-br from-blue-100 to-purple-100 rounded-lg flex items-center justify-center flex-shrink-0 overflow-hidden">
             <img 
-              *ngIf="(item.product | productImage) !== 'assets/images/cartShoppingTinta.svg';"
+              *ngIf="item.type === 'product' && item.product"
               [src]="item.product | productImage" 
               [alt]="item.product.descricao"
-              class="w-full h-full object-cover rounded-lg"
-              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
-            <ng-template #noImage>
-              <svg class="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
-              </svg>
-            </ng-template>
+              class="w-full h-full object-cover rounded-lg">
+            <img 
+              *ngIf="item.type === 'tool' && item.tool"
+              [src]="item.tool | toolImage" 
+              [alt]="item.tool.nome"
+              class="w-full h-full object-cover rounded-lg">
           </div>
 
-          <!-- Detalhes do Produto -->
+          <!-- Detalhes do Item -->
           <div class="flex-1 min-w-0">
-            <!-- Nome do Produto em destaque -->
-            <h4 class="font-bold text-gray-900 text-base mb-1 leading-tight">{{ item.product.descricao }}</h4>
+            <!-- Nome do Item em destaque -->
+            <h4 class="font-bold text-gray-900 text-base mb-1 leading-tight">
+              <span *ngIf="item.type === 'product' && item.product">{{ item.product.descricao }}</span>
+              <span *ngIf="item.type === 'tool' && item.tool">{{ item.tool.nome }}</span>
+            </h4>
             
-            <!-- Informações adicionais -->
-            <div class="space-y-1 mb-3">
+            <!-- Tipo do Item -->
+            <div class="mb-2">
+              <span *ngIf="item.type === 'product'" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                🎨 Tinta
+              </span>
+              <span *ngIf="item.type === 'tool'" class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                🔧 Ferramenta
+              </span>
+            </div>
+            
+            <!-- Informações adicionais para produtos -->
+            <div *ngIf="item.type === 'product' && item.product" class="space-y-1 mb-3">
               <p class="text-sm text-gray-600">
                 <span class="font-medium">Família:</span> {{ item.product.familia_tintas }}
               </p>
@@ -88,10 +100,21 @@
               </p>
             </div>
 
+            <!-- Informações adicionais para ferramentas -->
+            <div *ngIf="item.type === 'tool' && item.tool" class="space-y-1 mb-3">
+              <p class="text-sm text-gray-600">
+                <span class="font-medium">Descrição:</span> {{ item.tool.descricao }}
+              </p>
+              <p *ngIf="item.tool.info_tecnica" class="text-sm text-gray-600">
+                <span class="font-medium">Info Técnica:</span> {{ item.tool.info_tecnica.substring(0, 50) }}...
+              </p>
+            </div>
+
             <!-- Preço em destaque -->
             <div class="flex items-center space-x-2 mb-3">
               <span class="text-xl font-bold text-green-600 bg-green-50 px-2 py-1 rounded">
-                R$ {{ item.product.preco }}
+                <span *ngIf="item.type === 'product' && item.product">R$ {{ item.product.preco }}</span>
+                <span *ngIf="item.type === 'tool' && item.tool">R$ {{ item.tool.preco }}</span>
               </span>
               <span class="text-sm text-gray-500">por unidade</span>
             </div>
@@ -100,7 +123,7 @@
             <div class="flex items-center justify-between">
               <div class="flex items-center space-x-2 bg-white rounded-lg border">
                 <button
-                  (click)="updateQuantity(item.product.id, item.quantity - 1)"
+                  (click)="updateQuantity(getItemId(item.product || item.tool!), item.quantity - 1, item.type)"
                   class="p-2 hover:bg-gray-100 rounded-l-lg transition-colors"
                   [disabled]="item.quantity <= 1">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -109,7 +132,7 @@
                 </button>
                 <span class="px-3 py-2 font-semibold min-w-[3rem] text-center">{{ item.quantity }}</span>
                 <button
-                  (click)="updateQuantity(item.product.id, item.quantity + 1)"
+                  (click)="updateQuantity(getItemId(item.product || item.tool!), item.quantity + 1, item.type)"
                   class="p-2 hover:bg-gray-100 rounded-r-lg transition-colors">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
@@ -119,7 +142,7 @@
 
               <!-- Botão Remover -->
               <button
-                (click)="removeItem(item.product.id)"
+                (click)="removeItem(getItemId(item.product || item.tool!), item.type)"
                 class="text-red-500 hover:text-red-700 p-2 hover:bg-red-50 rounded-lg transition-colors">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
@@ -132,11 +155,17 @@
               <div class="flex justify-between items-center">
                 <span class="text-sm font-medium text-gray-700">Subtotal:</span>
                 <span class="text-lg font-bold text-green-600">
-                  R$ {{ getFinalPrice(item.product) * item.quantity}}
+                  <span *ngIf="item.type === 'product' && item.product">R$ {{ (getFinalPrice(item.product) * item.quantity) }}</span>
+                  <span *ngIf="item.type === 'tool' && item.tool">R$ {{ (getFinalPrice(item.tool) * item.quantity) }}</span>
                 </span>
               </div>
               <div class="text-xs text-gray-500 mt-1">
-                {{ item.quantity }} {{ item.quantity === 1 ? 'unidade' : 'unidades' }} × R$ {{ item.product.preco.toFixed(2) }}
+                <span *ngIf="item.type === 'product' && item.product">
+                  {{ item.quantity }} {{ item.quantity === 1 ? 'unidade' : 'unidades' }} × R$ {{ item.product.preco }}
+                </span>
+                <span *ngIf="item.type === 'tool' && item.tool">
+                  {{ item.quantity }} {{ item.quantity === 1 ? 'unidade' : 'unidades' }} × R$ {{ item.tool.preco }}
+                </span>
               </div>
             </div>
           </div>
@@ -151,12 +180,12 @@
     <div class="bg-gray-50 p-3 rounded-lg">
       <div class="flex justify-between items-center text-sm text-gray-600 mb-2">
         <span>{{ cartService.getTotalItems() }} {{ cartService.getTotalItems() === 1 ? 'item' : 'itens' }}</span>
-        <span>Subtotal: R$ {{ cartService.getTotalPrice().toFixed(2) }}</span>
+        <span>Subtotal: R$ {{ cartService.getTotalPrice() }}</span>
       </div>
       <div class="flex justify-between items-center">
         <span class="text-lg font-bold text-gray-800">Total:</span>
         <span class="text-2xl font-bold text-green-600 bg-green-50 px-3 py-1 rounded">
-          R$ {{ cartService.getTotalPrice().toFixed(2) }}
+          R$ {{ cartService.getTotalPrice() }}
         </span>
       </div>
     </div>

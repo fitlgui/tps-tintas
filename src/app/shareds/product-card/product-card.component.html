@@ -112,15 +112,15 @@
             <p class="font-semibold text-gray-900">{{ product.conteudo_embalagem || 'N/A' }}</p>
           </div>
           <div class="bg-white rounded-lg p-4 shadow-sm border">
-            <span class="text-sm text-gray-500">Quantidade por Fardo</span>
-            <p class="font-semibold text-gray-900">{{ product.quantidade_por_fardo || 'N/A' }}</p>
+            <span class="text-sm text-gray-500">Quantidade</span>
+            <p class="font-semibold text-gray-900">{{ 1 || 'N/A' }}</p>
           </div>
         </div>
 
         <!-- Stock Status -->
         <div class="flex items-center space-x-2" *ngIf="product.inStock">
           <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-          <span class="text-green-600 font-medium">{{ product.stockQuantity }} unidades por fardo disponíveis</span>
+          <span class="text-green-600 font-medium">{{ product.stockQuantity }} unidades disponíveis</span>
         </div>
         
         <div class="flex items-center space-x-2" *ngIf="!product.inStock">
@@ -304,21 +304,231 @@
     </div>
 
     <!-- Related Products -->
-    <div *ngIf="relatedProducts.length > 0" class="mt-16">
-      <h2 class="text-2xl font-bold text-gray-900 mb-8">Produtos Relacionados</h2>
+    <div *ngIf="relatedItems.length > 0" class="mt-16">
+      <h2 class="text-2xl font-bold text-gray-900 mb-8">{{ isToolView ? 'Ferramentas Relacionadas' : 'Produtos Relacionados' }}</h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div *ngFor="let relatedProduct of relatedProducts" 
+        <div *ngFor="let relatedItem of relatedItems" 
              class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:scale-105"
-             (click)="viewRelatedProduct(relatedProduct.id)">
+             (click)="viewRelatedItem(relatedItem)">
           <div class="aspect-square bg-gray-50 p-6 flex items-center justify-center">
-            <img [src]="relatedProduct | productImage" [alt]="relatedProduct.descricao" class="max-w-full max-h-full object-contain">
+            <img 
+              [src]="getItemImageUrl(relatedItem)" 
+              [alt]="getItemName(relatedItem)" 
+              class="max-w-full max-h-full object-contain">
           </div>
           <div class="p-4">
-            <h3 class="font-semibold text-gray-900 mb-1 truncate">{{ relatedProduct.descricao }}</h3>
-            <p class="text-sm text-gray-600 mb-2">{{ relatedProduct.linha_produtos_tintas }}</p>
+            <h3 class="font-semibold text-gray-900 mb-1 truncate">
+              {{ getItemName(relatedItem) }}
+            </h3>
+            <p class="text-sm text-gray-600 mb-2" *ngIf="getItemSubtitle(relatedItem)">{{ getItemSubtitle(relatedItem) }}</p>
             <div class="flex items-center justify-between">
               <span class="text-lg font-bold text-green-600">
-                R$ {{ relatedProduct.preco | number:'1.2-2' }}
+                R$ {{ relatedItem.preco | number:'1.2-2' }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Tool Details -->
+<div *ngIf="tool && !loading" class="bg-gray-50 min-h-screen">
+  <!-- Breadcrumb -->
+  <div class="bg-white border-b">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <nav class="flex" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-1 md:space-x-3">
+          <li class="inline-flex items-center">
+            <a routerLink="/" class="text-gray-700 hover:text-purple-600 inline-flex items-center">
+              <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+              </svg>
+              Home
+            </a>
+          </li>
+          <li>
+            <div class="flex items-center">
+              <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+              </svg>
+              <a routerLink="/tools" class="ml-1 text-gray-700 hover:text-purple-600 md:ml-2">Ferramentas</a>
+            </div>
+          </li>
+          <li>
+            <div class="flex items-center">
+              <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+              </svg>
+              <span class="ml-1 text-gray-500 md:ml-2">{{ tool.nome }}</span>
+            </div>
+          </li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Tool Section -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      
+      <!-- Tool Images -->
+      <div class="space-y-4">
+        <!-- Main Image -->
+        <div class="aspect-square bg-white rounded-2xl shadow-lg p-8 flex items-center justify-center">
+          <img [src]="productImages[selectedImage]" [alt]="tool.nome" class="max-w-full max-h-full object-contain">
+        </div>
+        
+        <!-- Thumbnail Gallery -->
+        <div *ngIf="productImages.length > 1" class="grid grid-cols-4 gap-4">
+          <button *ngFor="let image of productImages; let i = index" 
+                  (click)="selectImage(i)"
+                  [class.ring-2]="selectedImage === i"
+                  [class.ring-purple-500]="selectedImage === i"
+                  class="aspect-square bg-white rounded-lg shadow-md p-4 flex items-center justify-center hover:shadow-lg transition-all duration-200">
+            <img [src]="image" [alt]="'Imagem ' + (i + 1) + ' de ' + tool.nome" class="max-w-full max-h-full object-contain">
+          </button>
+        </div>
+      </div>
+
+      <!-- Tool Information -->
+      <div class="space-y-8">
+        <!-- Title and Basic Info -->
+        <div>
+          <div class="flex items-center space-x-2 mb-2">
+            <span class="bg-purple-100 text-purple-800 text-sm px-3 py-1 rounded-full font-medium">
+              Ferramenta
+            </span>
+            <span *ngIf="tool.inStock" class="bg-green-100 text-green-800 text-sm px-3 py-1 rounded-full font-medium">
+              ✓ Disponível
+            </span>
+          </div>
+          
+          <h1 class="text-3xl font-bold text-gray-900 mb-4">{{ tool.nome }}</h1>
+          
+          <div class="flex items-center space-x-4 mb-6">
+            <div class="text-3xl font-bold text-purple-600">
+              R$ {{ getFinalPrice() | number:'1.2-2' }}
+            </div>
+          </div>
+          
+          <p class="text-gray-600 leading-relaxed mb-6">{{ tool.description }}</p>
+        </div>
+
+        <!-- Purchase Actions -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <div class="flex items-center space-x-4 mb-6">
+            <label class="text-sm font-medium text-gray-700">Quantidade:</label>
+            <div class="flex items-center border border-gray-300 rounded-lg">
+              <button (click)="decreaseQuantity()" 
+                      [disabled]="quantity <= 1"
+                      class="px-3 py-2 text-gray-600 hover:text-gray-800 disabled:opacity-50 disabled:cursor-not-allowed">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+                </svg>
+              </button>
+              <span class="px-4 py-2 border-l border-r border-gray-300 font-medium">{{ quantity }}</span>
+              <button (click)="increaseQuantity()" 
+                      [disabled]="quantity >= (tool.stockQuantity || 1)"
+                      class="px-3 py-2 text-gray-600 hover:text-gray-800 disabled:opacity-50 disabled:cursor-not-allowed">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+          
+          <div class="space-y-3">
+            <button (click)="buyNow()" 
+                    class="w-full bg-purple-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-purple-700 transition-colors duration-200 flex items-center justify-center space-x-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.5 8H19"></path>
+              </svg>
+              <span>Comprar Agora - R$ {{ (getFinalPrice() * quantity) | number:'1.2-2' }}</span>
+            </button>
+            
+            <button (click)="addToCart()" 
+                    class="w-full bg-gray-200 text-gray-800 py-3 px-6 rounded-lg font-semibold hover:bg-gray-300 transition-colors duration-200 flex items-center justify-center space-x-2">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+              </svg>
+              <span>Adicionar ao carrinho</span>
+            </button>
+          </div>
+          
+          <div class="mt-4 text-sm text-gray-600 text-center">
+            <p>💬 Entre em contato pelo WhatsApp para finalizar sua compra</p>
+          </div>
+        </div>
+
+        <!-- Tool Details -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <!-- Basic Information -->
+          <div class="mb-8">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Informações Básicas</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="bg-purple-50 p-4 rounded-lg">
+                <span class="block text-sm text-purple-600 mb-1">Nome</span>
+                <span class="font-semibold text-gray-900">{{ tool.nome }}</span>
+              </div>
+              <div class="bg-purple-50 p-4 rounded-lg">
+                <span class="block text-sm text-purple-600 mb-1">Preço</span>
+                <span class="font-semibold text-gray-900">R$ {{ tool.preco | number:'1.2-2' }}</span>
+              </div>
+              <div *ngIf="tool.descricao" class="bg-purple-50 p-4 rounded-lg md:col-span-2">
+                <span class="block text-sm text-purple-600 mb-1">Descrição</span>
+                <span class="font-semibold text-gray-900">{{ tool.descricao }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Technical Information -->
+          <div class="mb-8" *ngIf="tool.info_tecnica">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Informações Técnicas</h3>
+            <div class="bg-yellow-50 p-4 rounded-lg">
+              <span class="block text-sm text-yellow-600 mb-1">Especificações Técnicas</span>
+              <span class="font-semibold text-gray-900">{{ tool.info_tecnica }}</span>
+            </div>
+          </div>
+
+          <!-- Features -->
+          <div>
+            <h3 class="text-lg font-semibold text-gray-800 mb-3">Características</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div *ngFor="let feature of tool.features" class="flex items-center space-x-3">
+                <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+                <span class="text-gray-700">{{ feature }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Related Tools -->
+    <div *ngIf="relatedItems.length > 0" class="mt-16">
+      <h2 class="text-2xl font-bold text-gray-900 mb-8">{{ isToolView ? 'Ferramentas Relacionadas' : 'Produtos Relacionados' }}</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div *ngFor="let relatedItem of relatedItems" 
+             class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:scale-105"
+             (click)="viewRelatedItem(relatedItem)">
+          <div class="aspect-square bg-gray-50 p-6 flex items-center justify-center">
+            <img 
+              [src]="getItemImageUrl(relatedItem)" 
+              [alt]="getItemName(relatedItem)" 
+              class="max-w-full max-h-full object-contain">
+          </div>
+          <div class="p-4">
+            <h3 class="font-semibold text-gray-900 mb-1 truncate">
+              {{ getItemName(relatedItem) }}
+            </h3>
+            <p class="text-sm text-gray-600 mb-2" *ngIf="getItemSubtitle(relatedItem)">{{ getItemSubtitle(relatedItem) }}</p>
+            <div class="flex items-center justify-between">
+              <span class="text-lg font-bold text-purple-600">
+                R$ {{ relatedItem.preco | number:'1.2-2' }}
               </span>
             </div>
           </div>

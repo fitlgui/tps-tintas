@@ -40,6 +40,12 @@
         Catálogo Tintas
       </a>
       <a class="text-gray-700 hover:text-blue-600 hover:scale-105 transition-all duration-300 font-medium"
+         href="/tools"
+         title="Catálogo de Ferramentas WEG - Industriais e Automotivas"
+         aria-label="Ver catálogo de ferramentas">
+        Ferramentas
+      </a>
+      <a class="text-gray-700 hover:text-blue-600 hover:scale-105 transition-all duration-300 font-medium"
          href="/contact"
          title="Contato TPS Tintas Cuiabá - Telefone e Endereço"
          aria-label="Entrar em contato">
@@ -100,8 +106,9 @@
       <input type="text" class="w-full border border-gray-300 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent mobile-search" placeholder="Pesquisar produtos...">
     </div>
     <div class="flex flex-col space-y-2 px-4 pb-4">
-      <a href="/catalog" (click)="closeMobileMenu()" class="text-gray-700 hover:text-blue-600 py-2 border-b border-gray-100 transition-colors duration-200">Inicio</a>
-      <a href="/catalog" (click)="closeMobileMenu()" class="text-gray-700 hover:text-blue-600 py-2 border-b border-gray-100 transition-colors duration-200">Coleção</a>
+      <a href="/" (click)="closeMobileMenu()" class="text-gray-700 hover:text-blue-600 py-2 border-b border-gray-100 transition-colors duration-200">Início</a>
+      <a href="/catalog" (click)="closeMobileMenu()" class="text-gray-700 hover:text-blue-600 py-2 border-b border-gray-100 transition-colors duration-200">Catálogo Tintas</a>
+      <a href="/tools" (click)="closeMobileMenu()" class="text-gray-700 hover:text-blue-600 py-2 border-b border-gray-100 transition-colors duration-200">Ferramentas</a>
       <a href="/contact" (click)="closeMobileMenu()" class="text-gray-700 hover:text-blue-600 py-2 border-b border-gray-100 transition-colors duration-200">Contato</a>
       <a href="/ourteam" (click)="closeMobileMenu()" class="text-gray-700 hover:text-blue-600 py-2 border-b border-gray-100 transition-colors duration-200">Quem Somos</a>
     </div>

@@ -15,11 +15,9 @@ export const authGuard: CanActivateFn = (route, state) => {
 
   // Se não estiver logado ou sessão expirada, faz logout e redireciona para login
   if (authService.isLoggedIn() && !authService.isSessionValid()) {
-    console.log('Sessão expirada. Fazendo logout automático...');
     authService.logout();
   }
 
-  console.log('Acesso negado. Redirecionando para /login...');
   router.navigate(['/login']);
   return false; // E bloqueia o acesso à rota atual
 };

@@ -18,7 +18,7 @@ export class CatalogComponent implements OnInit {
   public categories: any[] = [];
 
   // Variavel para armazenar as marcas
-  public brands: any[] = [];
+  // public brands: any[] = []; // Removido pois não está sendo usado
 
   // Variavel para armazenar os tamanhos
   public sizes: any[] = [];
@@ -27,7 +27,7 @@ export class CatalogComponent implements OnInit {
   public colors: any[] = [];
 
   public selectedCategories: Set<string> = new Set();
-  public selectedBrands: Set<string> = new Set();
+  // public selectedBrands: Set<string> = new Set(); // Removido pois não está sendo usado
   public selectedSizes: Set<string> = new Set();
   public selectedColors: Set<string> = new Set();
 
@@ -52,29 +52,23 @@ export class CatalogComponent implements OnInit {
     // Configurar SEO para página de catálogo
     this.setupCatalogSeo();
 
-    // Buscando Todos os Produtos e filtrando apenas produtos em estoque
+    // Buscando Todos os Produtos primeiro
     this.productsService.getAllProducts().subscribe((data: Product[]) => {
       // Filtrar apenas produtos que têm quantidade_por_fardo >= 1 (em estoque)
       this.allProducts = data.filter(product => product.quantidade_por_fardo >= 1);
-      // Definir preços mínimo e máximo automaticamente
-      this.setDefaultPriceRange();
-    })
-
-    this.productsService.getProducts(this.indexPage.toString()).subscribe((data: Product[]) => {
-      // Filtrar apenas produtos que têm quantidade_por_fardo >= 1 (em estoque)
-      this.products = data.filter(product => product.quantidade_por_fardo >= 1);
+      this.products = [...this.allProducts]; // Inicializar produtos exibidos
       // Definir preços mínimo e máximo automaticamente
       this.setDefaultPriceRange();
     });
 
     // Buscar Todas as Categorias
     this.productsService.getCategories().subscribe((data: any[]) => {
-      this.categories = data
-    })
+      this.categories = data;
+    });
 
     // Buscar Todos os Tamanhos
     this.productsService.getSize().subscribe((data: any[]) => {
-      this.sizes = data
+      this.sizes = data;
     });
 
     // Buscar Todas as Cores
@@ -92,21 +86,7 @@ export class CatalogComponent implements OnInit {
   }
 
   private applyFilters() {
-    let filteredProducts = [...this.allProducts];
-
-    if (this.selectedCategories.size > 0) {
-      filteredProducts = filteredProducts.filter(product => this.selectedCategories.has(product.familia_tintas));
-    }
-
-    if (this.selectedSizes.size > 0) {
-      filteredProducts = filteredProducts.filter(product => this.selectedSizes.has(product.conteudo_embalagem));
-    }
-
-    if (this.selectedColors.size > 0) {
-      filteredProducts = filteredProducts.filter(product => this.selectedColors.has(product.cor_comercial_tinta));
-    }
-
-    this.products = filteredProducts;
+    this.applyAllFilters();
   }
 
   // Filtrar por preço
@@ -118,29 +98,40 @@ export class CatalogComponent implements OnInit {
       [minPrice, maxPrice] = [maxPrice, minPrice];
     }
 
+    // Aplicar todos os filtros juntos
+    this.applyAllFilters(minPrice, maxPrice);
+  }
+
+  private applyAllFilters(minPrice?: number, maxPrice?: number) {
     let filteredProducts = [...this.allProducts];
 
-    // Aplicar filtros existentes primeiro
+    // Aplicar filtro de categoria
     if (this.selectedCategories.size > 0) {
-      filteredProducts = filteredProducts.filter(product => this.selectedCategories.has(product.familia_tintas));
+      filteredProducts = filteredProducts.filter(product => 
+        this.selectedCategories.has(product.familia_tintas)
+      );
     }
 
-    if (this.selectedBrands.size > 0) {
-      filteredProducts = filteredProducts.filter(product => this.selectedBrands.has(product.linha_produtos_tintas));
-    }
-
+    // Aplicar filtro de tamanho
     if (this.selectedSizes.size > 0) {
-      filteredProducts = filteredProducts.filter(product => this.selectedSizes.has(product.conteudo_embalagem));
+      filteredProducts = filteredProducts.filter(product => 
+        this.selectedSizes.has(product.conteudo_embalagem)
+      );
     }
 
+    // Aplicar filtro de cor
     if (this.selectedColors.size > 0) {
-      filteredProducts = filteredProducts.filter(product => this.selectedColors.has(product.cor_comercial_tinta));
+      filteredProducts = filteredProducts.filter(product => 
+        this.selectedColors.has(product.cor_comercial_tinta)
+      );
     }
 
-    // Aplicar filtro de preço
-    filteredProducts = filteredProducts.filter(product =>
-      product.preco >= minPrice && product.preco <= maxPrice
-    );
+    // Aplicar filtro de preço se especificado
+    if (minPrice !== undefined && maxPrice !== undefined) {
+      filteredProducts = filteredProducts.filter(product =>
+        product.preco >= minPrice && product.preco <= maxPrice
+      );
+    }
 
     this.products = filteredProducts;
   }
@@ -210,13 +201,17 @@ export class CatalogComponent implements OnInit {
     this.selectedColors.clear();
     this.products = [...this.allProducts];
     this.setDefaultPriceRange();
+    
+    // Resetar os checkboxes no DOM
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach((checkbox: any) => {
+      checkbox.checked = false;
+    });
   }
 
   // Adicionar produto ao carrinho
   addToCart(product: Product) {
     this.cartService.addToCart(product, 1);
-    // Opcional: mostrar toast de sucesso
-    console.log('Produto adicionado ao carrinho:', product.descricao);
   }
 
   // Navegar para página de detalhes do produto
@@ -235,32 +230,14 @@ export class CatalogComponent implements OnInit {
     });
   }
 
-  // Métodos de Paginação
+  // Métodos de Paginação (Simplificados - usando todos os produtos filtrados)
   nextPage() {
     this.indexPage++;
-    this.productsService.getProducts(this.indexPage.toString()).subscribe((data: Product[]) => {
-      // Filtrar apenas produtos que têm quantidade_por_fardo >= 1 (em estoque)
-      this.products = data.filter(product => product.quantidade_por_fardo >= 1);
-      // Definir preços mínimo e máximo automaticamente
-      this.setDefaultPriceRange();
-    }, error => {
-      console.error('Erro ao carregar produtos da próxima página:', error);
-      this.indexPage--; // Reverter a página em caso de erro
-    });
   }
 
   previousPage() {
     if (this.indexPage > 1) {
       this.indexPage--;
-      this.productsService.getProducts(this.indexPage.toString()).subscribe((data: Product[]) => {
-        // Filtrar apenas produtos que têm quantidade_por_fardo >= 1 (em estoque)
-        this.products = data.filter(product => product.quantidade_por_fardo >= 1);
-        // Definir preços mínimo e máximo automaticamente
-        this.setDefaultPriceRange();
-      }, error => {
-        console.error('Erro ao carregar produtos da página anterior:', error);
-        this.indexPage++; // Reverter a página em caso de erro
-      });
     }
   }
 }
