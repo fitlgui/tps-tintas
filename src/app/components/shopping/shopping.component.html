@@ -113,7 +113,7 @@
             <!-- Preço em destaque -->
             <div class="flex items-center space-x-2 mb-3">
               <span *ngIf="item.type === 'product' && item.product" class="text-xl font-bold text-green-600 bg-green-50 px-2 py-1 rounded">
-                <span *ngIf="item.product.preco > 0">R$ {{ item.product.preco }}</span>
+                <span *ngIf="item.product.preco > 0 && item.product.quantidade_por_fardo > 0">R$ {{ item.product.preco }}</span>
                 <span *ngIf="item.type === 'product' && item.product.preco <= 0">Falar com Vendedor</span>
               </span>
               <span *ngIf="item.type === 'tool' && item.tool">
@@ -159,7 +159,7 @@
               <div class="flex justify-between items-center">
                 <span class="text-sm font-medium text-gray-700">Subtotal:</span>
                 <span *ngIf="item.type === 'product' && item.product" class="text-lg font-bold text-green-600">
-                  <span *ngIf="item.product.preco > 0">R$ {{ (getFinalPrice(item.product) * item.quantity) }}</span>
+                  <span *ngIf="item.product.preco > 0 && item.product.quantidade_por_fardo > 0">R$ {{ (getFinalPrice(item.product) * item.quantity) }}</span>
                   <span *ngIf="item.product.preco <= 0">Falar com Vendedor</span>
                 </span>
                 <span *ngIf="item.type === 'tool' && item.tool">
