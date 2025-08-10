@@ -11,8 +11,12 @@ import { SeoService } from 'src/app/services/seo/seo.service';
 })
 export class HomeComponent implements OnInit {
 
+  // Variável para armazenar os produtos
   public produtos: Product[] = []
   cartService = inject(CartService);
+
+  // Numero aleatorio para exibição de produtos
+  public randomProductIndex: number = Math.floor(Math.random() * 120);
 
   constructor(
     private readonly productsService: ProductsService,
@@ -24,14 +28,10 @@ export class HomeComponent implements OnInit {
   ngOnInit(){
     // Configurar SEO para página inicial
     this.setupHomeSeo();
-
+    
     // Obtendo Produtos do Serviço
-    this.productsService.getAllProducts().subscribe((data: Product[])=> {
-      for(let x = 0; x < data.length && this.produtos.length < 4; x++) {
-        if(data[x].quantidade_por_fardo >= 1 && data[x].preco > 0) {
-          this.produtos.push(data[x]);
-        }
-      }
+    this.productsService.getProducts(this.randomProductIndex.toString()).subscribe((data: Product[])=> {
+      this.produtos = data.slice(0, 4);
     })
   }
 

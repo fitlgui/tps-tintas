@@ -32,8 +32,12 @@ export class ShoppingComponent {
   }
 
   // Obter preço final do item
-  getFinalPrice(item: Product | Tool): number {
-    return item.preco;
+  getFinalPrice(item: Product | Tool): any {
+    if(item.preco > 0) {
+      return item.preco;
+    } else {
+      return 'Falar com Vendedor';
+    }
   }
 
   // Obter nome do item

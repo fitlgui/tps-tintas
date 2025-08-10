@@ -11,7 +11,7 @@ export class SeoService {
 
   private readonly baseUrl = 'https://tpstintas.com.br';
   private readonly companyName = 'TPS Tintas Cuiabá';
-  private readonly defaultImage = 'https://tpstintas.com.br/assets/images/logoTps.svg';
+  private readonly defaultImage = '../../../assets/images/logoTps.svg';
 
   constructor(
     private meta: Meta,

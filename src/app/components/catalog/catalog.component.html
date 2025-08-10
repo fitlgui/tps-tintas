@@ -174,7 +174,7 @@
         <!-- Grid de Produtos -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           <div 
-            *ngFor="let item of products" 
+            *ngFor="let item of visibleProducts" 
             class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer transform hover:scale-105"
             (click)="viewProductDetails(item.id)">
             
@@ -199,7 +199,7 @@
               <h3 class="font-semibold text-gray-900 mb-2 line-clamp-2">{{item.descricao}}</h3>
               
               <!-- Preços -->
-              <div class="flex items-center space-x-2 mb-3">
+              <div *ngIf="item.preco > 0" class="flex items-center space-x-2 mb-3">
                 <span class="text-lg font-bold text-green-600">
                   R$ {{item.preco}}
                 </span>
@@ -231,10 +231,14 @@
             </div>
           </div>
         </div>
-        <div class="flex items-center justify-center w-full mt-6 space-x-4">
-          <button *ngIf="indexPage > 1" (click)="previousPage()">Anterior</button>
-          <span class="text-blue-600">{{indexPage}}</span>
-          <button (click)="nextPage()">Próximo</button>
+        <div class="flex items-center justify-center w-full mt-6">
+          <button *ngIf="hasMoreProducts" (click)="loadMore()"
+            class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-300 flex items-center space-x-2">
+            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+            </svg>
+            <span>Carregar mais</span>
+          </button>
         </div>
 
         <!-- Estado Vazio -->

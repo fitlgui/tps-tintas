@@ -112,9 +112,13 @@
 
             <!-- Preço em destaque -->
             <div class="flex items-center space-x-2 mb-3">
-              <span class="text-xl font-bold text-green-600 bg-green-50 px-2 py-1 rounded">
-                <span *ngIf="item.type === 'product' && item.product">R$ {{ item.product.preco }}</span>
-                <span *ngIf="item.type === 'tool' && item.tool">R$ {{ item.tool.preco }}</span>
+              <span *ngIf="item.type === 'product' && item.product" class="text-xl font-bold text-green-600 bg-green-50 px-2 py-1 rounded">
+                <span *ngIf="item.product.preco > 0">R$ {{ item.product.preco }}</span>
+                <span *ngIf="item.type === 'product' && item.product.preco <= 0">Falar com Vendedor</span>
+              </span>
+              <span *ngIf="item.type === 'tool' && item.tool">
+                <span *ngIf="item.tool.preco > 0">R$ {{ item.tool.preco }}</span>
+                <span *ngIf="item.type === 'tool' && item.tool.preco <= 0">Falar com Vendedor</span>
               </span>
               <span class="text-sm text-gray-500">por unidade</span>
             </div>
@@ -154,19 +158,26 @@
             <div class="mt-3 p-2 bg-gray-100 rounded-lg border-l-4 border-green-500">
               <div class="flex justify-between items-center">
                 <span class="text-sm font-medium text-gray-700">Subtotal:</span>
-                <span class="text-lg font-bold text-green-600">
-                  <span *ngIf="item.type === 'product' && item.product">R$ {{ (getFinalPrice(item.product) * item.quantity) }}</span>
-                  <span *ngIf="item.type === 'tool' && item.tool">R$ {{ (getFinalPrice(item.tool) * item.quantity) }}</span>
-                </span>
-              </div>
-              <div class="text-xs text-gray-500 mt-1">
-                <span *ngIf="item.type === 'product' && item.product">
-                  {{ item.quantity }} {{ item.quantity === 1 ? 'unidade' : 'unidades' }} × R$ {{ item.product.preco }}
+                <span *ngIf="item.type === 'product' && item.product" class="text-lg font-bold text-green-600">
+                  <span *ngIf="item.product.preco > 0">R$ {{ (getFinalPrice(item.product) * item.quantity) }}</span>
+                  <span *ngIf="item.product.preco <= 0">Falar com Vendedor</span>
                 </span>
                 <span *ngIf="item.type === 'tool' && item.tool">
-                  {{ item.quantity }} {{ item.quantity === 1 ? 'unidade' : 'unidades' }} × R$ {{ item.tool.preco }}
+                  <span *ngIf="item.tool.preco > 0">R$ {{ (getFinalPrice(item.tool) * item.quantity) }}</span>
+                  <span *ngIf="item.tool.preco <= 0">Falar com Vendedor</span>
                 </span>
               </div>
+              <div *ngIf="item.type === 'product' && item.product" class="text-xs text-gray-500 mt-1">
+                <span *ngIf="item.product.preco > 0">
+                  {{ item.quantity }} {{ item.quantity === 1 ? 'unidade' : 'unidades' }} × R$ {{ item.product.preco }}
+                </span>
+                <span *ngIf="item.product.preco <= 0">Falar com Vendedor</span>
+              </div>
+              <div *ngIf="item.type === 'tool' && item.tool" class="text-xs text-gray-500 mt-1">
+                <span *ngIf="item.tool.preco > 0">
+                  {{ item.quantity }} {{ item.quantity === 1 ? 'unidade' : 'unidades' }} × R$ {{ item.tool.preco }}
+                </span>
+                <span *ngIf="item.tool.preco <= 0">Falar com Vendedor</span>
             </div>
           </div>
         </div>

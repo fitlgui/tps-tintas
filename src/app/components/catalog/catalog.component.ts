@@ -13,6 +13,15 @@ export class CatalogComponent implements OnInit {
   // Variavel para armazenar os produtos
   public allProducts: Product[] = [];
   public products: Product[] = [];
+  public productsToShow: number = 12;
+
+  get hasMoreProducts(): boolean {
+    return this.products.length > this.productsToShow;
+  }
+
+  get visibleProducts(): Product[] {
+    return this.products.slice(0, this.productsToShow);
+  }
 
   // Variavel para armazenar as categorias
   public categories: any[] = [];
@@ -54,9 +63,9 @@ export class CatalogComponent implements OnInit {
 
     // Buscando Todos os Produtos primeiro
     this.productsService.getAllProducts().subscribe((data: Product[]) => {
-      // Filtrar apenas produtos que têm quantidade_por_fardo >= 1 (em estoque)
-      this.allProducts = data.filter(product => product.quantidade_por_fardo >= 1);
-      this.products = [...this.allProducts]; // Inicializar produtos exibidos
+      this.allProducts = data;
+  this.products = [...this.allProducts]; // Inicializar produtos exibidos
+  this.productsToShow = 12;
       // Definir preços mínimo e máximo automaticamente
       this.setDefaultPriceRange();
     });
@@ -133,7 +142,8 @@ export class CatalogComponent implements OnInit {
       );
     }
 
-    this.products = filteredProducts;
+  this.products = filteredProducts;
+  this.productsToShow = 12;
   }
 
   // Pegar preço máximo dos produtos
@@ -200,13 +210,17 @@ export class CatalogComponent implements OnInit {
     this.selectedSizes.clear();
     this.selectedColors.clear();
     this.products = [...this.allProducts];
+    this.productsToShow = 12;
     this.setDefaultPriceRange();
-    
     // Resetar os checkboxes no DOM
     const checkboxes = document.querySelectorAll('input[type="checkbox"]');
     checkboxes.forEach((checkbox: any) => {
       checkbox.checked = false;
     });
+  }
+
+  loadMore() {
+    this.productsToShow += 12;
   }
 
   // Adicionar produto ao carrinho
