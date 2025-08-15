@@ -16,6 +16,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
   filteredProducts: Product[] = [];
   selectedCategory: string = 'all';
   searchTerm: string = '';
+  showOnlyBestSellers: boolean = false;
   loading: boolean = true;
 
   // Subject para debounce da busca
@@ -74,9 +75,16 @@ export class ProductsComponent implements OnInit, OnDestroy {
   }
 
   private applyFilters(): void {
-    // Se não há busca nem categoria, mostrar todos os produtos
+    let baseProducts = [...this.products];
+
+    // Aplicar filtro de mais vendidos primeiro
+    if (this.showOnlyBestSellers) {
+      baseProducts = baseProducts.filter(product => product.mais_vendidos === true);
+    }
+
+    // Se não há busca nem categoria, mostrar produtos baseados no filtro de mais vendidos
     if ((!this.searchTerm || this.searchTerm.trim() === '') && this.selectedCategory === 'all') {
-      this.filteredProducts = [...this.products];
+      this.filteredProducts = baseProducts;
       return;
     }
 
@@ -84,6 +92,11 @@ export class ProductsComponent implements OnInit, OnDestroy {
     if (this.selectedCategory && this.selectedCategory !== 'all') {
       this.productsService.getProductByCategory(this.selectedCategory).subscribe({
         next: (filteredByCategory) => {
+          // Aplicar filtro de mais vendidos
+          if (this.showOnlyBestSellers) {
+            filteredByCategory = filteredByCategory.filter(product => product.mais_vendidos === true);
+          }
+
           // Aplicar filtro de busca nos resultados da categoria
           if (this.searchTerm && this.searchTerm.trim() !== '') {
             const term = this.searchTerm.toLowerCase().trim();
@@ -111,26 +124,45 @@ export class ProductsComponent implements OnInit, OnDestroy {
       this.productsService.getProductByName(term).subscribe({
         next: (product) => {
           if (product) {
-            this.filteredProducts = [product];
+            // Aplicar filtro de mais vendidos ao produto encontrado
+            if (this.showOnlyBestSellers) {
+              this.filteredProducts = product.mais_vendidos ? [product] : [];
+            } else {
+              this.filteredProducts = [product];
+            }
           } else {
             // Se não encontrou por nome exato, fazer busca local em todos os campos
-            this.filteredProducts = this.products.filter(p =>
+            let searchResults = this.products.filter(p =>
               p.descricao?.toLowerCase().includes(term) ||
               p.codigo?.toLowerCase().includes(term) ||
               p.linha_produtos_tintas?.toLowerCase().includes(term) ||
               p.cor_comercial_tinta?.toLowerCase().includes(term)
             );
+
+            // Aplicar filtro de mais vendidos aos resultados da busca
+            if (this.showOnlyBestSellers) {
+              searchResults = searchResults.filter(product => product.mais_vendidos === true);
+            }
+
+            this.filteredProducts = searchResults;
           }
         },
         error: (error) => {
           console.error('Erro ao buscar produto:', error);
           // Em caso de erro, fazer busca local
-          this.filteredProducts = this.products.filter(p =>
+          let searchResults = this.products.filter(p =>
             p.descricao?.toLowerCase().includes(term) ||
             p.codigo?.toLowerCase().includes(term) ||
             p.linha_produtos_tintas?.toLowerCase().includes(term) ||
             p.cor_comercial_tinta?.toLowerCase().includes(term)
           );
+
+          // Aplicar filtro de mais vendidos aos resultados da busca
+          if (this.showOnlyBestSellers) {
+            searchResults = searchResults.filter(product => product.mais_vendidos === true);
+          }
+
+          this.filteredProducts = searchResults;
         }
       });
     }
@@ -142,6 +174,10 @@ export class ProductsComponent implements OnInit, OnDestroy {
   }
 
   onCategoryChange(): void {
+    this.applyFilters();
+  }
+
+  onBestSellersFilterChange(): void {
     this.applyFilters();
   }
 

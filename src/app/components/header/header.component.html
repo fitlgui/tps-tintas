@@ -3,26 +3,11 @@
   <div class="hidden lg:flex flex-col items-center justify-center p-4">
     <!-- Logo Principal -->
     <div class="flex items-center justify-center text-2xl font-bold space-x-3 mb-4">
-      <h1 class="cursor-pointer hover:text-3xl transition-all duration-300 text-gray-800"
+      <img class="cursor-pointer w-16 h-10 hover:text-3xl transition-all duration-300 text-gray-800"
           (click)="goToHome()"
-          title="TPS Tintas Cuiabá - Tintas WEG Industriais">
-        TPS Tintas Cuiabá
-      </h1>
-      <div class="relative">
-        <button (click)="cartService.toggleCart()"
-                class="w-7 h-7 cursor-pointer hover:scale-110 transition-transform duration-300"
-                aria-label="Abrir carrinho de compras"
-                title="Carrinho de compras">
-          <img class="w-full h-full" src="../../../assets/icons/shoppingCart.svg" alt="Ícone carrinho de compras">
-        </button>
-        <!-- Badge do contador Desktop -->
-        <span
-          *ngIf="cartService.getTotalItems() > 0"
-          class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold header-cart-badge"
-          [attr.aria-label]="cartService.getTotalItems() + ' itens no carrinho'">
-          {{ cartService.getTotalItems() > 99 ? '99+' : cartService.getTotalItems() }}
-        </span>
-      </div>
+          title="TPS Tintas Cuiabá - Tintas WEG Industriais"
+          src="../../../assets/images/logoTps.png"
+          alt="Logo TPS Tintas Cuiabá"/>
     </div>
 
     <!-- Links do Cabeçalho Desktop -->
@@ -63,6 +48,21 @@
                placeholder="Buscar tintas WEG, cores..."
                aria-label="Pesquisar produtos no catálogo"
                title="Pesquisar tintas, cores e produtos">
+      </div>
+       <div class="relative">
+        <button (click)="cartService.toggleCart()"
+                class="w-7 h-7 cursor-pointer hover:scale-110 transition-transform duration-300"
+                aria-label="Abrir carrinho de compras"
+                title="Carrinho de compras">
+          <img class="w-full h-full" src="../../../assets/icons/shoppingCart.svg" alt="Ícone carrinho de compras">
+        </button>
+        <!-- Badge do contador Desktop -->
+        <span
+          *ngIf="cartService.getTotalItems() > 0"
+          class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-bold header-cart-badge"
+          [attr.aria-label]="cartService.getTotalItems() + ' itens no carrinho'">
+          {{ cartService.getTotalItems() > 99 ? '99+' : cartService.getTotalItems() }}
+        </span>
       </div>
     </nav>
   </div>

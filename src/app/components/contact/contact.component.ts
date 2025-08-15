@@ -153,4 +153,8 @@ export class ContactComponent implements OnInit {
   openPhone(): void {
     window.location.href = 'tel:+5565993421407';
   }
-} 
+
+  openMaps(): void {
+    window.open('https://www.google.com/maps?q=Av.+Gon%C3%A7alo+Antunes+De+Barros,+2017,+Dom+Bosco+-+Cuiab%C3%A1/MT', '_blank');
+  }
+}

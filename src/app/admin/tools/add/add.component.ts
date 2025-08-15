@@ -34,6 +34,8 @@ export class AddToolComponent {
       preco: [0, [Validators.required, Validators.min(0.01), Validators.max(999999.99)]],
       descricao: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(500)]],
       info_tecnica: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(1000)]],
+      marca: ['', [Validators.maxLength(50)]],
+      categoria: ['', [Validators.maxLength(50)]],
       photo: [''] // Campo para imagem
     });
   }
@@ -48,6 +50,8 @@ export class AddToolComponent {
         preco: parseFloat(this.toolForm.value.preco),
         descricao: this.toolForm.value.descricao.trim(),
         info_tecnica: this.toolForm.value.info_tecnica.trim(),
+        marca: this.toolForm.value.marca?.trim() || undefined,
+        categoria: this.toolForm.value.categoria?.trim() || undefined,
         photo: this.toolForm.value.photo || undefined // Incluir foto se houver
       };
 
@@ -83,6 +87,8 @@ export class AddToolComponent {
   get preco() { return this.toolForm.get('preco'); }
   get descricao() { return this.toolForm.get('descricao'); }
   get info_tecnica() { return this.toolForm.get('info_tecnica'); }
+  get marca() { return this.toolForm.get('marca'); }
+  get categoria() { return this.toolForm.get('categoria'); }
 
   // Métodos de validação
   isFieldInvalid(fieldName: string): boolean {
@@ -117,7 +123,9 @@ export class AddToolComponent {
       nome: 'Nome',
       preco: 'Preço',
       descricao: 'Descrição',
-      info_tecnica: 'Informações Técnicas'
+      info_tecnica: 'Informações Técnicas',
+      marca: 'Marca',
+      categoria: 'Categoria'
     };
     return labels[fieldName] || fieldName;
   }

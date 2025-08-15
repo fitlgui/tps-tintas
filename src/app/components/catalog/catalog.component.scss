@@ -1,0 +1,24 @@
+/* Para navegadores baseados em WebKit (Chrome, Safari, Edge) */
+
+/* Define a largura geral da barra de rolagem */
+::-webkit-scrollbar {
+  width: 5px;
+  padding-left: 2px;
+}
+
+/* Estiliza o fundo da barra de rolagem (a trilha) */
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Um cinza bem claro para um fundo clean */
+  border-radius: 5px;
+}
+
+/* Estiliza o "polegar" da barra de rolagem (a parte que você arrasta) */
+::-webkit-scrollbar-thumb {
+  background: #007bff; /* Um azul primário vibrante e moderno */
+  border-radius: 5px;
+}
+
+/* Efeito ao passar o mouse sobre o polegar */
+::-webkit-scrollbar-thumb:hover {
+  background: #0056b3; /* Um tom de azul mais escuro para o feedback visual */
+}

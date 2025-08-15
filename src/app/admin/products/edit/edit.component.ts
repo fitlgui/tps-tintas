@@ -46,6 +46,7 @@ export class EditComponent implements OnInit {
     cor: '',
     diluente_etq: '',
     preco: 0,
+    mais_vendidos: false,
     createdAt: '',
     updatedAt: ''
 }

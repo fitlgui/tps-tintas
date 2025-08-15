@@ -43,7 +43,8 @@ export class AddComponent implements OnInit {
     sistema_resina: '',
     quantidade_por_fardo: 1,
     cor: '',
-    diluente_etq: ''
+    diluente_etq: '',
+    mais_vendidos: false
   };
 
   categories: any[] = [];

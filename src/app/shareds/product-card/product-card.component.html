@@ -92,7 +92,7 @@
         <!-- Price -->
         <div class="bg-gradient-to-r from-green-50 to-blue-50 rounded-xl p-6 border border-green-200">
           <div class="flex items-baseline space-x-3">
-            <span class="text-3xl font-bold text-green-600">R$ {{ getFinalPrice() | number:'1.2-2' }}</span>
+            <span class="text-3xl font-bold text-green-600">R$ {{ getFinalPrice() }}</span>
           </div>
           <p class="text-sm text-gray-600 mt-2">💳 Em até 12x sem juros no cartão</p>
         </div>
@@ -124,8 +124,8 @@
         </div>
         
         <div class="flex items-center space-x-2" *ngIf="!product.inStock">
-          <div class="w-3 h-3 bg-red-500 rounded-full"></div>
-          <span class="text-red-600 font-medium">Produto fora de estoque</span>
+          <div class="w-3 h-3 bg-green-400 rounded-full"></div>
+          <span class="text-green-500 font-medium">Consultar Valores</span>
         </div>
 
         <!-- Quantity Selector -->
@@ -149,11 +149,12 @@
         </div>
 
         <!-- Action Buttons -->
-        <div class="space-y-3" *ngIf="product.inStock">
+        <div class="space-y-3" >
           <button 
             (click)="buyNow()"
             class="w-full bg-gradient-to-r from-green-600 to-green-700 text-white py-4 px-6 rounded-xl font-bold text-lg hover:from-green-700 hover:to-green-800 transform hover:scale-105 transition-all duration-200 shadow-lg">
-            🚀 Comprar Agora
+            <p *ngIf="product.inStock">🚀 Comprar Agora</p>
+            <p *ngIf="!product.inStock">Falar com Vendedor</p>
           </button>
           <button 
             (click)="addToCart()"
@@ -162,15 +163,6 @@
           </button>
         </div>
         
-        <!-- Out of Stock Button -->
-        <div class="space-y-3" *ngIf="!product.inStock">
-          <button 
-            disabled
-            class="w-full bg-gray-400 text-white py-4 px-6 rounded-xl font-bold text-lg cursor-not-allowed opacity-50">
-            Produto Indisponível
-          </button>
-          <p class="text-sm text-gray-600 text-center">Este produto está temporariamente fora de estoque</p>
-        </div>
 
         <!-- Trust Badges -->
         <div class="grid grid-cols-3 gap-2 text-center">

@@ -41,6 +41,7 @@ export interface Product {
     cor: string;
     diluente_etq: string;
     preco: number;
+    mais_vendidos: boolean;
     createdAt: string;
     updatedAt: string;
 }
@@ -80,6 +81,7 @@ export interface ProductUpdate {
     cor: string;
     diluente_etq: string;
     preco: number;
+    mais_vendidos: boolean;
 }
 
 
@@ -161,6 +163,14 @@ export class ProductsService {
           product.photo = base64Data;
         }
       }
+      
+      // Garantir que mais_vendidos seja um boolean válido
+      if (product.mais_vendidos === undefined || product.mais_vendidos === null) {
+        product.mais_vendidos = false;
+      } else {
+        product.mais_vendidos = Boolean(product.mais_vendidos);
+      }
+      
       return product;
     });
   }
@@ -230,8 +240,8 @@ export class ProductsService {
 
   // Pegar produto por ID
   getProductById(id: number): Observable<Product | null> {
-    return this.http.get<Product | null>(`${this.environment.apiUrl}/products/${id}`).pipe(
-      map((data: Product | null) => {
+    return this.http.get<any>(`${this.environment.apiUrl}/products/${id}`).pipe(
+      map((data: any) => {
         if (data) {
           // Se photo é um buffer, converter para string base64
           if (data.photo && typeof data.photo === 'object') {
@@ -242,8 +252,13 @@ export class ProductsService {
               data.photo = base64Data;
             }
           }
+          
+          // Se o campo não existe, definir como false
+          if (!data.hasOwnProperty('mais_vendidos')) {
+            data.mais_vendidos = false;
+          }
         }
-        return data;
+        return data as Product;
       })
     );
   }
@@ -266,6 +281,7 @@ export class ProductsService {
   updateProduct(id: number, product: ProductUpdate): Observable<ProductUpdate> {
     // Garantir que photo seja enviado como string base64 (sem prefixo data:image)
     const productToSend = { ...product };
+    productToSend.preco = productToSend.preco - 0.01;
     if (productToSend.photo && typeof productToSend.photo === 'string' && productToSend.photo.startsWith('data:image/')) {
       // Extrair apenas a parte base64
       productToSend.photo = productToSend.photo.split(',')[1];
@@ -401,5 +417,12 @@ export class ProductsService {
           totalColors: colors.size
         };
       })
+    );
+  }
+
+  // Obter apenas produtos mais vendidos
+  getBestSellingProducts(): Observable<Product[]> {
+    return this.getAllProducts().pipe(
+      map(products => products.filter(product => product.mais_vendidos === true))
     );
   }}

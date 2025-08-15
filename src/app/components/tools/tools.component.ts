@@ -14,6 +14,11 @@ export class ToolsComponent implements OnInit {
   public tools: Tool[] = [];
   public filteredTools: Tool[] = [];
 
+  // Marcas
+  public brands: string[] = [];
+  public selectedBrand: string | null = null;
+  public showBrands: boolean = true;
+
   // Busca
   public searchTerm: string = '';
   public isLoading: boolean = true;
@@ -53,7 +58,11 @@ export class ToolsComponent implements OnInit {
       next: (data: Tool[]) => {
         this.allTools = data;
         this.tools = [...data];
-        this.filteredTools = [...data];
+        this.extractBrands();
+        // Sempre começar mostrando marcas
+        this.showBrands = true;
+        this.selectedBrand = null;
+        this.filteredTools = [];
         this.isLoading = false;
       },
       error: (err) => {
@@ -66,23 +75,35 @@ export class ToolsComponent implements OnInit {
 
   // Buscar ferramentas por nome
   searchTools() {
+    // Só permite buscar quando está visualizando ferramentas de uma marca
+    if (!this.selectedBrand) {
+      return;
+    }
+
     if (!this.searchTerm.trim()) {
-      this.filteredTools = [...this.allTools];
+      this.filterByBrand(this.selectedBrand);
       return;
     }
 
     const searchLower = this.searchTerm.toLowerCase().trim();
-    this.filteredTools = this.allTools.filter(tool =>
+    const toolsInBrand = this.allTools.filter(tool => 
+      tool.marca && tool.marca.trim() === this.selectedBrand
+    );
+
+    this.filteredTools = toolsInBrand.filter(tool =>
       tool.nome.toLowerCase().includes(searchLower) ||
       tool.descricao.toLowerCase().includes(searchLower) ||
-      tool.info_tecnica.toLowerCase().includes(searchLower)
+      tool.info_tecnica.toLowerCase().includes(searchLower) ||
+      (tool.categoria && tool.categoria.toLowerCase().includes(searchLower))
     );
   }
 
   // Limpar busca
   clearSearch() {
     this.searchTerm = '';
-    this.filteredTools = [...this.allTools];
+    if (this.selectedBrand) {
+      this.filterByBrand(this.selectedBrand);
+    }
   }
 
   // Navegar para detalhes da ferramenta
@@ -93,5 +114,47 @@ export class ToolsComponent implements OnInit {
   // Recarregar ferramentas
   reloadTools() {
     this.loadTools();
+  }
+
+  // Extrair marcas únicas das ferramentas
+  private extractBrands() {
+    const brandSet = new Set<string>();
+    
+    this.allTools.forEach(tool => {
+      if (tool.marca && tool.marca.trim()) {
+        brandSet.add(tool.marca.trim());
+      }
+    });
+    
+    this.brands = Array.from(brandSet).sort();
+  }
+
+  // Selecionar marca
+  selectBrand(brand: string) {
+    this.selectedBrand = brand;
+    this.showBrands = false;
+    this.filterByBrand(brand);
+  }
+
+  // Filtrar ferramentas por marca
+  private filterByBrand(brand: string) {
+    this.filteredTools = this.allTools.filter(tool => 
+      tool.marca && tool.marca.trim() === brand
+    );
+  }
+
+  // Voltar para marcas
+  backToBrands() {
+    this.selectedBrand = null;
+    this.showBrands = true;
+    this.filteredTools = [];
+    this.clearSearch();
+  }
+
+  // Obter ferramentas por marca (para contagem)
+  getToolsCountByBrand(brand: string): number {
+    return this.allTools.filter(tool => 
+      tool.marca && tool.marca.trim() === brand
+    ).length;
   }
 }

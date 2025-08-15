@@ -276,14 +276,16 @@ export class ProductCardComponent implements OnInit {
     return features;
   }
 
-  getFinalPrice(): number {
+  getFinalPrice(): any {
     if (this.isToolView && this.tool) {
+      if (this.tool.preco <= 0) return 'Consultar Valor';
       return this.tool.preco;
     }
     if (!this.isToolView && this.product) {
+      if (this.product.preco <= 0) return 'Consultar Valor';
       return this.product.preco;
     }
-    return 0;
+    return 'Consultar Valor';
   }
 
   getCurrentItem(): ExtendedProduct | ExtendedTool | null {
@@ -318,7 +320,7 @@ export class ProductCardComponent implements OnInit {
       return;
     }
 
-    if (!this.product || !this.product.inStock) return;
+    if (!this.product) return;
 
     // Adicionar produto ao carrinho usando o serviço
     this.cartService.addToCart(this.product as Product, this.quantity);
@@ -338,7 +340,7 @@ export class ProductCardComponent implements OnInit {
       return;
     }
 
-    if (!this.product || !this.product.inStock) return;
+    if (!this.product) return;
 
     // Adicionar ao carrinho e enviar para WhatsApp
     this.cartService.addToCart(this.product as Product, this.quantity);

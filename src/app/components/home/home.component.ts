@@ -13,10 +13,19 @@ export class HomeComponent implements OnInit {
 
   // Variável para armazenar os produtos
   public produtos: Product[] = []
+  // Variável para armazenar produtos mais vendidos (sempre disponível)
+  public produtosMaisVendidos: Product[] = []
   cartService = inject(CartService);
 
-  // Numero aleatorio para exibição de produtos
-  public randomProductIndex: number = Math.floor(Math.random() * 120);
+  // Filtro selecionado
+  public selectedFilter: string = 'mais-vendidos';
+  // Opções de filtro
+  public filterOptions = [
+    { label: 'Mais vendidos', value: 'mais-vendidos' },
+    { label: 'Tinta Líquida', value: 'tinta-liquida' },
+    { label: 'Tinta Pó', value: 'tinta-po' },
+    { label: 'Diluentes', value: 'diluente' }
+  ];
 
   constructor(
     private readonly productsService: ProductsService,
@@ -28,11 +37,57 @@ export class HomeComponent implements OnInit {
   ngOnInit(){
     // Configurar SEO para página inicial
     this.setupHomeSeo();
-    
-    // Obtendo Produtos do Serviço
-    this.productsService.getProducts(this.randomProductIndex.toString()).subscribe((data: Product[])=> {
-      this.produtos = data.slice(0, 4);
-    })
+    this.loadProductsByFilter(this.selectedFilter);
+    // Carregar produtos mais vendidos para a seção "Os Mais Vendidos"
+    this.loadBestSellers();
+  }
+
+  loadBestSellers() {
+    this.productsService.getBestSellingProducts().subscribe({
+      next: (bestSellers) => {
+        this.produtosMaisVendidos = bestSellers;
+      },
+      error: (error) => {
+        console.error('Erro ao carregar produtos mais vendidos:', error);
+        this.produtosMaisVendidos = []; // Array vazio em caso de erro
+      }
+    });
+  }
+
+  loadProductsByFilter(filter: string) {
+    this.selectedFilter = filter;
+    let obs$;
+    switch (filter) {
+      case 'mais-vendidos':
+        // Buscar apenas produtos com mais_vendidos: true
+        obs$ = this.productsService.getBestSellingProducts();
+        break;
+      case 'tinta-liquida':
+        obs$ = this.productsService.getProductByCategory('Tinta Líquida');
+        break;
+      case 'tinta-po':
+        obs$ = this.productsService.getProductByCategory('Tinta Pó');
+        break;
+      case 'diluentes':
+        obs$ = this.productsService.getProductByCategory('Diluentes');
+        break;
+      default:
+        obs$ = this.productsService.getAllProducts();
+    }
+    obs$.subscribe((data: Product[]) => {
+      if (filter === 'mais-vendidos') {
+        // Usar produtos mais vendidos
+        this.produtos = data.slice(0, 4);
+        // Se não houver produtos marcados como mais vendidos, pegar os 4 primeiros de todos
+        if (this.produtos.length === 0) {
+          this.productsService.getAllProducts().subscribe((allProducts) => {
+            this.produtos = allProducts.slice(0, 4);
+          });
+        }
+      } else {
+        this.produtos = data.slice(0, 4);
+      }
+    });
   }
 
   private setupHomeSeo() {

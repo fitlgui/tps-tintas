@@ -38,6 +38,8 @@ export class EditToolComponent implements OnInit {
       preco: [0, [Validators.required, Validators.min(0.01), Validators.max(999999.99)]],
       descricao: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(500)]],
       info_tecnica: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(1000)]],
+      marca: ['', [Validators.maxLength(50)]],
+      categoria: ['', [Validators.maxLength(50)]],
       photo: [''] // Campo para imagem
     });
   }
@@ -83,6 +85,8 @@ export class EditToolComponent implements OnInit {
       preco: tool.preco,
       descricao: tool.descricao,
       info_tecnica: tool.info_tecnica,
+      marca: tool.marca || '',
+      categoria: tool.categoria || '',
       photo: tool.photo || ''
     });
 
@@ -111,6 +115,12 @@ export class EditToolComponent implements OnInit {
       }
       if (this.toolForm.value.info_tecnica.trim() !== this.currentTool?.info_tecnica) {
         updateData.info_tecnica = this.toolForm.value.info_tecnica.trim();
+      }
+      if (this.toolForm.value.marca?.trim() !== this.currentTool?.marca) {
+        updateData.marca = this.toolForm.value.marca?.trim() || undefined;
+      }
+      if (this.toolForm.value.categoria?.trim() !== this.currentTool?.categoria) {
+        updateData.categoria = this.toolForm.value.categoria?.trim() || undefined;
       }
       if (this.toolForm.value.photo !== this.currentTool?.photo) {
         updateData.photo = this.toolForm.value.photo || undefined;
@@ -178,6 +188,8 @@ export class EditToolComponent implements OnInit {
       parseFloat(this.toolForm.value.preco) !== this.currentTool.preco ||
       this.toolForm.value.descricao.trim() !== this.currentTool.descricao ||
       this.toolForm.value.info_tecnica.trim() !== this.currentTool.info_tecnica ||
+      this.toolForm.value.marca?.trim() !== this.currentTool.marca ||
+      this.toolForm.value.categoria?.trim() !== this.currentTool.categoria ||
       this.toolForm.value.photo !== this.currentTool.photo
     );
   }
@@ -187,6 +199,8 @@ export class EditToolComponent implements OnInit {
   get preco() { return this.toolForm.get('preco'); }
   get descricao() { return this.toolForm.get('descricao'); }
   get info_tecnica() { return this.toolForm.get('info_tecnica'); }
+  get marca() { return this.toolForm.get('marca'); }
+  get categoria() { return this.toolForm.get('categoria'); }
 
   // Métodos de validação
   isFieldInvalid(fieldName: string): boolean {
@@ -221,7 +235,9 @@ export class EditToolComponent implements OnInit {
       nome: 'Nome',
       preco: 'Preço',
       descricao: 'Descrição',
-      info_tecnica: 'Informações Técnicas'
+      info_tecnica: 'Informações Técnicas',
+      marca: 'Marca',
+      categoria: 'Categoria'
     };
     return labels[fieldName] || fieldName;
   }

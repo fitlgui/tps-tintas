@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, throwError, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { catchError, map, tap } from 'rxjs/operators';
 import { environment } from 'src/environment/enviroment';
 import { AuthService } from '../admin/admin.service';
 
@@ -12,6 +12,8 @@ export interface Tool {
   descricao: string;
   info_tecnica: string;
   photo?: string; // Campo para imagem em base64
+  marca?: string | null;
+  categoria?: string | null;
   created_at?: string;
   updated_at?: string;
 }
@@ -22,6 +24,8 @@ export interface CreateToolRequest {
   descricao: string;
   info_tecnica: string;
   photo?: string; // Campo para imagem em base64
+  marca?: string | null;
+  categoria?: string | null;
 }
 
 export interface UpdateToolRequest {
@@ -30,6 +34,8 @@ export interface UpdateToolRequest {
   descricao?: string;
   info_tecnica?: string;
   photo?: string; // Campo para imagem em base64
+  marca?: string | null;
+  categoria?: string | null;
 }
 
 @Injectable({
@@ -122,6 +128,7 @@ export class ToolsService {
   getTools(): Observable<Tool[]> {
     return this.http.get<Tool[]>(this.apiUrl).pipe(
       map((tools: Tool[]) => this.processToolsImages(tools)),
+      tap((tools: Tool[]) => console.log('Ferramentas buscadas:', tools)),
       catchError(error => {
         console.error('Erro ao buscar ferramentas:', error);
         return of([]);

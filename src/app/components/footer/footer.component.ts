@@ -14,4 +14,8 @@ export class FooterComponent {
   goToAdmin() {
     this.router.navigate(['/admin']);
   }
+
+  goToMaps() {
+    window.open('https://maps.app.goo.gl/bF53ZJgDU6WifmL4A', '_blank');
+  }
 }

@@ -125,7 +125,7 @@
           <!-- Tamanhos -->
           <div class="border-b border-gray-200 pb-6 mb-6">
             <h3 class="text-md font-medium text-gray-900 mb-4">Tamanhos</h3>
-            <div class="space-y-3">
+            <div class="space-y-3 max-h-[200px] overflow-y-auto overflow-x-hidden">
               <div *ngFor="let size of sizes" class="flex items-center justify-between">
                 <label class="flex items-center cursor-pointer">
                   <input 
@@ -142,7 +142,7 @@
           <!-- Cores -->
           <div>
             <h3 class="text-md font-medium text-gray-900 mb-4">Cores</h3>
-            <div class="space-y-3">
+            <div class="space-y-3 max-h-[200px] overflow-y-auto overflow-x-hidden">
               <div *ngFor="let color of colors" class="flex items-center justify-between">
                 <label class="flex items-center cursor-pointer">
                   <input 
@@ -180,13 +180,6 @@
             
             <!-- Header do Card -->
             <div class="relative p-4">
-              <div class="flex justify-between items-start mb-4">
-                <button class="text-gray-400 hover:text-red-500 transition-colors duration-200">
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
-                  </svg>
-                </button>
-              </div>
               
               <!-- Imagem do Produto -->
               <div class="aspect-square bg-gray-50 rounded-lg flex items-center justify-center mb-4">
