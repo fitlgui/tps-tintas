@@ -333,7 +333,7 @@
       <nav class="flex" aria-label="Breadcrumb">
         <ol class="inline-flex items-center space-x-1 md:space-x-3">
           <li class="inline-flex items-center">
-            <a routerLink="/" class="text-gray-700 hover:text-purple-600 inline-flex items-center">
+            <a routerLink="/" class="text-gray-700 hover:text-blue-600 inline-flex items-center">
               <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
               </svg>
@@ -345,7 +345,7 @@
               <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
               </svg>
-              <a routerLink="/tools" class="ml-1 text-gray-700 hover:text-purple-600 md:ml-2">Ferramentas</a>
+              <a routerLink="/tools" class="ml-1 text-gray-700 hover:text-blue-600 md:ml-2">Ferramentas</a>
             </div>
           </li>
           <li>
@@ -389,18 +389,15 @@
         <!-- Title and Basic Info -->
         <div>
           <div class="flex items-center space-x-2 mb-2">
-            <span class="bg-purple-100 text-purple-800 text-sm px-3 py-1 rounded-full font-medium">
+            <span class="bg-gray-300 text-blue-600 text-sm px-3 py-1 rounded-full font-medium">
               Ferramenta
-            </span>
-            <span *ngIf="tool.inStock" class="bg-green-100 text-green-800 text-sm px-3 py-1 rounded-full font-medium">
-              ✓ Disponível
             </span>
           </div>
           
           <h1 class="text-3xl font-bold text-gray-900 mb-4">{{ tool.nome }}</h1>
           
           <div class="flex items-center space-x-4 mb-6">
-            <div class="text-3xl font-bold text-purple-600">
+            <div class="text-3xl font-bold text-blue-600">
               R$ {{ getFinalPrice() | number:'1.2-2' }}
             </div>
           </div>
@@ -433,7 +430,7 @@
           
           <div class="space-y-3">
             <button (click)="buyNow()" 
-                    class="w-full bg-purple-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-purple-700 transition-colors duration-200 flex items-center justify-center space-x-2">
+                    class="w-full bg-green-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-200 flex items-center justify-center space-x-2">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.5 8H19"></path>
               </svg>
@@ -441,7 +438,7 @@
             </button>
             
             <button (click)="addToCart()" 
-                    class="w-full bg-gray-200 text-gray-800 py-3 px-6 rounded-lg font-semibold hover:bg-gray-300 transition-colors duration-200 flex items-center justify-center space-x-2">
+                    class="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200 flex items-center justify-center space-x-2">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
               </svg>
@@ -461,15 +458,15 @@
             <h3 class="text-lg font-semibold text-gray-800 mb-4">Informações Básicas</h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div class="bg-purple-50 p-4 rounded-lg">
-                <span class="block text-sm text-purple-600 mb-1">Nome</span>
+                <span class="block text-sm text-blue-600 mb-1">Nome</span>
                 <span class="font-semibold text-gray-900">{{ tool.nome }}</span>
               </div>
               <div class="bg-purple-50 p-4 rounded-lg">
-                <span class="block text-sm text-purple-600 mb-1">Preço</span>
+                <span class="block text-sm text-blue-600 mb-1">Preço</span>
                 <span class="font-semibold text-gray-900">R$ {{ tool.preco | number:'1.2-2' }}</span>
               </div>
               <div *ngIf="tool.descricao" class="bg-purple-50 p-4 rounded-lg md:col-span-2">
-                <span class="block text-sm text-purple-600 mb-1">Descrição</span>
+                <span class="block text-sm text-blue-600 mb-1">Descrição</span>
                 <span class="font-semibold text-gray-900">{{ tool.descricao }}</span>
               </div>
             </div>
@@ -519,7 +516,7 @@
             </h3>
             <p class="text-sm text-gray-600 mb-2" *ngIf="getItemSubtitle(relatedItem)">{{ getItemSubtitle(relatedItem) }}</p>
             <div class="flex items-center justify-between">
-              <span class="text-lg font-bold text-purple-600">
+              <span class="text-lg font-bold text-blue-600">
                 R$ {{ relatedItem.preco | number:'1.2-2' }}
               </span>
             </div>

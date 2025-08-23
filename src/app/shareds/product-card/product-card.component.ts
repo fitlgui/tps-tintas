@@ -270,7 +270,6 @@ export class ProductCardComponent implements OnInit {
     if (product.diluente_etq) features.push(`Diluente: ${product.diluente_etq}`);
     
     // Informações de estoque
-    features.push(`Quantidade em estoque: ${product.quantidade_por_fardo}`);
     features.push('Garantia de qualidade WEG');
     
     return features;
