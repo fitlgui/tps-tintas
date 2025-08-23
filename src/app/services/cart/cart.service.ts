@@ -186,9 +186,16 @@ export class CartService {
         message += `   • Preço unitário: R$ ${finalPrice}\n`;
         message += `   • Subtotal: R$ ${(finalPrice * item.quantity)}\n\n`;
       }
+      
+      if(itemName && finalPrice <= 0) { 
+        message += `*${index + 1}. ${itemType}: ${itemName}*\n`;
+        message += `   • Preço unitário: A negociar\n`;
+      }
     });
 
+    if(this.getTotalPrice() > 0){
     message += `*💰 Total do Pedido: R$ ${this.getTotalPrice()}*\n\n`;
+    }
     message += `Gostaria de finalizar este pedido. Aguardo contato para confirmação! 😊`;
 
     return encodeURIComponent(message);
