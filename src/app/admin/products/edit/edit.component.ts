@@ -115,7 +115,6 @@ export class EditComponent implements OnInit {
     this.productsService.getColors().subscribe({
       next: (data) => {
         this.colors = data;
-        console.log('Cores carregadas:', data);
       },
       error: (error) => console.error('Erro ao carregar cores:', error)
     });
@@ -206,13 +205,11 @@ export class EditComponent implements OnInit {
 
     this.productsService.updateProduct(this.productId, productToUpdate).subscribe({
       next: (updatedProduct) => {
-        console.log('Produto atualizado:', updatedProduct);
         this.loading = false;
         // Redirecionar para lista de produtos
         this.router.navigate(['/admin/produtos']);
       },
       error: (error) => {
-        console.log('Dados enviados:', productToUpdate);
         console.error('Erro ao atualizar produto:', error);
         this.loading = false;
       }
@@ -292,11 +289,6 @@ export class EditComponent implements OnInit {
       // Remover prefixo e salvar
       const base64Data = compressedBase64.split(',')[1];
       this.product.photo = base64Data;
-
-      console.log('Imagem comprimida:', {
-        tamanhoOriginal: `${(file.size / 1024).toFixed(2)} KB`,
-        tamanhoComprimido: `${(base64Data.length * 0.75 / 1024).toFixed(2)} KB`
-      });
     };
 
     // Carregar imagem

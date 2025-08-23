@@ -88,48 +88,38 @@ export class AddComponent implements OnInit {
   }
 
   validateForm(): boolean {
-    console.log('Iniciando validação do formulário...');
     this.errors = {};
     let isValid = true;
 
     if (!this.product.codigo?.trim()) {
       this.errors.codigo = 'Código é obrigatório';
-      console.log('Erro: Código não preenchido');
       isValid = false;
     }
 
     if (!this.product.descricao?.trim()) {
       this.errors.descricao = 'Descrição é obrigatória';
-      console.log('Erro: Descrição não preenchida');
       isValid = false;
     }
 
     if (!this.product.preco || this.product.preco <= 0) {
       this.errors.preco = 'Preço deve ser maior que zero';
-      console.log('Erro: Preço inválido:', this.product.preco);
       isValid = false;
     }
 
     if (!this.product.familia_tintas) {
       this.errors.familia_tintas = 'Família de tintas é obrigatória';
-      console.log('Erro: Família de tintas não selecionada');
       isValid = false;
     }
 
     if (!this.product.conteudo_embalagem) {
       this.errors.conteudo_embalagem = 'Conteúdo da embalagem é obrigatório';
-      console.log('Erro: Conteúdo da embalagem não preenchido');
       isValid = false;
     }
 
     if (!this.product.cor_comercial_tinta) {
       this.errors.cor_comercial_tinta = 'Cor comercial é obrigatória';
-      console.log('Erro: Cor comercial não preenchida');
       isValid = false;
     }
-
-    console.log('Resultado da validação:', isValid ? 'VÁLIDO' : 'INVÁLIDO');
-    console.log('Erros encontrados:', this.errors);
     
     return isValid;
   }
@@ -163,24 +153,17 @@ export class AddComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.log('onSubmit chamado');
-    console.log('Produto antes da validação:', this.product);
-    
     if (!this.validateForm()) {
-      console.log('Validação falhou, erros:', this.errors);
       return;
     }
 
-    console.log('Validação passou, iniciando envio...');
     this.loading = true;
 
     // Sanitizar produto antes de enviar
     const productToSend = this.sanitizeProduct(this.product);
-    console.log('Produto sanitizado a ser enviado:', productToSend);
 
     this.productsService.addProduct(productToSend as Product).subscribe({
       next: (newProduct) => {
-        console.log('Produto adicionado com sucesso:', newProduct);
         this.loading = false;
         // Redirecionar para lista de produtos
         this.router.navigate(['/admin/produtos']);

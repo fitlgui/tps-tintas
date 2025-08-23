@@ -166,7 +166,7 @@ export class AuthService {
             return null;
           }
         } else {
-          console.log('Usuário não encontrado ou não é admin');
+          // Usuário não encontrado ou não é admin
         }
 
         return null;

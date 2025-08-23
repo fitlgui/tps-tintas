@@ -128,7 +128,6 @@ export class ToolsService {
   getTools(): Observable<Tool[]> {
     return this.http.get<Tool[]>(this.apiUrl).pipe(
       map((tools: Tool[]) => this.processToolsImages(tools)),
-      tap((tools: Tool[]) => console.log('Ferramentas buscadas:', tools)),
       catchError(error => {
         console.error('Erro ao buscar ferramentas:', error);
         return of([]);

@@ -40,18 +40,13 @@ export class LoginComponent implements OnInit {
 
     this.loading = true;
     this.errorMessage = '';
-
-    console.log('🔑 Iniciando processo de login...');
     
     // Chamar o método login que retorna Observable
     this.authService.login(this.credentials.username, this.credentials.password).subscribe({
       next: (success) => {
-        console.log('📋 Resultado do login:', success);
         if (success) {
-          console.log('✅ Login bem-sucedido, redirecionando...');
           this.router.navigate(['/admin']);
         } else {
-          console.log('❌ Login falhado');
           this.errorMessage = 'Credenciais inválidas.';
         }
         this.loading = false;

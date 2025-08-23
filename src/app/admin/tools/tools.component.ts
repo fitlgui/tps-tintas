@@ -35,12 +35,6 @@ export class ToolsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Debug: verificar status de autenticação
-    console.log('ToolsComponent - Status de login:', this.authService.isLoggedIn());
-    console.log('ToolsComponent - Pode visualizar:', this.authService.canView());
-    console.log('ToolsComponent - Pode editar:', this.authService.canEdit());
-    console.log('ToolsComponent - Usuário atual:', this.authService.getCurrentUserInfo());
-    
     this.loadTools();
   }
 

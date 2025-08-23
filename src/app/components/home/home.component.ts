@@ -107,6 +107,5 @@ export class HomeComponent implements OnInit {
 
   addToCart(product: Product): void {
     this.cartService.addToCart(product, 1);
-    console.log('Produto adicionado ao carrinho:', product.descricao);
   }
 }
