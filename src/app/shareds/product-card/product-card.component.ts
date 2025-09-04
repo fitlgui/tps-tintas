@@ -292,15 +292,7 @@ export class ProductCardComponent implements OnInit {
   }
 
   increaseQuantity(): void {
-    if (this.isToolView) {
-      if (this.quantity < (this.tool?.stockQuantity || 1)) {
-        this.quantity++;
-      }
-    } else {
-      if (this.quantity < (this.product?.stockQuantity || 1)) {
-        this.quantity++;
-      }
-    }
+      this.quantity++;
   }
 
   decreaseQuantity(): void {

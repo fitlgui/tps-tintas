@@ -2,19 +2,30 @@
 <app-header></app-header>
 
 <!-- Loading State -->
-<div *ngIf="loading" class="min-h-screen bg-gray-50 flex items-center justify-center">
+<div
+  *ngIf="loading"
+  class="min-h-screen bg-gray-50 flex items-center justify-center"
+>
   <div class="text-center">
-    <div class="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
+    <div
+      class="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"
+    ></div>
     <p class="mt-4 text-gray-600">Carregando produto...</p>
   </div>
 </div>
 
 <!-- Error State -->
-<div *ngIf="error && !loading" class="min-h-screen bg-gray-50 flex items-center justify-center">
+<div
+  *ngIf="error && !loading"
+  class="min-h-screen bg-gray-50 flex items-center justify-center"
+>
   <div class="text-center">
     <div class="text-6xl text-red-500 mb-4">⚠️</div>
     <h2 class="text-2xl font-bold text-gray-800 mb-2">{{ error }}</h2>
-    <button (click)="goToCatalog()" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
+    <button
+      (click)="goToCatalog()"
+      class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+    >
       Voltar ao Catálogo
     </button>
   </div>
@@ -28,27 +39,54 @@
       <nav class="flex" aria-label="Breadcrumb">
         <ol class="inline-flex items-center space-x-1 md:space-x-3">
           <li class="inline-flex items-center">
-            <a routerLink="/" class="text-gray-700 hover:text-blue-600 inline-flex items-center">
+            <a
+              routerLink="/"
+              class="text-gray-700 hover:text-blue-600 inline-flex items-center"
+            >
               <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                <path
+                  d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"
+                ></path>
               </svg>
               Home
             </a>
           </li>
           <li>
             <div class="flex items-center">
-              <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+              <svg
+                class="w-6 h-6 text-gray-400"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                  clip-rule="evenodd"
+                ></path>
               </svg>
-              <a routerLink="/catalog" class="ml-1 text-gray-700 hover:text-blue-600 md:ml-2">Catálogo</a>
+              <a
+                routerLink="/catalog"
+                class="ml-1 text-gray-700 hover:text-blue-600 md:ml-2"
+                >Catálogo</a
+              >
             </div>
           </li>
           <li>
             <div class="flex items-center">
-              <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+              <svg
+                class="w-6 h-6 text-gray-400"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                  clip-rule="evenodd"
+                ></path>
               </svg>
-              <span class="ml-1 text-gray-500 md:ml-2">{{ product.descricao }}</span>
+              <span class="ml-1 text-gray-500 md:ml-2">{{
+                product.descricao
+              }}</span>
             </div>
           </li>
         </ol>
@@ -59,23 +97,33 @@
   <!-- Product Section -->
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-      
       <!-- Product Images -->
       <div class="space-y-4">
         <!-- Main Image -->
-        <div class="aspect-square bg-white rounded-2xl shadow-lg p-8 flex items-center justify-center">
-          <img [src]="productImages[selectedImage]" [alt]="product.descricao" class="max-w-full max-h-full object-contain">
+        <div
+          class="aspect-square bg-white rounded-2xl shadow-lg p-8 flex items-center justify-center"
+        >
+          <img
+            [src]="productImages[selectedImage]"
+            [alt]="product.descricao"
+            class="max-w-full max-h-full object-contain"
+          />
         </div>
-        
+
         <!-- Thumbnail Gallery -->
         <div class="flex space-x-4">
-          <button 
+          <button
             *ngFor="let image of productImages; let i = index"
             (click)="selectImage(i)"
             [class.ring-2]="selectedImage === i"
             [class.ring-blue-500]="selectedImage === i"
-            class="aspect-square w-20 bg-white rounded-lg shadow p-2 hover:shadow-md transition-all duration-200">
-            <img [src]="image" [alt]="'Imagem ' + (i + 1)" class="w-full h-full object-contain">
+            class="aspect-square w-20 bg-white rounded-lg shadow p-2 hover:shadow-md transition-all duration-200"
+          >
+            <img
+              [src]="image"
+              [alt]="'Imagem ' + (i + 1)"
+              class="w-full h-full object-contain"
+            />
           </button>
         </div>
       </div>
@@ -84,45 +132,66 @@
       <div class="space-y-6">
         <!-- Title and Category -->
         <div>
-          <span class="inline-block bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full font-medium">{{ product.familia_tintas }}</span>
-          <h1 class="text-3xl font-bold text-gray-900 mt-2">{{ product.descricao }}</h1>
-          <p class="text-lg text-gray-600 mt-1">{{ product.linha_produtos_tintas }}</p>
+          <span
+            class="inline-block bg-blue-100 text-blue-800 text-sm px-3 py-1 rounded-full font-medium"
+            >{{ product.familia_tintas }}</span
+          >
+          <h1 class="text-3xl font-bold text-gray-900 mt-2">
+            {{ product.descricao }}
+          </h1>
+          <p class="text-lg text-gray-600 mt-1">
+            {{ product.linha_produtos_tintas }}
+          </p>
         </div>
 
         <!-- Price -->
-        <div class="bg-gradient-to-r from-green-50 to-blue-50 rounded-xl p-6 border border-green-200">
+        <div
+          class="bg-gradient-to-r from-green-50 to-blue-50 rounded-xl p-6 border border-green-200"
+        >
           <div class="flex items-baseline space-x-3">
-            <span class="text-3xl font-bold text-green-600">R$ {{ getFinalPrice() }}</span>
+            <span class="text-3xl font-bold text-green-600"
+              >R$ {{ getFinalPrice() }}</span
+            >
           </div>
-          <p class="text-sm text-gray-600 mt-2">💳 Em até 12x sem juros no cartão</p>
+          <p class="text-sm text-gray-600 mt-2">
+            💳 Em até 12x sem juros no cartão
+          </p>
         </div>
 
         <!-- Product Specs -->
         <div class="grid grid-cols-2 gap-4">
           <div class="bg-white rounded-lg p-4 shadow-sm border">
             <span class="text-sm text-gray-500">Código</span>
-            <p class="font-semibold text-gray-900">{{ product.codigo || 'N/A' }}</p>
+            <p class="font-semibold text-gray-900">
+              {{ product.codigo || "N/A" }}
+            </p>
           </div>
           <div class="bg-white rounded-lg p-4 shadow-sm border">
             <span class="text-sm text-gray-500">Cor Comercial</span>
-            <p class="font-semibold text-gray-900">{{ product.cor_comercial_tinta || 'N/A' }}</p>
+            <p class="font-semibold text-gray-900">
+              {{ product.cor_comercial_tinta || "N/A" }}
+            </p>
           </div>
           <div class="bg-white rounded-lg p-4 shadow-sm border">
             <span class="text-sm text-gray-500">Tamanho/Embalagem</span>
-            <p class="font-semibold text-gray-900">{{ product.conteudo_embalagem || 'N/A' }}</p>
+            <p class="font-semibold text-gray-900">
+              {{ product.conteudo_embalagem || "N/A" }}
+            </p>
           </div>
           <div class="bg-white rounded-lg p-4 shadow-sm border">
             <span class="text-sm text-gray-500">Quantidade</span>
-            <p class="font-semibold text-gray-900">{{ 1 || 'N/A' }}</p>
+            <p class="font-semibold text-gray-900">{{ 1 || "N/A" }}</p>
           </div>
         </div>
 
         <!-- Stock Status -->
         <div class="flex items-center space-x-2" *ngIf="product.inStock">
           <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-          <span class="text-green-600 font-medium">{{ product.stockQuantity }} unidades disponíveis</span>
+          <span class="text-green-600 font-medium"
+            >{{ product.stockQuantity }} unidades disponíveis</span
+          >
         </div>
-        
+
         <div class="flex items-center space-x-2" *ngIf="!product.inStock">
           <div class="w-3 h-3 bg-green-400 rounded-full"></div>
           <span class="text-green-500 font-medium">Consultar Valores</span>
@@ -130,45 +199,51 @@
 
         <!-- Quantity Selector -->
         <div class="space-y-3">
-          <label class="block text-sm font-medium text-gray-700">Quantidade</label>
+          <label class="block text-sm font-medium text-gray-700"
+            >Quantidade</label
+          >
           <div class="flex items-center space-x-3">
-            <button 
+            <button
               (click)="decreaseQuantity()"
               [disabled]="quantity <= 1"
-              class="w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center font-bold text-gray-700">
+              class="w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center font-bold text-gray-700"
+            >
               -
             </button>
-            <span class="w-16 text-center text-lg font-semibold">{{ quantity }}</span>
-            <button 
+            <span class="w-16 text-center text-lg font-semibold">{{
+              quantity
+            }}</span>
+            <button
               (click)="increaseQuantity()"
-              [disabled]="quantity >= product.stockQuantity"
-              class="w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center font-bold text-gray-700">
+              class="w-10 h-10 rounded-full bg-gray-200 hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center font-bold text-gray-700"
+            >
               +
             </button>
           </div>
         </div>
 
         <!-- Action Buttons -->
-        <div class="space-y-3" >
-          <button 
+        <div class="space-y-3">
+          <button
             (click)="buyNow()"
-            class="w-full bg-gradient-to-r from-green-600 to-green-700 text-white py-4 px-6 rounded-xl font-bold text-lg hover:from-green-700 hover:to-green-800 transform hover:scale-105 transition-all duration-200 shadow-lg">
+            class="w-full bg-gradient-to-r from-green-600 to-green-700 text-white py-4 px-6 rounded-xl font-bold text-lg hover:from-green-700 hover:to-green-800 transform hover:scale-105 transition-all duration-200 shadow-lg"
+          >
             <p *ngIf="product.inStock">🚀 Comprar Agora</p>
             <p *ngIf="!product.inStock">Falar com Vendedor</p>
           </button>
-          <button 
+          <button
             (click)="addToCart()"
-            class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-4 px-6 rounded-xl font-bold text-lg hover:from-blue-700 hover:to-blue-800 transform hover:scale-105 transition-all duration-200 shadow-lg">
+            class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-4 px-6 rounded-xl font-bold text-lg hover:from-blue-700 hover:to-blue-800 transform hover:scale-105 transition-all duration-200 shadow-lg"
+          >
             🛒 Adicionar ao Carrinho
           </button>
         </div>
-        
 
         <!-- Trust Badges -->
         <div class="grid grid-cols-3 gap-2 text-center">
           <div class="bg-white rounded-lg p-3 shadow-sm border">
             <div class="text-2xl mb-1">🚚</div>
-            <p class="text-xs text-gray-600">Frete Grátis acima de R$ 150</p>
+            <p class="text-xs text-gray-600">Frete para todo Mato Grosso</p>
           </div>
           <div class="bg-white rounded-lg p-3 shadow-sm border">
             <div class="text-2xl mb-1">🔒</div>
@@ -186,106 +261,245 @@
     <div class="mt-16">
       <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
         <div class="p-8">
-          <h2 class="text-2xl font-bold text-gray-900 mb-6">Detalhes do Produto</h2>
-          
+          <h2 class="text-2xl font-bold text-gray-900 mb-6">
+            Detalhes do Produto
+          </h2>
+
           <!-- Description -->
           <div class="mb-8">
             <h3 class="text-lg font-semibold text-gray-800 mb-3">Descrição</h3>
-            <p class="text-gray-600 leading-relaxed">{{ product.description }}</p>
+            <p class="text-gray-600 leading-relaxed">
+              {{ product.description }}
+            </p>
           </div>
 
           <!-- Technical Specifications -->
-          <div class="mb-8" *ngIf="product.massa_especifica || product.tempo_secagem || product.tempo_cura || product.metodo_aplicacao || product.temperatura_aplicacao">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">Especificações Técnicas</h3>
+          <div
+            class="mb-8"
+            *ngIf="
+              product.massa_especifica ||
+              product.tempo_secagem ||
+              product.tempo_cura ||
+              product.metodo_aplicacao ||
+              product.temperatura_aplicacao
+            "
+          >
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">
+              Especificações Técnicas
+            </h3>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <div *ngIf="product.massa_especifica" class="bg-gray-50 p-4 rounded-lg">
-                <span class="block text-sm text-gray-600 mb-1">Massa Específica</span>
-                <span class="font-semibold text-gray-900">{{ product.massa_especifica }}</span>
+              <div
+                *ngIf="product.massa_especifica"
+                class="bg-gray-50 p-4 rounded-lg"
+              >
+                <span class="block text-sm text-gray-600 mb-1"
+                  >Massa Específica</span
+                >
+                <span class="font-semibold text-gray-900">{{
+                  product.massa_especifica
+                }}</span>
               </div>
-              <div *ngIf="product.tempo_secagem" class="bg-gray-50 p-4 rounded-lg">
-                <span class="block text-sm text-gray-600 mb-1">Tempo de Secagem</span>
-                <span class="font-semibold text-gray-900">{{ product.tempo_secagem }}</span>
+              <div
+                *ngIf="product.tempo_secagem"
+                class="bg-gray-50 p-4 rounded-lg"
+              >
+                <span class="block text-sm text-gray-600 mb-1"
+                  >Tempo de Secagem</span
+                >
+                <span class="font-semibold text-gray-900">{{
+                  product.tempo_secagem
+                }}</span>
               </div>
               <div *ngIf="product.tempo_cura" class="bg-gray-50 p-4 rounded-lg">
-                <span class="block text-sm text-gray-600 mb-1">Tempo de Cura</span>
-                <span class="font-semibold text-gray-900">{{ product.tempo_cura }}</span>
+                <span class="block text-sm text-gray-600 mb-1"
+                  >Tempo de Cura</span
+                >
+                <span class="font-semibold text-gray-900">{{
+                  product.tempo_cura
+                }}</span>
               </div>
-              <div *ngIf="product.metodo_aplicacao" class="bg-gray-50 p-4 rounded-lg">
-                <span class="block text-sm text-gray-600 mb-1">Método de Aplicação</span>
-                <span class="font-semibold text-gray-900">{{ product.metodo_aplicacao }}</span>
+              <div
+                *ngIf="product.metodo_aplicacao"
+                class="bg-gray-50 p-4 rounded-lg"
+              >
+                <span class="block text-sm text-gray-600 mb-1"
+                  >Método de Aplicação</span
+                >
+                <span class="font-semibold text-gray-900">{{
+                  product.metodo_aplicacao
+                }}</span>
               </div>
-              <div *ngIf="product.temperatura_aplicacao" class="bg-gray-50 p-4 rounded-lg">
-                <span class="block text-sm text-gray-600 mb-1">Temperatura de Aplicação</span>
-                <span class="font-semibold text-gray-900">{{ product.temperatura_aplicacao }}</span>
+              <div
+                *ngIf="product.temperatura_aplicacao"
+                class="bg-gray-50 p-4 rounded-lg"
+              >
+                <span class="block text-sm text-gray-600 mb-1"
+                  >Temperatura de Aplicação</span
+                >
+                <span class="font-semibold text-gray-900">{{
+                  product.temperatura_aplicacao
+                }}</span>
               </div>
-              <div *ngIf="product.ambiente_aplicacao" class="bg-gray-50 p-4 rounded-lg">
-                <span class="block text-sm text-gray-600 mb-1">Ambiente de Aplicação</span>
-                <span class="font-semibold text-gray-900">{{ product.ambiente_aplicacao }}</span>
+              <div
+                *ngIf="product.ambiente_aplicacao"
+                class="bg-gray-50 p-4 rounded-lg"
+              >
+                <span class="block text-sm text-gray-600 mb-1"
+                  >Ambiente de Aplicação</span
+                >
+                <span class="font-semibold text-gray-900">{{
+                  product.ambiente_aplicacao
+                }}</span>
               </div>
             </div>
           </div>
 
           <!-- Product Properties -->
-          <div class="mb-8" *ngIf="product.acabamento_pintura || product.brilho || product.funcao_tinta || product.relacao_resina || product.cura">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">Propriedades do Produto</h3>
+          <div
+            class="mb-8"
+            *ngIf="
+              product.acabamento_pintura ||
+              product.brilho ||
+              product.funcao_tinta ||
+              product.relacao_resina ||
+              product.cura
+            "
+          >
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">
+              Propriedades do Produto
+            </h3>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <div *ngIf="product.acabamento_pintura" class="bg-blue-50 p-4 rounded-lg">
+              <div
+                *ngIf="product.acabamento_pintura"
+                class="bg-blue-50 p-4 rounded-lg"
+              >
                 <span class="block text-sm text-blue-600 mb-1">Acabamento</span>
-                <span class="font-semibold text-gray-900">{{ product.acabamento_pintura }}</span>
+                <span class="font-semibold text-gray-900">{{
+                  product.acabamento_pintura
+                }}</span>
               </div>
               <div *ngIf="product.brilho" class="bg-blue-50 p-4 rounded-lg">
                 <span class="block text-sm text-blue-600 mb-1">Brilho</span>
-                <span class="font-semibold text-gray-900">{{ product.brilho }}</span>
+                <span class="font-semibold text-gray-900">{{
+                  product.brilho
+                }}</span>
               </div>
-              <div *ngIf="product.funcao_tinta" class="bg-blue-50 p-4 rounded-lg">
-                <span class="block text-sm text-blue-600 mb-1">Função da Tinta</span>
-                <span class="font-semibold text-gray-900">{{ product.funcao_tinta }}</span>
+              <div
+                *ngIf="product.funcao_tinta"
+                class="bg-blue-50 p-4 rounded-lg"
+              >
+                <span class="block text-sm text-blue-600 mb-1"
+                  >Função da Tinta</span
+                >
+                <span class="font-semibold text-gray-900">{{
+                  product.funcao_tinta
+                }}</span>
               </div>
-              <div *ngIf="product.relacao_resina" class="bg-blue-50 p-4 rounded-lg">
+              <div
+                *ngIf="product.relacao_resina"
+                class="bg-blue-50 p-4 rounded-lg"
+              >
                 <span class="block text-sm text-blue-600 mb-1">Resina</span>
-                <span class="font-semibold text-gray-900">{{ product.relacao_resina }}</span>
+                <span class="font-semibold text-gray-900">{{
+                  product.relacao_resina
+                }}</span>
               </div>
               <div *ngIf="product.cura" class="bg-blue-50 p-4 rounded-lg">
                 <span class="block text-sm text-blue-600 mb-1">Cura</span>
-                <span class="font-semibold text-gray-900">{{ product.cura }}</span>
+                <span class="font-semibold text-gray-900">{{
+                  product.cura
+                }}</span>
               </div>
-              <div *ngIf="product.sistema_resina" class="bg-blue-50 p-4 rounded-lg">
-                <span class="block text-sm text-blue-600 mb-1">Sistema de Resina</span>
-                <span class="font-semibold text-gray-900">{{ product.sistema_resina }}</span>
+              <div
+                *ngIf="product.sistema_resina"
+                class="bg-blue-50 p-4 rounded-lg"
+              >
+                <span class="block text-sm text-blue-600 mb-1"
+                  >Sistema de Resina</span
+                >
+                <span class="font-semibold text-gray-900">{{
+                  product.sistema_resina
+                }}</span>
               </div>
             </div>
           </div>
 
           <!-- Application Information -->
-          <div class="mb-8" *ngIf="product.camadas || product.metodo_preparo || product.processo_pintura || product.diluente_etq">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">Informações de Aplicação</h3>
+          <div
+            class="mb-8"
+            *ngIf="
+              product.camadas ||
+              product.metodo_preparo ||
+              product.processo_pintura ||
+              product.diluente_etq
+            "
+          >
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">
+              Informações de Aplicação
+            </h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div *ngIf="product.camadas" class="bg-green-50 p-4 rounded-lg">
                 <span class="block text-sm text-green-600 mb-1">Camadas</span>
-                <span class="font-semibold text-gray-900">{{ product.camadas }}</span>
+                <span class="font-semibold text-gray-900">{{
+                  product.camadas
+                }}</span>
               </div>
-              <div *ngIf="product.metodo_preparo" class="bg-green-50 p-4 rounded-lg">
-                <span class="block text-sm text-green-600 mb-1">Método de Preparo</span>
-                <span class="font-semibold text-gray-900">{{ product.metodo_preparo }}</span>
+              <div
+                *ngIf="product.metodo_preparo"
+                class="bg-green-50 p-4 rounded-lg"
+              >
+                <span class="block text-sm text-green-600 mb-1"
+                  >Método de Preparo</span
+                >
+                <span class="font-semibold text-gray-900">{{
+                  product.metodo_preparo
+                }}</span>
               </div>
-              <div *ngIf="product.processo_pintura" class="bg-green-50 p-4 rounded-lg">
-                <span class="block text-sm text-green-600 mb-1">Processo de Pintura</span>
-                <span class="font-semibold text-gray-900">{{ product.processo_pintura }}</span>
+              <div
+                *ngIf="product.processo_pintura"
+                class="bg-green-50 p-4 rounded-lg"
+              >
+                <span class="block text-sm text-green-600 mb-1"
+                  >Processo de Pintura</span
+                >
+                <span class="font-semibold text-gray-900">{{
+                  product.processo_pintura
+                }}</span>
               </div>
-              <div *ngIf="product.diluente_etq" class="bg-green-50 p-4 rounded-lg">
+              <div
+                *ngIf="product.diluente_etq"
+                class="bg-green-50 p-4 rounded-lg"
+              >
                 <span class="block text-sm text-green-600 mb-1">Diluente</span>
-                <span class="font-semibold text-gray-900">{{ product.diluente_etq }}</span>
+                <span class="font-semibold text-gray-900">{{
+                  product.diluente_etq
+                }}</span>
               </div>
             </div>
           </div>
 
           <!-- Features -->
           <div>
-            <h3 class="text-lg font-semibold text-gray-800 mb-3">Características Adicionais</h3>
+            <h3 class="text-lg font-semibold text-gray-800 mb-3">
+              Características Adicionais
+            </h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <div *ngFor="let feature of product.features" class="flex items-center space-x-3">
-                <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              <div
+                *ngFor="let feature of product.features"
+                class="flex items-center space-x-3"
+              >
+                <svg
+                  class="w-5 h-5 text-green-500 flex-shrink-0"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 13l4 4L19 7"
+                  ></path>
                 </svg>
                 <span class="text-gray-700">{{ feature }}</span>
               </div>
@@ -297,25 +511,37 @@
 
     <!-- Related Products -->
     <div *ngIf="relatedItems.length > 0" class="mt-16">
-      <h2 class="text-2xl font-bold text-gray-900 mb-8">{{ isToolView ? 'Ferramentas Relacionadas' : 'Produtos Relacionados' }}</h2>
+      <h2 class="text-2xl font-bold text-gray-900 mb-8">
+        {{ isToolView ? "Ferramentas Relacionadas" : "Produtos Relacionados" }}
+      </h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div *ngFor="let relatedItem of relatedItems" 
-             class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:scale-105"
-             (click)="viewRelatedItem(relatedItem)">
-          <div class="aspect-square bg-gray-50 p-6 flex items-center justify-center">
-            <img 
-              [src]="getItemImageUrl(relatedItem)" 
-              [alt]="getItemName(relatedItem)" 
-              class="max-w-full max-h-full object-contain">
+        <div
+          *ngFor="let relatedItem of relatedItems"
+          class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:scale-105"
+          (click)="viewRelatedItem(relatedItem)"
+        >
+          <div
+            class="aspect-square bg-gray-50 p-6 flex items-center justify-center"
+          >
+            <img
+              [src]="getItemImageUrl(relatedItem)"
+              [alt]="getItemName(relatedItem)"
+              class="max-w-full max-h-full object-contain"
+            />
           </div>
           <div class="p-4">
             <h3 class="font-semibold text-gray-900 mb-1 truncate">
               {{ getItemName(relatedItem) }}
             </h3>
-            <p class="text-sm text-gray-600 mb-2" *ngIf="getItemSubtitle(relatedItem)">{{ getItemSubtitle(relatedItem) }}</p>
+            <p
+              class="text-sm text-gray-600 mb-2"
+              *ngIf="getItemSubtitle(relatedItem)"
+            >
+              {{ getItemSubtitle(relatedItem) }}
+            </p>
             <div class="flex items-center justify-between">
               <span class="text-lg font-bold text-green-600">
-                R$ {{ relatedItem.preco | number:'1.2-2' }}
+                R$ {{ relatedItem.preco | number : "1.2-2" }}
               </span>
             </div>
           </div>
@@ -333,25 +559,50 @@
       <nav class="flex" aria-label="Breadcrumb">
         <ol class="inline-flex items-center space-x-1 md:space-x-3">
           <li class="inline-flex items-center">
-            <a routerLink="/" class="text-gray-700 hover:text-blue-600 inline-flex items-center">
+            <a
+              routerLink="/"
+              class="text-gray-700 hover:text-blue-600 inline-flex items-center"
+            >
               <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path>
+                <path
+                  d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"
+                ></path>
               </svg>
               Home
             </a>
           </li>
           <li>
             <div class="flex items-center">
-              <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+              <svg
+                class="w-6 h-6 text-gray-400"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                  clip-rule="evenodd"
+                ></path>
               </svg>
-              <a routerLink="/tools" class="ml-1 text-gray-700 hover:text-blue-600 md:ml-2">Ferramentas</a>
+              <a
+                routerLink="/tools"
+                class="ml-1 text-gray-700 hover:text-blue-600 md:ml-2"
+                >Ferramentas</a
+              >
             </div>
           </li>
           <li>
             <div class="flex items-center">
-              <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"></path>
+              <svg
+                class="w-6 h-6 text-gray-400"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                  clip-rule="evenodd"
+                ></path>
               </svg>
               <span class="ml-1 text-gray-500 md:ml-2">{{ tool.nome }}</span>
             </div>
@@ -364,22 +615,33 @@
   <!-- Tool Section -->
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-      
       <!-- Tool Images -->
       <div class="space-y-4">
         <!-- Main Image -->
-        <div class="aspect-square bg-white rounded-2xl shadow-lg p-8 flex items-center justify-center">
-          <img [src]="productImages[selectedImage]" [alt]="tool.nome" class="max-w-full max-h-full object-contain">
+        <div
+          class="aspect-square bg-white rounded-2xl shadow-lg p-8 flex items-center justify-center"
+        >
+          <img
+            [src]="productImages[selectedImage]"
+            [alt]="tool.nome"
+            class="max-w-full max-h-full object-contain"
+          />
         </div>
-        
+
         <!-- Thumbnail Gallery -->
         <div *ngIf="productImages.length > 1" class="grid grid-cols-4 gap-4">
-          <button *ngFor="let image of productImages; let i = index" 
-                  (click)="selectImage(i)"
-                  [class.ring-2]="selectedImage === i"
-                  [class.ring-purple-500]="selectedImage === i"
-                  class="aspect-square bg-white rounded-lg shadow-md p-4 flex items-center justify-center hover:shadow-lg transition-all duration-200">
-            <img [src]="image" [alt]="'Imagem ' + (i + 1) + ' de ' + tool.nome" class="max-w-full max-h-full object-contain">
+          <button
+            *ngFor="let image of productImages; let i = index"
+            (click)="selectImage(i)"
+            [class.ring-2]="selectedImage === i"
+            [class.ring-purple-500]="selectedImage === i"
+            class="aspect-square bg-white rounded-lg shadow-md p-4 flex items-center justify-center hover:shadow-lg transition-all duration-200"
+          >
+            <img
+              [src]="image"
+              [alt]="'Imagem ' + (i + 1) + ' de ' + tool.nome"
+              class="max-w-full max-h-full object-contain"
+            />
           </button>
         </div>
       </div>
@@ -389,20 +651,24 @@
         <!-- Title and Basic Info -->
         <div>
           <div class="flex items-center space-x-2 mb-2">
-            <span class="bg-gray-300 text-blue-600 text-sm px-3 py-1 rounded-full font-medium">
+            <span
+              class="bg-gray-300 text-blue-600 text-sm px-3 py-1 rounded-full font-medium"
+            >
               Ferramenta
             </span>
           </div>
-          
+
           <h1 class="text-3xl font-bold text-gray-900 mb-4">{{ tool.nome }}</h1>
-          
+
           <div class="flex items-center space-x-4 mb-6">
             <div class="text-3xl font-bold text-blue-600">
-              R$ {{ getFinalPrice() | number:'1.2-2' }}
+              R$ {{ getFinalPrice() | number : "1.2-2" }}
             </div>
           </div>
-          
-          <p class="text-gray-600 leading-relaxed mb-6">{{ tool.description }}</p>
+
+          <p class="text-gray-600 leading-relaxed mb-6">
+            {{ tool.description }}
+          </p>
         </div>
 
         <!-- Purchase Actions -->
@@ -410,42 +676,96 @@
           <div class="flex items-center space-x-4 mb-6">
             <label class="text-sm font-medium text-gray-700">Quantidade:</label>
             <div class="flex items-center border border-gray-300 rounded-lg">
-              <button (click)="decreaseQuantity()" 
-                      [disabled]="quantity <= 1"
-                      class="px-3 py-2 text-gray-600 hover:text-gray-800 disabled:opacity-50 disabled:cursor-not-allowed">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"></path>
+              <button
+                (click)="decreaseQuantity()"
+                [disabled]="quantity <= 1"
+                class="px-3 py-2 text-gray-600 hover:text-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M20 12H4"
+                  ></path>
                 </svg>
               </button>
-              <span class="px-4 py-2 border-l border-r border-gray-300 font-medium">{{ quantity }}</span>
-              <button (click)="increaseQuantity()" 
-                      [disabled]="quantity >= (tool.stockQuantity || 1)"
-                      class="px-3 py-2 text-gray-600 hover:text-gray-800 disabled:opacity-50 disabled:cursor-not-allowed">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+              <span
+                class="px-4 py-2 border-l border-r border-gray-300 font-medium"
+                >{{ quantity }}</span
+              >
+              <button
+                (click)="increaseQuantity()"
+                [disabled]="quantity >= (tool.stockQuantity || 1)"
+                class="px-3 py-2 text-gray-600 hover:text-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                  ></path>
                 </svg>
               </button>
             </div>
           </div>
-          
+
           <div class="space-y-3">
-            <button (click)="buyNow()" 
-                    class="w-full bg-green-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-200 flex items-center justify-center space-x-2">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.5 8H19"></path>
+            <button
+              (click)="buyNow()"
+              class="w-full bg-green-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-green-700 transition-colors duration-200 flex items-center justify-center space-x-2"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-1.5 8H19"
+                ></path>
               </svg>
-              <span>Comprar Agora - R$ {{ (getFinalPrice() * quantity) | number:'1.2-2' }}</span>
+              <span
+                >Comprar Agora - R$
+                {{ getFinalPrice() * quantity | number : "1.2-2" }}</span
+              >
             </button>
-            
-            <button (click)="addToCart()" 
-                    class="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200 flex items-center justify-center space-x-2">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+
+            <button
+              (click)="addToCart()"
+              class="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-200 flex items-center justify-center space-x-2"
+            >
+              <svg
+                class="w-5 h-5"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
+                ></path>
               </svg>
               <span>Adicionar ao carrinho</span>
             </button>
           </div>
-          
+
           <div class="mt-4 text-sm text-gray-600 text-center">
             <p>💬 Entre em contato pelo WhatsApp para finalizar sua compra</p>
           </div>
@@ -455,7 +775,9 @@
         <div class="bg-white rounded-xl shadow-lg p-6">
           <!-- Basic Information -->
           <div class="mb-8">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">Informações Básicas</h3>
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">
+              Informações Básicas
+            </h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div class="bg-purple-50 p-4 rounded-lg">
                 <span class="block text-sm text-blue-600 mb-1">Nome</span>
@@ -463,31 +785,59 @@
               </div>
               <div class="bg-purple-50 p-4 rounded-lg">
                 <span class="block text-sm text-blue-600 mb-1">Preço</span>
-                <span class="font-semibold text-gray-900">R$ {{ tool.preco | number:'1.2-2' }}</span>
+                <span class="font-semibold text-gray-900"
+                  >R$ {{ tool.preco | number : "1.2-2" }}</span
+                >
               </div>
-              <div *ngIf="tool.descricao" class="bg-purple-50 p-4 rounded-lg md:col-span-2">
+              <div
+                *ngIf="tool.descricao"
+                class="bg-purple-50 p-4 rounded-lg md:col-span-2"
+              >
                 <span class="block text-sm text-blue-600 mb-1">Descrição</span>
-                <span class="font-semibold text-gray-900">{{ tool.descricao }}</span>
+                <span class="font-semibold text-gray-900">{{
+                  tool.descricao
+                }}</span>
               </div>
             </div>
           </div>
 
           <!-- Technical Information -->
           <div class="mb-8" *ngIf="tool.info_tecnica">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4">Informações Técnicas</h3>
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">
+              Informações Técnicas
+            </h3>
             <div class="bg-yellow-50 p-4 rounded-lg">
-              <span class="block text-sm text-yellow-600 mb-1">Especificações Técnicas</span>
-              <span class="font-semibold text-gray-900">{{ tool.info_tecnica }}</span>
+              <span class="block text-sm text-yellow-600 mb-1"
+                >Especificações Técnicas</span
+              >
+              <span class="font-semibold text-gray-900">{{
+                tool.info_tecnica
+              }}</span>
             </div>
           </div>
 
           <!-- Features -->
           <div>
-            <h3 class="text-lg font-semibold text-gray-800 mb-3">Características</h3>
+            <h3 class="text-lg font-semibold text-gray-800 mb-3">
+              Características
+            </h3>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-              <div *ngFor="let feature of tool.features" class="flex items-center space-x-3">
-                <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              <div
+                *ngFor="let feature of tool.features"
+                class="flex items-center space-x-3"
+              >
+                <svg
+                  class="w-5 h-5 text-green-500 flex-shrink-0"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 13l4 4L19 7"
+                  ></path>
                 </svg>
                 <span class="text-gray-700">{{ feature }}</span>
               </div>
@@ -499,25 +849,37 @@
 
     <!-- Related Tools -->
     <div *ngIf="relatedItems.length > 0" class="mt-16">
-      <h2 class="text-2xl font-bold text-gray-900 mb-8">{{ isToolView ? 'Ferramentas Relacionadas' : 'Produtos Relacionados' }}</h2>
+      <h2 class="text-2xl font-bold text-gray-900 mb-8">
+        {{ isToolView ? "Ferramentas Relacionadas" : "Produtos Relacionados" }}
+      </h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div *ngFor="let relatedItem of relatedItems" 
-             class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:scale-105"
-             (click)="viewRelatedItem(relatedItem)">
-          <div class="aspect-square bg-gray-50 p-6 flex items-center justify-center">
-            <img 
-              [src]="getItemImageUrl(relatedItem)" 
-              [alt]="getItemName(relatedItem)" 
-              class="max-w-full max-h-full object-contain">
+        <div
+          *ngFor="let relatedItem of relatedItems"
+          class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer transform hover:scale-105"
+          (click)="viewRelatedItem(relatedItem)"
+        >
+          <div
+            class="aspect-square bg-gray-50 p-6 flex items-center justify-center"
+          >
+            <img
+              [src]="getItemImageUrl(relatedItem)"
+              [alt]="getItemName(relatedItem)"
+              class="max-w-full max-h-full object-contain"
+            />
           </div>
           <div class="p-4">
             <h3 class="font-semibold text-gray-900 mb-1 truncate">
               {{ getItemName(relatedItem) }}
             </h3>
-            <p class="text-sm text-gray-600 mb-2" *ngIf="getItemSubtitle(relatedItem)">{{ getItemSubtitle(relatedItem) }}</p>
+            <p
+              class="text-sm text-gray-600 mb-2"
+              *ngIf="getItemSubtitle(relatedItem)"
+            >
+              {{ getItemSubtitle(relatedItem) }}
+            </p>
             <div class="flex items-center justify-between">
               <span class="text-lg font-bold text-blue-600">
-                R$ {{ relatedItem.preco | number:'1.2-2' }}
+                R$ {{ relatedItem.preco | number : "1.2-2" }}
               </span>
             </div>
           </div>

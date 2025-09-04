@@ -72,7 +72,13 @@ export class CatalogComponent implements OnInit {
 
     // Buscar Todas as Categorias
     this.productsService.getCategories().subscribe((data: any[]) => {
-      this.categories = data;
+      this.categories = data.sort((a, b) => {
+        const nameA = (a.nome || a).toString().toLowerCase();
+        const nameB = (b.nome || b).toString().toLowerCase();
+        if (nameA < nameB) return -1;
+        if (nameA > nameB) return 1;
+        return 0;
+      });
     });
 
     // Buscar Todos os Tamanhos
@@ -161,6 +167,20 @@ export class CatalogComponent implements OnInit {
       this.selectedCategories.delete(category);
     }
     this.applyFilters();
+    // Atualizar tamanhos e cores disponíveis para a(s) categoria(s) selecionada(s)
+    this.updateAvailableSizesAndColors();
+  }
+  // Atualiza os tamanhos e cores disponíveis conforme as categorias selecionadas
+  private updateAvailableSizesAndColors() {
+    let filteredProducts = [...this.allProducts];
+    if (this.selectedCategories.size > 0) {
+      filteredProducts = filteredProducts.filter(product =>
+        this.selectedCategories.has(product.familia_tintas)
+      );
+    }
+    // Extrai tamanhos e cores únicos dos produtos filtrados
+    this.sizes = Array.from(new Set(filteredProducts.map(p => p.conteudo_embalagem).filter(Boolean)));
+    this.colors = Array.from(new Set(filteredProducts.map(p => p.cor_comercial_tinta).filter(Boolean)));
   }
 
   // Mostrar os produtos por tamanho
@@ -186,7 +206,13 @@ export class CatalogComponent implements OnInit {
 
   // Mostrar o numero de produtos por Tamanho
   getNumberOfProductsBySize(size: string): number {
-    return this.allProducts.filter(product => product.conteudo_embalagem === size).length;
+    let filteredProducts = [...this.allProducts];
+    if (this.selectedCategories.size > 0) {
+      filteredProducts = filteredProducts.filter(product =>
+        this.selectedCategories.has(product.familia_tintas)
+      );
+    }
+    return filteredProducts.filter(product => product.conteudo_embalagem === size).length;
   }
 
   // Mostrar o numero de produtos por Categoria
@@ -196,7 +222,13 @@ export class CatalogComponent implements OnInit {
 
   // Mostrar o numero de produtos por Cor
   getNumberOfProductsByColor(color: string): number {
-    return this.allProducts.filter(product => product.cor_comercial_tinta === color).length;
+    let filteredProducts = [...this.allProducts];
+    if (this.selectedCategories.size > 0) {
+      filteredProducts = filteredProducts.filter(product =>
+        this.selectedCategories.has(product.familia_tintas)
+      );
+    }
+    return filteredProducts.filter(product => product.cor_comercial_tinta === color).length;
   }
 
   // Navegar para detalhes do produto
