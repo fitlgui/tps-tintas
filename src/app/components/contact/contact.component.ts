@@ -12,7 +12,7 @@ export class ContactComponent implements OnInit {
   submitSuccess = false;
 
   // Número do WhatsApp da empresa
-  private readonly whatsappNumber = '5565993421407';
+  private readonly whatsappNumber = '5565996063809';
 
   constructor(private formBuilder: FormBuilder) {
     this.contactForm = this.formBuilder.group({
@@ -151,7 +151,7 @@ export class ContactComponent implements OnInit {
   }
 
   openPhone(): void {
-    window.location.href = 'tel:+5565993421407';
+    window.location.href = 'tel:+556536443628';
   }
 
   openMaps(): void {

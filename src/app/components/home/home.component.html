@@ -11,31 +11,45 @@
   >
     <!-- Banner Principal -->
     <div
-      class="w-full min-h-[300px] lg:h-[400px] bg-gradient-to-r from-blue-500 to-blue-600 flex flex-col space-y-4 items-start justify-center p-6 lg:p-8 rounded-2xl shadow-lg mb-6"
+      style="
+        background-image: url('/assets/images/bannerTpstintas.jpeg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      "
+      class="w-full min-h-[300px] lg:h-[400px] flex flex-col space-y-4 items-start justify-center p-6 lg:p-8 rounded-2xl shadow-lg mb-6 relative"
     >
-      <p class="text-blue-100 text-sm lg:text-base uppercase tracking-wide">
-        Tintas WEG em Cuiabá
-      </p>
-      <h1 class="font-bold text-3xl lg:text-5xl text-white leading-tight">
-        Tudo de Tintas<br />
-        <span class="text-yellow-300">em Mato Grosso</span>
-      </h1>
-      <p class="text-blue-100 text-sm lg:text-lg max-w-md">
-        Revenda autorizada WEG com cores personalizadas, ferramentas e abrasivos
-        para indústria e residência
-      </p>
-      <a
-        href="/catalog"
-        class="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold px-6 py-3 flex items-center space-x-2 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
-        aria-label="Ver catálogo completo de tintas"
-      >
-        <span class="text-sm lg:text-base">Ver Catálogo de Tintas</span>
-        <img
-          class="w-6 h-6 icon-enhanced"
-          src="../../../assets/icons/buttonHomeBanner.svg"
-          alt="Ícone seta direita"
-        />
-      </a>
+      <!-- Overlay para melhorar legibilidade do texto -->
+      <div
+        class="absolute inset-0 bg-black bg-opacity-30 backdrop-blur-sm rounded-2xl"
+      ></div>
+
+      <!-- Conteúdo do banner com z-index maior -->
+      <div class="relative z-10 flex flex-col space-y-4">
+        <p class="text-blue-100 text-sm lg:text-base uppercase tracking-wide">
+          Tintas WEG em Cuiabá
+        </p>
+        <h1 class="font-bold text-3xl lg:text-5xl text-white leading-tight">
+          Tudo de Tintas<br />
+          <span class="text-yellow-300">em Mato Grosso</span>
+        </h1>
+        <p class="text-blue-100 text-sm lg:text-lg max-w-md">
+          Revenda autorizada WEG com cores personalizadas, ferramentas e
+          abrasivos para indústria e residência
+        </p>
+        <a
+          href="/catalog"
+          class="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold px-6 py-3 flex items-center space-x-2 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
+          aria-label="Ver catálogo completo de tintas"
+        >
+          <span class="text-sm lg:text-base">Ver Catálogo de Tintas</span>
+          <img
+            class="w-6 h-6 icon-enhanced"
+            src="../../../assets/icons/buttonHomeBanner.svg"
+            alt="Ícone seta direita"
+          />
+        </a>
+      </div>
     </div>
 
     <!-- Cards de Diferenciais -->
