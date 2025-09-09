@@ -4,7 +4,7 @@
 
 ## TPS Tintas
   
-Catálogo e painel administrativo de tintas WEG (industrial, automotiva e residencial) com gestão de produtos, SEO otimizado e destaque de produtos mais vendidos.
+Mini-eccomerce desenvolvido para a TPS Tintas feito com muito zelo para ser o melhor possível, todo o código foi desenvolvido por @fitlgui
 
 ## 🚀 Tecnologias
 
