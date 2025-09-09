@@ -1,27 +1,107 @@
-# Tps
+<div align="center">
+	<img src="./src/assets/images/logoTps.svg" alt="TPS Tintas" height="80" />
+  
+	# TPS Tintas
+  
+	Catálogo e painel administrativo de tintas WEG (industrial, automotiva e residencial) com gestão de produtos, SEO otimizado e destaque de produtos mais vendidos.
+</div>
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.16.
+---
 
-## Development server
+## 🚀 Tecnologias
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- Angular 16
+- Tailwind CSS
+- RxJS
+- SEO dinâmico (metadados por rota)
 
-## Code scaffolding
+## 📦 Funcionalidades Principais
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- Catálogo de produtos com filtros por:
+	- Categoria (família de tintas)
+	- Tamanho (conteúdo da embalagem)
+	- Cor comercial
+	- Faixa de preço
+- Destaque de produtos "Mais Vendidos" (`mais_vendidos`)
+- Banner otimizado com overlay e blur
+- Componentização (cards, catálogo, home, header, footer)
+- Admin com CRUD de produtos (adicionar / editar)
+- Upload e compressão de imagem (base64)
+- Contagem dinâmica de opções disponíveis por filtro
+- Remoção de logs em produção
 
-## Build
+## 📁 Estrutura (resumida)
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+```
+src/
+	app/
+		components/
+			home/
+			catalog/
+		admin/
+			products/
+				add/
+				edit/
+		services/
+			products/
+			cart/
+			seo/
+	assets/
+		images/
+		icons/
+```
 
-## Running unit tests
+## 🛠 Scripts
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+| Comando | Descrição |
+|---------|-----------|
+| `npm start` | Inicia servidor dev em http://localhost:4200 |
+| `npm run build` | Gera build de produção em `dist/` |
+| `npm test` | Executa testes unitários (Karma/Jasmine) |
+| `npm run watch` | Build em modo watch |
 
-## Running end-to-end tests
+## ▶️ Como Rodar
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+```bash
+git clone <repo>
+cd tps-tintas
+npm install
+npm start
+```
 
-## Further help
+Acesse: http://localhost:4200
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+## 📌 Variáveis / Configuração
+
+Verifique o arquivo de ambiente em `src/environment/enviroment.ts` para endpoints e configurações de API.
+
+## 🧩 SEO Dinâmico
+
+O serviço `SeoService` atualiza título, descrição e keywords por rota principal (home, catálogo, etc.).
+
+## 🛒 Carrinho
+
+`CartService` permite adicionar produtos a partir de cards e detalhes.
+
+## ⭐ Produtos Mais Vendidos
+
+Campo booleano `mais_vendidos` controlado no admin. Exibido:
+- Lista do catálogo (badge)
+- Seção "Os Mais Vendidos" na Home
+
+## 🤝 Contribuição
+
+Siga o padrão Angular CLI ao gerar novos componentes e serviços.
+
+```bash
+ng generate component minha-feature
+ng generate service services/minha-feature
+```
+
+## 📄 Licença
+
+Uso interno / proprietário.
+
+---
+
+Qualquer melhoria desejada (ex: autenticação avançada, PWA, cache) pode ser adicionada futuramente.
