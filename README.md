@@ -1,12 +1,10 @@
 <div align="center">
 	<img src="./src/assets/images/logoTps.svg" alt="TPS Tintas" height="80" />
-  
-	# TPS Tintas
-  
-	Catálogo e painel administrativo de tintas WEG (industrial, automotiva e residencial) com gestão de produtos, SEO otimizado e destaque de produtos mais vendidos.
 </div>
 
----
+## TPS Tintas
+  
+Catálogo e painel administrativo de tintas WEG (industrial, automotiva e residencial) com gestão de produtos, SEO otimizado e destaque de produtos mais vendidos.
 
 ## 🚀 Tecnologias
 
