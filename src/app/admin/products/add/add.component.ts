@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ProductsService, Product } from '../../../services/products/products.service';
+import { NotificationService } from '../../../services/ui/notification.service';
 
 @Component({
   selector: 'app-add',
@@ -51,6 +52,21 @@ export class AddComponent implements OnInit {
   colors: any[] = [];
   sizes: any[] = [];
   brands: string[] = [];
+
+  presetSizes: string[] = [
+    '100G', '250G', '500G', '900G',
+    '1KG', '3,6KG', '5KG', '18KG',
+    '100ML', '200ML', '250ML', '500ML', '900ML',
+    '1L', '3,6L', '18L'
+  ];
+
+  get allSizes(): string[] {
+    const combined = [...this.presetSizes];
+    for (const s of this.sizes) {
+      if (!combined.includes(s)) combined.push(s);
+    }
+    return combined;
+  }
   loading = false;
   errors: any = {};
   selectedFile: File | null = null;
@@ -59,7 +75,8 @@ export class AddComponent implements OnInit {
 
   constructor(
     private productsService: ProductsService,
-    private router: Router
+    private router: Router,
+    private notificationService: NotificationService
   ) { }
 
   ngOnInit(): void {
@@ -92,35 +109,25 @@ export class AddComponent implements OnInit {
     let isValid = true;
 
     if (!this.product.codigo?.trim()) {
-      this.errors.codigo = 'Código é obrigatório';
+      this.errors.codigo = 'Codigo e obrigatorio';
       isValid = false;
     }
 
     if (!this.product.descricao?.trim()) {
-      this.errors.descricao = 'Descrição é obrigatória';
+      this.errors.descricao = 'Descricao e obrigatoria';
       isValid = false;
     }
 
-    if (!this.product.preco || this.product.preco <= 0) {
-      this.errors.preco = 'Preço deve ser maior que zero';
+    if (this.product.preco !== undefined && this.product.preco !== null && this.product.preco < 0) {
+      this.errors.preco = 'Preco nao pode ser negativo';
       isValid = false;
     }
 
-    if (!this.product.familia_tintas) {
-      this.errors.familia_tintas = 'Família de tintas é obrigatória';
+    if (this.product.quantidade_por_fardo !== undefined && this.product.quantidade_por_fardo !== null && this.product.quantidade_por_fardo < 1) {
+      this.errors.quantidade_por_fardo = 'Quantidade por fardo deve ser maior ou igual a 1';
       isValid = false;
     }
 
-    if (!this.product.conteudo_embalagem) {
-      this.errors.conteudo_embalagem = 'Conteúdo da embalagem é obrigatório';
-      isValid = false;
-    }
-
-    if (!this.product.cor_comercial_tinta) {
-      this.errors.cor_comercial_tinta = 'Cor comercial é obrigatória';
-      isValid = false;
-    }
-    
     return isValid;
   }
 
@@ -130,11 +137,12 @@ export class AddComponent implements OnInit {
     
     // Lista de campos string que podem ser null
     const stringFields = [
-      'linha_produtos_tintas', 'cor_tinta', 'acabamento_pintura', 'brilho', 'escala_cor',
-      'familia', 'versao_tinta', 'funcao_tinta', 'relacao_resina', 'cura', 'classificacao_verniz',
-      'massa_especifica', 'tempo_secagem', 'tempo_cura', 'metodo_aplicacao', 'temperatura_aplicacao',
-      'ambiente_aplicacao', 'camadas', 'metodo_preparo', 'processo_pintura', 'photo_url',
-      'produto_url', 'embalagem', 'referencia_tinta_liquida', 'sistema_resina', 'cor', 'diluente_etq'
+      'familia_tintas', 'linha_produtos_tintas', 'conteudo_embalagem', 'cor_comercial_tinta', 'cor_tinta',
+      'acabamento_pintura', 'brilho', 'escala_cor', 'familia', 'versao_tinta', 'funcao_tinta',
+      'relacao_resina', 'cura', 'classificacao_verniz', 'massa_especifica', 'tempo_secagem', 'tempo_cura',
+      'metodo_aplicacao', 'temperatura_aplicacao', 'ambiente_aplicacao', 'camadas', 'metodo_preparo',
+      'processo_pintura', 'photo_url', 'produto_url', 'embalagem', 'referencia_tinta_liquida',
+      'sistema_resina', 'cor', 'diluente_etq'
     ];
 
     // Converter strings vazias para null
@@ -168,7 +176,7 @@ export class AddComponent implements OnInit {
         // Redirecionar para lista de produtos
         this.router.navigate(['/admin/produtos']);
       },
-      error: (error) => {
+      error: async (error) => {
         console.error('Erro completo ao adicionar produto:', error);
         console.error('Status do erro:', error.status);
         console.error('Mensagem do erro:', error.message);
@@ -176,7 +184,7 @@ export class AddComponent implements OnInit {
         this.loading = false;
         
         // Mostrar erro para o usuário
-        alert('Erro ao adicionar produto: ' + (error.error?.message || error.message || 'Erro desconhecido'));
+        await this.notificationService.error('Erro ao adicionar produto: ' + (error.error?.message || error.message || 'Erro desconhecido'));
       }
     });
   }

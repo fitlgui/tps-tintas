@@ -4,6 +4,7 @@ import { ProductsService, Product } from '../../services/products/products.servi
 import { AuthService } from '../../services/admin/admin.service';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { NotificationService } from '../../services/ui/notification.service';
 
 @Component({
   selector: 'app-products',
@@ -26,7 +27,8 @@ export class ProductsComponent implements OnInit, OnDestroy {
   constructor(
     private readonly productsService: ProductsService,
     private readonly router: Router,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    private readonly notificationService: NotificationService
   ) {
     // Configurar debounce para a busca
     this.searchSubscription = this.searchSubject.pipe(
@@ -193,21 +195,29 @@ export class ProductsComponent implements OnInit, OnDestroy {
     this.filteredProducts = [...this.products];
   }
 
-  deleteProduct(id: number): void {
+  async deleteProduct(id: number): Promise<void> {
     if (!this.canEdit()) {
-      alert('Você não tem permissão para excluir produtos.');
+      await this.notificationService.warning('Você não tem permissão para excluir produtos.', 'Acesso negado');
       return;
     }
 
-    if (confirm('Tem certeza que deseja excluir este produto?')) {
+    const confirmed = await this.notificationService.confirm(
+      'Tem certeza que deseja excluir este produto?',
+      'Excluir produto',
+      'Excluir'
+    );
+
+    if (confirmed) {
       this.productsService.deleteProduct(id).subscribe({
-        next: (success) => {
+        next: async (success) => {
           if (success) {
             this.loadProducts(); // Recarregar lista
+            await this.notificationService.success('Produto excluído com sucesso!');
           }
         },
-        error: (error) => {
+        error: async (error) => {
           console.error('Erro ao excluir produto:', error);
+          await this.notificationService.error('Erro ao excluir produto. Tente novamente.');
         }
       });
     }
@@ -248,5 +258,19 @@ export class ProductsComponent implements OnInit, OnDestroy {
     
     // Imagem padrão se não houver nenhuma
     return 'assets/images/cartShoppingTinta.svg';
+  }
+
+  getCreatedAt(product: Product): string | null {
+    const productWithAltDate = product as Product & { created_at?: string };
+    return product.createdAt || productWithAltDate.created_at || null;
+  }
+
+  formatDate(dateString: string): string {
+    const parsedDate = new Date(dateString);
+    if (Number.isNaN(parsedDate.getTime())) {
+      return '';
+    }
+
+    return parsedDate.toLocaleDateString('pt-BR');
   }
 }

@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CartService } from '../../services/cart/cart.service';
 import { Product } from '../../services/products/products.service';
 import { Tool } from '../../services/tools/tools.service';
+import { NotificationService } from '../../services/ui/notification.service';
 
 @Component({
   selector: 'app-shopping',
@@ -10,6 +11,7 @@ import { Tool } from '../../services/tools/tools.service';
 })
 export class ShoppingComponent {
   cartService = inject(CartService);
+  notificationService = inject(NotificationService);
 
   // Número do WhatsApp da empresa (substitua pelo número real)
   private readonly whatsappNumber = '5565993421407';
@@ -25,8 +27,14 @@ export class ShoppingComponent {
   }
 
   // Limpar todo o carrinho
-  clearCart(): void {
-    if (confirm('Tem certeza que deseja limpar todo o carrinho?')) {
+  async clearCart(): Promise<void> {
+    const confirmed = await this.notificationService.confirm(
+      'Tem certeza que deseja limpar todo o carrinho?',
+      'Limpar carrinho',
+      'Limpar'
+    );
+
+    if (confirmed) {
       this.cartService.clearCart();
     }
   }

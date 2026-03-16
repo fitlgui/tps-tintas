@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductsService, Product } from '../../../services/products/products.service';
+import { NotificationService } from '../../../services/ui/notification.service';
 
 @Component({
   selector: 'app-edit',
@@ -56,6 +57,21 @@ export class EditComponent implements OnInit {
   colors: any[] = [];
   sizes: any[] = [];
   brands: string[] = [];
+
+  presetSizes: string[] = [
+    '100G', '250G', '500G', '900G',
+    '1KG', '3,6KG', '5KG', '18KG',
+    '100ML', '200ML', '250ML', '500ML', '900ML',
+    '1L', '3,6L', '18L'
+  ];
+
+  get allSizes(): string[] {
+    const combined = [...this.presetSizes];
+    for (const s of this.sizes) {
+      if (!combined.includes(s)) combined.push(s);
+    }
+    return combined;
+  }
   loading = false;
   loadingProduct = true;
   errors: any = {};
@@ -66,7 +82,8 @@ export class EditComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private productsService: ProductsService
+    private productsService: ProductsService,
+    private notificationService: NotificationService
   ) { }
 
   ngOnInit(): void {
@@ -150,7 +167,7 @@ export class EditComponent implements OnInit {
       isValid = false;
     }
 
-    if (!this.product.cor_tinta) {
+    if (!this.product.cor_comercial_tinta && !this.product.cor_tinta) {
       this.errors.cor_tinta = 'Cor é obrigatória';
       isValid = false;
     }
@@ -233,7 +250,7 @@ export class EditComponent implements OnInit {
       // Verificar tamanho do arquivo (máximo 2MB)
       const maxSize = 2 * 1024 * 1024; // 2MB
       if (file.size > maxSize) {
-        alert('Arquivo muito grande! Máximo permitido: 2MB');
+        void this.notificationService.warning('Arquivo muito grande! Máximo permitido: 2MB', 'Imagem inválida');
         return;
       }
 

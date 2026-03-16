@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/admin/admin.service';
+import { NotificationService } from '../../services/ui/notification.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -13,7 +14,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
 
   constructor(
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private notificationService: NotificationService
   ) { }
 
   ngOnInit(): void {
@@ -44,8 +46,14 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.updateSessionTime();
   }
 
-  logout(): void {
-    if (confirm('Tem certeza que deseja sair?')) {
+  async logout(): Promise<void> {
+    const confirmed = await this.notificationService.confirm(
+      'Tem certeza que deseja sair?',
+      'Encerrar sessão',
+      'Sair'
+    );
+
+    if (confirmed) {
       this.authService.logout();
       this.router.navigate(['/login']);
     }

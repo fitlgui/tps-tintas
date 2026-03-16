@@ -26,8 +26,9 @@
 }
 
 /* Estilos para o campo de busca com foco */
-input[type="text"]:focus {
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+input[type="text"]:focus,
+input[type="search"]:focus {
+  box-shadow: none;
 }
 
 /* Hover effects para os links */
@@ -45,12 +46,45 @@ a:hover {
 
 /* Sticky header styling */
 header {
-  backdrop-filter: blur(10px);
-  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(6px);
+  background-color: rgba(255, 255, 255, 0.96);
 }
 
 /* Icon hover effects */
 svg:hover {
-  transform: scale(1.1);
-  transition: transform 0.2s ease-in-out;
+  transform: none;
+  transition: none;
+}
+
+.header-search-frame {
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.header-search-frame:focus-within {
+  border-color: inherit;
+  box-shadow: none;
+}
+
+.header-search-dropdown {
+  animation: revealSearch 0.16s ease-out;
+}
+
+.search-result-card {
+  border: 1px solid #f1f5f9;
+}
+
+.search-result-card:hover {
+  border-color: rgba(203, 213, 225, 0.65);
+}
+
+@keyframes revealSearch {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

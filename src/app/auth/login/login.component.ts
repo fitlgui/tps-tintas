@@ -9,7 +9,7 @@ import { AuthService } from '../../services/admin/admin.service';
 })
 export class LoginComponent implements OnInit {
   credentials = {
-    username: '',
+    email: '',
     password: ''
   };
 
@@ -33,27 +33,26 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if (!this.credentials.username || !this.credentials.password) {
+    if (!this.credentials.email || !this.credentials.password) {
       this.errorMessage = 'Por favor, preencha todos os campos';
       return;
     }
 
     this.loading = true;
     this.errorMessage = '';
-    
-    // Chamar o método login que retorna Observable
-    this.authService.login(this.credentials.username, this.credentials.password).subscribe({
+
+    this.authService.login(this.credentials.email, this.credentials.password).subscribe({
       next: (success) => {
         if (success) {
           this.router.navigate(['/admin']);
         } else {
-          this.errorMessage = 'Credenciais inválidas.';
+          this.errorMessage = 'E-mail ou senha invalidos.';
         }
         this.loading = false;
       },
       error: (error) => {
-        console.error('💥 Erro durante login:', error);
-        this.errorMessage = 'Erro de conexão. Tente novamente.';
+        console.error('Erro durante login:', error);
+        this.errorMessage = 'Erro de conexao. Tente novamente.';
         this.loading = false;
       }
     });

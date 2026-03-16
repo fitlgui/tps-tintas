@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UsersService, User, UpdateUserData } from 'src/app/services/users/users.service';
+import { NotificationService } from 'src/app/services/ui/notification.service';
 
 @Component({
   selector: 'app-edit',
@@ -20,7 +21,8 @@ export class EditComponent implements OnInit {
     private fb: FormBuilder,
     private usersService: UsersService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private notificationService: NotificationService
   ) {
     this.userForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
@@ -53,7 +55,7 @@ export class EditComponent implements OnInit {
         });
         this.loading = false;
       },
-      error: (error) => {
+      error: async (error) => {
         console.error('Erro ao carregar usuário:', error);
         this.loading = false;
         
@@ -68,7 +70,7 @@ export class EditComponent implements OnInit {
           errorMessage = `Erro ${error.status}: ${error.message || 'Falha ao carregar usuário'}`;
         }
         
-        alert(errorMessage);
+        await this.notificationService.error(errorMessage);
         this.router.navigate(['/admin/users']);
       }
     });
@@ -106,13 +108,13 @@ export class EditComponent implements OnInit {
       console.log('Enviando dados para API:', { ...userData, password: '***' }); // Log sem mostrar senha
 
       this.usersService.editUser(this.userId, userData).subscribe({
-        next: (response) => {
-          alert('Usuário atualizado com sucesso!');
+        next: async () => {
+          await this.notificationService.success('Usuário atualizado com sucesso!');
           this.router.navigate(['/admin/users']);
         },
-        error: (error) => {
+        error: async (error) => {
           console.error('Erro ao atualizar usuário:', error);
-          alert('Erro ao atualizar usuário. Verifique os dados e tente novamente.');
+          await this.notificationService.error('Erro ao atualizar usuário. Verifique os dados e tente novamente.');
           this.saving = false;
         }
       });

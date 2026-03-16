@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToolsService, Tool } from 'src/app/services/tools/tools.service';
 import { SeoService } from 'src/app/services/seo/seo.service';
@@ -12,12 +12,23 @@ export class ToolsComponent implements OnInit {
   // Variavel para armazenar as ferramentas
   public allTools: Tool[] = [];
   public tools: Tool[] = [];
-  public filteredTools: Tool[] = [];
+  public toolsToShow: number = 12;
 
-  // Marcas
+  get hasMoreTools(): boolean {
+    return this.tools.length > this.toolsToShow;
+  }
+
+  get visibleTools(): Tool[] {
+    return this.tools.slice(0, this.toolsToShow);
+  }
+
+  // Filtros
   public brands: string[] = [];
-  public selectedBrand: string | null = null;
-  public showBrands: boolean = true;
+  public categories: string[] = [];
+  public selectedBrands: Set<string> = new Set();
+  public selectedCategories: Set<string> = new Set();
+  public minPrice: number = 0;
+  public maxPrice: number = 0;
 
   // Busca
   public searchTerm: string = '';
@@ -32,6 +43,11 @@ export class ToolsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.route.queryParamMap.subscribe((params) => {
+      this.searchTerm = (params.get('q') ?? '').trim();
+      this.applyFilters();
+    });
+
     // Configurar SEO para página de ferramentas
     this.setupToolsSeo();
 
@@ -58,12 +74,10 @@ export class ToolsComponent implements OnInit {
       next: (data: Tool[]) => {
         this.allTools = data;
         this.tools = [...data];
-        this.extractBrands();
-        // Sempre começar mostrando marcas
-        this.showBrands = true;
-        this.selectedBrand = null;
-        this.filteredTools = [];
+        this.extractBrandsAndCategories();
+        this.setDefaultPriceRange();
         this.isLoading = false;
+        this.applyFilters();
       },
       error: (err) => {
         this.error = 'Erro ao carregar ferramentas. Tente novamente mais tarde.';
@@ -75,35 +89,18 @@ export class ToolsComponent implements OnInit {
 
   // Buscar ferramentas por nome
   searchTools() {
-    // Só permite buscar quando está visualizando ferramentas de uma marca
-    if (!this.selectedBrand) {
-      return;
-    }
-
-    if (!this.searchTerm.trim()) {
-      this.filterByBrand(this.selectedBrand);
-      return;
-    }
-
-    const searchLower = this.searchTerm.toLowerCase().trim();
-    const toolsInBrand = this.allTools.filter(tool => 
-      tool.marca && tool.marca.trim() === this.selectedBrand
-    );
-
-    this.filteredTools = toolsInBrand.filter(tool =>
-      tool.nome.toLowerCase().includes(searchLower) ||
-      tool.descricao.toLowerCase().includes(searchLower) ||
-      tool.info_tecnica.toLowerCase().includes(searchLower) ||
-      (tool.categoria && tool.categoria.toLowerCase().includes(searchLower))
-    );
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { q: this.searchTerm.trim() || null },
+      queryParamsHandling: 'merge',
+      replaceUrl: true
+    });
   }
 
   // Limpar busca
   clearSearch() {
     this.searchTerm = '';
-    if (this.selectedBrand) {
-      this.filterByBrand(this.selectedBrand);
-    }
+    this.searchTools();
   }
 
   // Navegar para detalhes da ferramenta
@@ -116,45 +113,137 @@ export class ToolsComponent implements OnInit {
     this.loadTools();
   }
 
-  // Extrair marcas únicas das ferramentas
-  private extractBrands() {
+  private extractBrandsAndCategories() {
     const brandSet = new Set<string>();
-    
+    const categorySet = new Set<string>();
+
     this.allTools.forEach(tool => {
       if (tool.marca && tool.marca.trim()) {
         brandSet.add(tool.marca.trim());
       }
+      if (tool.categoria && tool.categoria.trim()) {
+        categorySet.add(tool.categoria.trim());
+      }
     });
-    
+
     this.brands = Array.from(brandSet).sort();
+    this.categories = Array.from(categorySet).sort();
   }
 
-  // Selecionar marca
-  selectBrand(brand: string) {
-    this.selectedBrand = brand;
-    this.showBrands = false;
-    this.filterByBrand(brand);
+  private setDefaultPriceRange() {
+    if (this.allTools.length > 0) {
+      const prices = this.allTools.map(tool => Number(tool.preco) || 0);
+      this.minPrice = Math.min(...prices);
+      this.maxPrice = Math.max(...prices);
+    }
   }
 
-  // Filtrar ferramentas por marca
-  private filterByBrand(brand: string) {
-    this.filteredTools = this.allTools.filter(tool => 
-      tool.marca && tool.marca.trim() === brand
-    );
+  getToolsByBrand(event: Event, brand: string) {
+    const isChecked = (event.target as HTMLInputElement).checked;
+    if (isChecked) {
+      this.selectedBrands.add(brand);
+    } else {
+      this.selectedBrands.delete(brand);
+    }
+    this.applyFilters();
   }
 
-  // Voltar para marcas
-  backToBrands() {
-    this.selectedBrand = null;
-    this.showBrands = true;
-    this.filteredTools = [];
-    this.clearSearch();
+  getToolsByCategory(event: Event, category: string) {
+    const isChecked = (event.target as HTMLInputElement).checked;
+    if (isChecked) {
+      this.selectedCategories.add(category);
+    } else {
+      this.selectedCategories.delete(category);
+    }
+    this.applyFilters();
   }
 
-  // Obter ferramentas por marca (para contagem)
+  filterByPrice(minPrice: number, maxPrice: number) {
+    if (minPrice < 0) minPrice = 0;
+    if (maxPrice <= 0) maxPrice = this.getMaxPrice();
+    if (minPrice > maxPrice) {
+      [minPrice, maxPrice] = [maxPrice, minPrice];
+    }
+    this.applyAllFilters(minPrice, maxPrice);
+  }
+
+  clearAllFilters() {
+    this.selectedBrands.clear();
+    this.selectedCategories.clear();
+    this.searchTerm = '';
+    this.tools = [...this.allTools];
+    this.toolsToShow = 12;
+    this.setDefaultPriceRange();
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { q: null },
+      queryParamsHandling: 'merge'
+    });
+
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    checkboxes.forEach((checkbox: any) => {
+      checkbox.checked = false;
+    });
+  }
+
   getToolsCountByBrand(brand: string): number {
-    return this.allTools.filter(tool => 
-      tool.marca && tool.marca.trim() === brand
-    ).length;
+    return this.allTools.filter(tool => tool.marca?.trim() === brand).length;
+  }
+
+  getToolsCountByCategory(category: string): number {
+    return this.allTools.filter(tool => tool.categoria?.trim() === category).length;
+  }
+
+  getMaxPrice(): number {
+    if (this.allTools.length === 0) return 1000;
+    return Math.max(...this.allTools.map(tool => Number(tool.preco) || 0));
+  }
+
+  private applyFilters() {
+    this.applyAllFilters();
+  }
+
+  private applyAllFilters(minPrice?: number, maxPrice?: number): void {
+    let filteredTools = [...this.allTools];
+
+    if (this.searchTerm) {
+      const normalizedTerm = this.searchTerm.toLowerCase();
+      filteredTools = filteredTools.filter((tool) => this.matchesSearch(tool, normalizedTerm));
+    }
+
+    if (this.selectedBrands.size > 0) {
+      filteredTools = filteredTools.filter(tool => tool.marca && this.selectedBrands.has(tool.marca.trim()));
+    }
+
+    if (this.selectedCategories.size > 0) {
+      filteredTools = filteredTools.filter(tool => tool.categoria && this.selectedCategories.has(tool.categoria.trim()));
+    }
+
+    if (minPrice !== undefined && maxPrice !== undefined) {
+      filteredTools = filteredTools.filter(tool => Number(tool.preco) >= minPrice && Number(tool.preco) <= maxPrice);
+    }
+
+    this.tools = filteredTools;
+    this.toolsToShow = 12;
+  }
+
+  private matchesSearch(tool: Tool, term: string): boolean {
+    return [tool.nome, tool.descricao, tool.info_tecnica, tool.categoria, tool.marca]
+      .some((value) => value?.toLowerCase().includes(term));
+  }
+
+  loadMore() {
+    this.toolsToShow += 12;
+  }
+
+  getToolImageUrl(tool: Tool): string {
+    return this.toolsService.getToolImageUrl(tool);
+  }
+
+  formatPrice(price: number): string {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    }).format(Number(price) || 0);
   }
 }

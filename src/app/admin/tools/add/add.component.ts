@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToolsService, CreateToolRequest } from 'src/app/services/tools/tools.service';
 import { AuthService } from 'src/app/services/admin/admin.service';
+import { NotificationService } from 'src/app/services/ui/notification.service';
 
 @Component({
   selector: 'app-add-tool',
@@ -21,7 +22,8 @@ export class AddToolComponent {
     private fb: FormBuilder,
     private toolsService: ToolsService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private notificationService: NotificationService
   ) {
     // Verificar permissões ao inicializar
     if (!this.authService.canEdit()) {
@@ -56,8 +58,8 @@ export class AddToolComponent {
       };
 
       this.toolsService.createTool(toolData).subscribe({
-        next: (tool) => {
-          alert('Ferramenta criada com sucesso!');
+        next: async () => {
+          await this.notificationService.success('Ferramenta criada com sucesso!');
           this.router.navigate(['/admin/tools']);
         },
         error: (error) => {

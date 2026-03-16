@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UsersService, CreateUserData } from 'src/app/services/users/users.service';
+import { NotificationService } from 'src/app/services/ui/notification.service';
 
 @Component({
   selector: 'app-create',
@@ -16,7 +17,8 @@ export class CreateComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private usersService: UsersService,
-    private router: Router
+    private router: Router,
+    private notificationService: NotificationService
   ) {
     this.userForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(2)]],
@@ -56,13 +58,13 @@ export class CreateComponent implements OnInit {
       };
 
       this.usersService.createUser(userData).subscribe({
-        next: (response) => {
-          alert('Usuário criado com sucesso!');
+        next: async () => {
+          await this.notificationService.success('Usuário criado com sucesso!');
           this.router.navigate(['/admin/users']);
         },
-        error: (error) => {
+        error: async (error) => {
           console.error('Erro ao criar usuário:', error);
-          alert('Erro ao criar usuário. Verifique os dados e tente novamente.');
+          await this.notificationService.error('Erro ao criar usuário. Verifique os dados e tente novamente.');
           this.loading = false;
         }
       });

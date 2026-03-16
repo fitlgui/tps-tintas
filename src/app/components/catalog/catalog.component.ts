@@ -14,6 +14,7 @@ export class CatalogComponent implements OnInit {
   public allProducts: Product[] = [];
   public products: Product[] = [];
   public productsToShow: number = 12;
+  public searchTerm: string = '';
 
   get hasMoreProducts(): boolean {
     return this.products.length > this.productsToShow;
@@ -58,14 +59,20 @@ export class CatalogComponent implements OnInit {
   ) {}
 
   ngOnInit(){
+    this.route.queryParamMap.subscribe((params) => {
+      this.searchTerm = (params.get('q') ?? '').trim();
+      this.applyFilters();
+    });
+
     // Configurar SEO para página de catálogo
     this.setupCatalogSeo();
 
     // Buscando Todos os Produtos primeiro
     this.productsService.getAllProducts().subscribe((data: Product[]) => {
       this.allProducts = data;
-  this.products = [...this.allProducts]; // Inicializar produtos exibidos
-  this.productsToShow = 12;
+      this.products = [...this.allProducts];
+      this.productsToShow = 12;
+      this.applyFilters();
       // Definir preços mínimo e máximo automaticamente
       this.setDefaultPriceRange();
     });
@@ -120,6 +127,11 @@ export class CatalogComponent implements OnInit {
   private applyAllFilters(minPrice?: number, maxPrice?: number) {
     let filteredProducts = [...this.allProducts];
 
+    if (this.searchTerm) {
+      const normalizedTerm = this.searchTerm.toLowerCase();
+      filteredProducts = filteredProducts.filter((product) => this.matchesSearch(product, normalizedTerm));
+    }
+
     // Aplicar filtro de categoria
     if (this.selectedCategories.size > 0) {
       filteredProducts = filteredProducts.filter(product => 
@@ -148,8 +160,20 @@ export class CatalogComponent implements OnInit {
       );
     }
 
-  this.products = filteredProducts;
-  this.productsToShow = 12;
+    this.products = filteredProducts;
+    this.productsToShow = 12;
+  }
+
+  private matchesSearch(product: Product, term: string): boolean {
+    return [
+      product.descricao,
+      product.codigo,
+      product.linha_produtos_tintas,
+      product.cor_comercial_tinta,
+      product.familia_tintas,
+      product.conteudo_embalagem,
+      product.cor_tinta
+    ].some((value) => value?.toLowerCase().includes(term));
   }
 
   // Pegar preço máximo dos produtos
@@ -241,9 +265,15 @@ export class CatalogComponent implements OnInit {
     this.selectedCategories.clear();
     this.selectedSizes.clear();
     this.selectedColors.clear();
+    this.searchTerm = '';
     this.products = [...this.allProducts];
     this.productsToShow = 12;
     this.setDefaultPriceRange();
+    void this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { q: null },
+      queryParamsHandling: 'merge'
+    });
     // Resetar os checkboxes no DOM
     const checkboxes = document.querySelectorAll('input[type="checkbox"]');
     checkboxes.forEach((checkbox: any) => {

@@ -2,11 +2,9 @@
   <!-- Header -->
   <div class="mb-8">
     <div class="flex items-center space-x-4">
-      <button
-        (click)="onCancel()"
-        class="text-gray-600 hover:text-gray-900 transition-colors">
+      <button (click)="onCancel()" class="text-gray-600 hover:text-gray-900 transition-colors">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
         </svg>
       </button>
       <div>
@@ -27,16 +25,11 @@
           <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
             Nome do Produto <span class="text-red-500">*</span>
           </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            [(ngModel)]="product.descricao"
-            required
+          <input type="text" id="name" name="name" [(ngModel)]="product.descricao" required
             placeholder="Ex: W-THANE PDA 520"
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            [class.border-red-500]="errors.name">
-          <p *ngIf="errors.name" class="text-red-500 text-sm mt-1">{{errors.name}}</p>
+            [class.border-red-500]="errors.descricao">
+          <p *ngIf="errors.descricao" class="text-red-500 text-sm mt-1">{{errors.descricao}}</p>
         </div>
 
         <!-- Codigo do Produto -->
@@ -44,13 +37,7 @@
           <label for="codigo" class="block text-sm font-medium text-gray-700 mb-2">
             Código do Produto <span class="text-red-500">*</span>
           </label>
-          <input
-            type="text"
-            id="codigo"
-            name="codigo"
-            [(ngModel)]="product.codigo"
-            required
-            placeholder="Ex: 232325252"
+          <input type="text" id="codigo" name="codigo" [(ngModel)]="product.codigo" required placeholder="Ex: 232325252"
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             [class.border-red-500]="errors.codigo">
           <p *ngIf="errors.codigo" class="text-red-500 text-sm mt-1">{{errors.codigo}}</p>
@@ -59,16 +46,9 @@
         <!-- Preço -->
         <div>
           <label for="price" class="block text-sm font-medium text-gray-700 mb-2">
-            Preço (R$) <span class="text-red-500">*</span>
+            Preco (R$)
           </label>
-          <input
-            type="number"
-            id="price"
-            name="price"
-            [(ngModel)]="product.preco"
-            required
-            min="0"
-            step="0.01"
+          <input type="number" id="price" name="price" [(ngModel)]="product.preco" min="0" step="0.01"
             placeholder="0.00"
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             [class.border-red-500]="errors.preco">
@@ -78,17 +58,10 @@
         <!-- Quantidade por Fardo -->
         <div>
           <label for="quantity-fardo" class="block text-sm font-medium text-gray-700 mb-2">
-            Quantidade por Fardo <span class="text-red-500">*</span>
+            Quantidade por Fardo
           </label>
-          <input
-            type="number"
-            id="quantity-fardo"
-            name="quantity-fardo"
-            [(ngModel)]="product.quantidade_por_fardo"
-            required
-            min="1"
-            step="1"
-            placeholder="1"
+          <input type="number" id="quantity-fardo" name="quantity-fardo" [(ngModel)]="product.quantidade_por_fardo"
+            min="1" step="1" placeholder="1"
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             [class.border-red-500]="errors.quantidade_por_fardo">
           <p *ngIf="errors.quantidade_por_fardo" class="text-red-500 text-sm mt-1">{{errors.quantidade_por_fardo}}</p>
@@ -98,79 +71,241 @@
         <!-- Categoria -->
         <div>
           <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
-            Categoria <span class="text-red-500">*</span>
+            Categoria
           </label>
-          <select
-            id="category"
-            name="category"
-            [(ngModel)]="product.familia_tintas"
-            required
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            [class.border-red-500]="errors.category">
-            <option value="">Selecione uma categoria</option>
-            <option *ngFor="let category of categories" [value]="category">
-              {{category}}
-            </option>
-          </select>
-          <p *ngIf="errors.category" class="text-red-500 text-sm mt-1">{{errors.category}}</p>
+          <input type="text" id="category" name="category" [(ngModel)]="product.familia_tintas"
+            list="add-categories-list" placeholder="Selecione ou digite uma categoria"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+          <datalist id="add-categories-list">
+            <option *ngFor="let category of categories" [value]="category"></option>
+          </datalist>
         </div>
 
         <!-- Tamanho -->
         <div>
           <label for="size" class="block text-sm font-medium text-gray-700 mb-2">
-            Tamanho <span class="text-red-500">*</span>
+            Conteudo da embalagem
           </label>
-          <select
-            id="size"
-            name="size"
-            [(ngModel)]="product.conteudo_embalagem"
-            required
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            [class.border-red-500]="errors.size">
-            <option value="">Selecione um tamanho</option>
-            <option *ngFor="let size of sizes" [value]="size">
-              {{size}}
-            </option>
-          </select>
-          <p *ngIf="errors.size" class="text-red-500 text-sm mt-1">{{errors.size}}</p>
+          <input type="text" id="size" name="size" [(ngModel)]="product.conteudo_embalagem" list="add-sizes-list"
+            placeholder="Ex: 18L, 3,6KG, 900G..."
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+          <datalist id="add-sizes-list">
+            <option *ngFor="let size of allSizes" [value]="size"></option>
+          </datalist>
         </div>
 
         <!-- Cor -->
         <div>
           <label for="color" class="block text-sm font-medium text-gray-700 mb-2">
-            Cor <span class="text-red-500">*</span>
+            Cor comercial
           </label>
-          <select
-            id="color"
-            name="color"
-            [(ngModel)]="product.cor_comercial_tinta"
-            required
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            [class.border-red-500]="errors.color">
-            <option value="">Selecione uma cor</option>
-            <option *ngFor="let color of colors" [value]="color">
-              {{color}}
-            </option>
-          </select>
-          <p *ngIf="errors.color" class="text-red-500 text-sm mt-1">{{errors.color}}</p>
+          <input type="text" id="color" name="color" [(ngModel)]="product.cor_comercial_tinta" list="add-colors-list"
+            placeholder="Selecione ou digite uma cor"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+          <datalist id="add-colors-list">
+            <option *ngFor="let color of colors" [value]="color"></option>
+          </datalist>
         </div>
 
         <!-- Mais Vendidos -->
         <div class="md:col-span-2">
           <div class="flex items-center space-x-3">
-            <input
-              type="checkbox"
-              id="mais_vendidos"
-              name="mais_vendidos"
-              [(ngModel)]="product.mais_vendidos"
+            <input type="checkbox" id="mais_vendidos" name="mais_vendidos" [(ngModel)]="product.mais_vendidos"
               class="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
             <label for="mais_vendidos" class="text-sm font-medium text-gray-700">
               Marcar como produto mais vendido
             </label>
           </div>
           <p class="text-xs text-gray-500 mt-1">
-            Produtos marcados aparecerão na seção "Mais Vendidos" da página inicial
+            Produtos marcados aparecerao na secao "Mais Vendidos" da pagina inicial
           </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-md p-6">
+      <h2 class="text-xl font-semibold text-gray-900 mb-6">Campos Adicionais do Produto</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label for="linha_produtos_tintas" class="block text-sm font-medium text-gray-700 mb-2">Linha de
+            produtos</label>
+          <input type="text" id="linha_produtos_tintas" name="linha_produtos_tintas"
+            [(ngModel)]="product.linha_produtos_tintas" placeholder="Ex: Linha HT"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        </div>
+
+        <div>
+          <label for="familia" class="block text-sm font-medium text-gray-700 mb-2">Família</label>
+          <input type="text" id="familia" name="familia" [(ngModel)]="product.familia"
+            placeholder="Ex: Repintura Automotiva"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        </div>
+
+        <div>
+          <label for="cor_tinta" class="block text-sm font-medium text-gray-700 mb-2">Cor da tinta</label>
+          <input type="text" id="cor_tinta" name="cor_tinta" [(ngModel)]="product.cor_tinta" placeholder="Ex: Branco"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        </div>
+
+        <div>
+          <label for="acabamento_pintura" class="block text-sm font-medium text-gray-700 mb-2">Acabamento da
+            pintura</label>
+          <input type="text" id="acabamento_pintura" name="acabamento_pintura" [(ngModel)]="product.acabamento_pintura"
+            placeholder="Ex: Fosco"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        </div>
+
+        <div>
+          <label for="brilho" class="block text-sm font-medium text-gray-700 mb-2">Brilho</label>
+          <input type="text" id="brilho" name="brilho" [(ngModel)]="product.brilho" placeholder="Ex: Alto"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        </div>
+
+        <div>
+          <label for="escala_cor" class="block text-sm font-medium text-gray-700 mb-2">Escala de cor</label>
+          <input type="text" id="escala_cor" name="escala_cor" [(ngModel)]="product.escala_cor" placeholder="Ex: RAL"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        </div>
+
+        <div>
+          <label for="versao_tinta" class="block text-sm font-medium text-gray-700 mb-2">Versão da tinta</label>
+          <input type="text" id="versao_tinta" name="versao_tinta" [(ngModel)]="product.versao_tinta"
+            placeholder="Ex: Premium"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        </div>
+
+        <div>
+          <label for="funcao_tinta" class="block text-sm font-medium text-gray-700 mb-2">Função da tinta</label>
+          <input type="text" id="funcao_tinta" name="funcao_tinta" [(ngModel)]="product.funcao_tinta"
+            placeholder="Ex: Acabamento"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        </div>
+
+        <div>
+          <label for="relacao_resina" class="block text-sm font-medium text-gray-700 mb-2">Relação resina</label>
+          <input type="text" id="relacao_resina" name="relacao_resina" [(ngModel)]="product.relacao_resina"
+            placeholder="Ex: PU"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        </div>
+
+        <div>
+          <label for="cura" class="block text-sm font-medium text-gray-700 mb-2">Cura</label>
+          <input type="text" id="cura" name="cura" [(ngModel)]="product.cura" placeholder="Ex: Química"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        </div>
+
+        <div>
+          <label for="classificacao_verniz" class="block text-sm font-medium text-gray-700 mb-2">Classificação
+            verniz</label>
+          <input type="text" id="classificacao_verniz" name="classificacao_verniz"
+            [(ngModel)]="product.classificacao_verniz" placeholder="Ex: PU Alto Sólidos"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        </div>
+
+        <div>
+          <label for="massa_especifica" class="block text-sm font-medium text-gray-700 mb-2">Massa específica</label>
+          <input type="text" id="massa_especifica" name="massa_especifica" [(ngModel)]="product.massa_especifica"
+            placeholder="Ex: 1.22 g/cm3"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        </div>
+
+        <div>
+          <label for="tempo_secagem" class="block text-sm font-medium text-gray-700 mb-2">Tempo de secagem</label>
+          <input type="text" id="tempo_secagem" name="tempo_secagem" [(ngModel)]="product.tempo_secagem"
+            placeholder="Ex: 30 min"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        </div>
+
+        <div>
+          <label for="tempo_cura" class="block text-sm font-medium text-gray-700 mb-2">Tempo de cura</label>
+          <input type="text" id="tempo_cura" name="tempo_cura" [(ngModel)]="product.tempo_cura" placeholder="Ex: 24h"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        </div>
+
+        <div>
+          <label for="metodo_aplicacao" class="block text-sm font-medium text-gray-700 mb-2">Método de aplicação</label>
+          <input type="text" id="metodo_aplicacao" name="metodo_aplicacao" [(ngModel)]="product.metodo_aplicacao"
+            placeholder="Ex: Pistola"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        </div>
+
+        <div>
+          <label for="temperatura_aplicacao" class="block text-sm font-medium text-gray-700 mb-2">Temperatura de
+            aplicação</label>
+          <input type="text" id="temperatura_aplicacao" name="temperatura_aplicacao"
+            [(ngModel)]="product.temperatura_aplicacao" placeholder="Ex: 10C a 35C"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        </div>
+
+        <div>
+          <label for="ambiente_aplicacao" class="block text-sm font-medium text-gray-700 mb-2">Ambiente de
+            aplicação</label>
+          <input type="text" id="ambiente_aplicacao" name="ambiente_aplicacao" [(ngModel)]="product.ambiente_aplicacao"
+            placeholder="Ex: Interno/Externo"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        </div>
+
+        <div>
+          <label for="camadas" class="block text-sm font-medium text-gray-700 mb-2">Camadas</label>
+          <input type="text" id="camadas" name="camadas" [(ngModel)]="product.camadas" placeholder="Ex: 2 a 3"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        </div>
+
+        <div>
+          <label for="metodo_preparo" class="block text-sm font-medium text-gray-700 mb-2">Método de preparo</label>
+          <input type="text" id="metodo_preparo" name="metodo_preparo" [(ngModel)]="product.metodo_preparo"
+            placeholder="Ex: Homogeneizar"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        </div>
+
+        <div>
+          <label for="processo_pintura" class="block text-sm font-medium text-gray-700 mb-2">Processo de pintura</label>
+          <input type="text" id="processo_pintura" name="processo_pintura" [(ngModel)]="product.processo_pintura"
+            placeholder="Ex: Convencional"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        </div>
+
+        <div>
+          <label for="embalagem" class="block text-sm font-medium text-gray-700 mb-2">Embalagem</label>
+          <input type="text" id="embalagem" name="embalagem" [(ngModel)]="product.embalagem"
+            placeholder="Ex: Lata Redonda"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        </div>
+
+        <div>
+          <label for="referencia_tinta_liquida" class="block text-sm font-medium text-gray-700 mb-2">Referência tinta
+            líquida</label>
+          <input type="text" id="referencia_tinta_liquida" name="referencia_tinta_liquida"
+            [(ngModel)]="product.referencia_tinta_liquida" placeholder="Ex: Ref-001"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        </div>
+
+        <div>
+          <label for="sistema_resina" class="block text-sm font-medium text-gray-700 mb-2">Sistema de resina</label>
+          <input type="text" id="sistema_resina" name="sistema_resina" [(ngModel)]="product.sistema_resina"
+            placeholder="Ex: Poliuretano"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        </div>
+
+        <div>
+          <label for="cor" class="block text-sm font-medium text-gray-700 mb-2">Cor (interna)</label>
+          <input type="text" id="cor" name="cor" [(ngModel)]="product.cor" placeholder="Ex: 001"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        </div>
+
+        <div>
+          <label for="diluente_etq" class="block text-sm font-medium text-gray-700 mb-2">Diluente ETQ</label>
+          <input type="text" id="diluente_etq" name="diluente_etq" [(ngModel)]="product.diluente_etq"
+            placeholder="Ex: DNT 1000"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        </div>
+
+        <div>
+          <label for="produto_url" class="block text-sm font-medium text-gray-700 mb-2">URL do produto</label>
+          <input type="url" id="produto_url" name="produto_url" [(ngModel)]="product.produto_url"
+            placeholder="https://www.exemplo.com/produto"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
         </div>
       </div>
     </div>
@@ -186,10 +321,12 @@
             Foto do Produto
           </label>
           <div class="flex items-center justify-center w-full">
-            <label for="photo-upload" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
+            <label for="photo-upload"
+              class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
               <div *ngIf="!imagePreview" class="flex flex-col items-center justify-center pt-5 pb-6">
                 <svg class="w-10 h-10 mb-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
                 </svg>
                 <p class="mb-2 text-sm text-gray-500">
                   <span class="font-semibold">Clique para upload</span> ou arraste e solte
@@ -199,21 +336,15 @@
               </div>
               <div *ngIf="imagePreview" class="relative w-full h-full">
                 <img [src]="imagePreview" alt="Preview" class="w-full h-full object-contain rounded-lg">
-                <button
-                  type="button"
-                  (click)="removeImage(); $event.stopPropagation()"
+                <button type="button" (click)="removeImage(); $event.stopPropagation()"
                   class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
                   </svg>
                 </button>
               </div>
-              <input
-                id="photo-upload"
-                type="file"
-                accept="image/*"
-                (change)="onFileSelected($event)"
-                class="hidden">
+              <input id="photo-upload" type="file" accept="image/*" (change)="onFileSelected($event)" class="hidden">
             </label>
           </div>
         </div>
@@ -228,7 +359,9 @@
             <div *ngIf="compressingImage" class="mt-2 flex items-center space-x-2">
               <svg class="animate-spin h-4 w-4 text-blue-600" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                <path class="opacity-75" fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                </path>
               </svg>
               <span class="text-blue-600 font-medium">Comprimindo imagem...</span>
             </div>
@@ -240,11 +373,7 @@
           <label for="photo_url" class="block text-sm font-medium text-gray-700 mb-2">
             URL da Imagem (alternativa)
           </label>
-          <input
-            type="url"
-            id="photo_url"
-            name="photo_url"
-            [(ngModel)]="product.photo_url"
+          <input type="url" id="photo_url" name="photo_url" [(ngModel)]="product.photo_url"
             placeholder="https://exemplo.com/imagem.jpg"
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
           <p class="text-xs text-gray-500 mt-1">
@@ -261,11 +390,8 @@
       <div class="max-w-sm mx-auto">
         <div class="bg-gray-50 rounded-lg p-6 text-center">
           <div class="h-32 flex items-center justify-center mb-4">
-            <img 
-              [src]="imagePreview || product.photo_url || '/assets/images/cartShoppingTinta.svg'" 
-              alt="Preview" 
-              class="h-24 w-24 object-contain"
-              onerror="this.src='/assets/images/placeholder-product.jpg'">
+            <img [src]="imagePreview || product.photo_url || '/assets/images/cartShoppingTinta.svg'" alt="Preview"
+              class="h-24 w-24 object-contain" onerror="this.src='/assets/images/placeholder-product.jpg'">
           </div>
 
           <h3 class="text-lg font-semibold text-gray-900 mb-2">
@@ -275,7 +401,7 @@
           <div class="space-y-1 text-sm text-gray-600 mb-4">
             <p><span class="font-medium">Categoria:</span> {{product.familia_tintas || 'N/A'}}</p>
             <p><span class="font-medium">Tamanho:</span> {{product.conteudo_embalagem || 'N/A'}}</p>
-            <p><span class="font-medium">Cor:</span> {{product.cor_tinta || 'N/A'}}</p>
+            <p><span class="font-medium">Cor:</span> {{product.cor_comercial_tinta || product.cor_tinta || 'N/A'}}</p>
             <p><span class="font-medium">Qtd por Fardo:</span> {{product.quantidade_por_fardo || 1}} unidades</p>
           </div>
 
@@ -290,28 +416,18 @@
 
     <!-- Actions -->
     <div class="flex justify-end space-x-4">
-      <button
-        type="button"
-        (click)="onCancel()"
+      <button type="button" (click)="onCancel()"
         class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium">
         Cancelar
       </button>
 
-      <!-- Botão de teste -->
-      <button
-        type="button"
-        (click)="onSubmit()"
-        class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm">
-        Teste Manual
-      </button>
-
-      <button
-        type="submit"
-        [disabled]="loading"
+      <button type="submit" [disabled]="loading"
         class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2">
         <svg *ngIf="loading" class="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          <path class="opacity-75" fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+          </path>
         </svg>
         <span>{{loading ? 'Salvando...' : 'Adicionar Produto'}}</span>
       </button>

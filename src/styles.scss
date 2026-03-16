@@ -1,3 +1,5 @@
+@import 'sweetalert2/dist/sweetalert2.min.css';
+
 /* src/styles.scss */
 
 @tailwind base;
@@ -39,3 +41,38 @@
 }
 
 /* O resto do seu CSS global pode vir depois */
+
+.app-swal-popup {
+  border-radius: 1rem;
+  padding: 1.75rem;
+  border: 1px solid #dbeafe;
+  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+}
+
+.app-swal-title {
+  color: #1e3a8a;
+  font-weight: 700;
+}
+
+.app-swal-content {
+  color: #334155;
+}
+
+.app-swal-confirm,
+.app-swal-cancel {
+  border: 0;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1.25rem;
+  font-weight: 600;
+  margin: 5px;
+}
+
+.app-swal-confirm {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #fff;
+}
+
+.app-swal-cancel {
+  background: #e2e8f0;
+  color: #0f172a;
+}

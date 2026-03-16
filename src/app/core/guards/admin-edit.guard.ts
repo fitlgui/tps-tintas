@@ -2,11 +2,13 @@
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../../services/admin/admin.service';
+import { NotificationService } from '../../services/ui/notification.service';
 
 export const adminEditGuard: CanActivateFn = (route, state) => {
   // Injetamos os serviços que precisamos dentro da função
   const authService = inject(AuthService);
   const router = inject(Router);
+  const notificationService = inject(NotificationService);
 
   // Verificamos se está logado e se a sessão ainda é válida
   if (!authService.isLoggedIn() || !authService.isSessionValid()) {
@@ -28,7 +30,7 @@ export const adminEditGuard: CanActivateFn = (route, state) => {
     }
     
     // Mostrar mensagem de aviso
-    alert('Apenas administradores podem realizar alterações.');
+    void notificationService.warning('Apenas administradores podem realizar alterações.', 'Acesso restrito');
     return false;
   }
 

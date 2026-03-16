@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ToolsService, Tool } from 'src/app/services/tools/tools.service';
 import { AuthService } from 'src/app/services/admin/admin.service';
 import { Router } from '@angular/router';
+import { NotificationService } from 'src/app/services/ui/notification.service';
 
 @Component({
   selector: 'app-tools',
@@ -31,7 +32,8 @@ export class ToolsComponent implements OnInit {
   constructor(
     private toolsService: ToolsService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -44,7 +46,13 @@ export class ToolsComponent implements OnInit {
     
     this.toolsService.getTools().subscribe({
       next: (tools) => {
-        this.tools = tools;
+        this.tools = tools.map((tool) => ({
+          ...tool,
+          nome: tool.nome ?? '',
+          descricao: tool.descricao ?? '',
+          info_tecnica: tool.info_tecnica ?? '',
+          preco: Number(tool.preco ?? 0)
+        }));
         this.applyFilters();
         this.loading = false;
       },
@@ -63,9 +71,9 @@ export class ToolsComponent implements OnInit {
     if (this.searchTerm.trim()) {
       const term = this.searchTerm.toLowerCase();
       filtered = filtered.filter(tool => 
-        tool.nome.toLowerCase().includes(term) ||
-        tool.descricao.toLowerCase().includes(term) ||
-        tool.info_tecnica.toLowerCase().includes(term)
+        (tool.nome || '').toLowerCase().includes(term) ||
+        (tool.descricao || '').toLowerCase().includes(term) ||
+        (tool.info_tecnica || '').toLowerCase().includes(term)
       );
     }
     
@@ -180,22 +188,26 @@ export class ToolsComponent implements OnInit {
   }
 
   // Excluir ferramenta
-  deleteTool(tool: Tool): void {
+  async deleteTool(tool: Tool): Promise<void> {
     if (!this.canEdit() || !tool.id) {
       return;
     }
     
-    const confirmDelete = confirm(`Tem certeza que deseja excluir a ferramenta "${tool.nome}"?`);
+    const confirmDelete = await this.notificationService.confirm(
+      `Tem certeza que deseja excluir a ferramenta "${tool.nome}"?`,
+      'Excluir ferramenta',
+      'Excluir'
+    );
     
     if (confirmDelete) {
       this.toolsService.deleteTool(tool.id).subscribe({
-        next: () => {
+        next: async () => {
           this.loadTools();
-          alert('Ferramenta excluída com sucesso!');
+          await this.notificationService.success('Ferramenta excluída com sucesso!');
         },
-        error: (error) => {
+        error: async (error) => {
           console.error('Erro ao excluir ferramenta:', error);
-          alert('Erro ao excluir ferramenta: ' + error.message);
+          await this.notificationService.error('Erro ao excluir ferramenta: ' + error.message);
         }
       });
     }
@@ -214,7 +226,8 @@ export class ToolsComponent implements OnInit {
     return date.toLocaleDateString('pt-BR');
   }
 
-  truncateText(text: string, maxLength: number = 100): string {
+  truncateText(text: string | null | undefined, maxLength: number = 100): string {
+    if (!text) return '';
     if (text.length <= maxLength) return text;
     return text.substring(0, maxLength) + '...';
   }

@@ -4,6 +4,7 @@ import { UsersService, User } from 'src/app/services/users/users.service';
 import { AuthService } from 'src/app/services/admin/admin.service';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { NotificationService } from 'src/app/services/ui/notification.service';
 
 @Component({
   selector: 'app-users',
@@ -21,7 +22,8 @@ export class UsersComponent implements OnInit {
   constructor(
     private usersService: UsersService,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -91,21 +93,27 @@ export class UsersComponent implements OnInit {
     }
   }
 
-  deleteUser(userId: number): void {
+  async deleteUser(userId: number): Promise<void> {
     if (!this.canEdit()) {
-      alert('Você não tem permissão para excluir usuários.');
+      await this.notificationService.warning('Você não tem permissão para excluir usuários.', 'Acesso negado');
       return;
     }
 
-    if (confirm('Tem certeza que deseja excluir este usuário?')) {
+    const confirmed = await this.notificationService.confirm(
+      'Tem certeza que deseja excluir este usuário?',
+      'Excluir usuário',
+      'Excluir'
+    );
+
+    if (confirmed) {
       this.usersService.deleteUser(userId).subscribe({
-        next: () => {
+        next: async () => {
           this.loadUsers(); // Recarregar lista
-          alert('Usuário excluído com sucesso!');
+          await this.notificationService.success('Usuário excluído com sucesso!');
         },
-        error: (error) => {
+        error: async (error) => {
           console.error('Erro ao excluir usuário:', error);
-          alert('Erro ao excluir usuário. Tente novamente.');
+          await this.notificationService.error('Erro ao excluir usuário. Tente novamente.');
         }
       });
     }

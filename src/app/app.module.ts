@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ProductCardComponent } from './shareds/product-card/product-card.component';
@@ -17,6 +17,7 @@ import { SharedPipesModule } from './shareds/shared-pipes.module';
 import { ProductImagePipe } from './pipes/product-image.pipe';
 import { ToolImagePipe } from './pipes/tool-image.pipe';
 import { ToolsComponent } from './components/tools/tools.component';
+import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,13 @@ import { ToolsComponent } from './components/tools/tools.component';
     HttpClientModule,
     SharedPipesModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

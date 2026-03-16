@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToolsService, Tool, UpdateToolRequest } from 'src/app/services/tools/tools.service';
 import { AuthService } from 'src/app/services/admin/admin.service';
+import { NotificationService } from 'src/app/services/ui/notification.service';
 
 @Component({
   selector: 'app-edit-tool',
@@ -25,7 +26,8 @@ export class EditToolComponent implements OnInit {
     private toolsService: ToolsService,
     private authService: AuthService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private notificationService: NotificationService
   ) {
     // Verificar permissões ao inicializar
     if (!this.authService.canEdit()) {
@@ -128,14 +130,14 @@ export class EditToolComponent implements OnInit {
 
       // Se nenhum campo foi modificado
       if (Object.keys(updateData).length === 0) {
-        alert('Nenhuma alteração foi detectada.');
+        void this.notificationService.info('Nenhuma alteração foi detectada.');
         this.loading = false;
         return;
       }
 
       this.toolsService.updateTool(this.toolId, updateData).subscribe({
-        next: (tool) => {
-          alert('Ferramenta atualizada com sucesso!');
+        next: async () => {
+          await this.notificationService.success('Ferramenta atualizada com sucesso!');
           this.router.navigate(['/admin/tools']);
         },
         error: (error) => {
@@ -160,20 +162,24 @@ export class EditToolComponent implements OnInit {
     this.router.navigate(['/admin/tools']);
   }
 
-  onDelete(): void {
+  async onDelete(): Promise<void> {
     if (!this.toolId || !this.currentTool) return;
 
-    const confirmDelete = confirm(`Tem certeza que deseja excluir a ferramenta "${this.currentTool.nome}"?`);
+    const confirmDelete = await this.notificationService.confirm(
+      `Tem certeza que deseja excluir a ferramenta "${this.currentTool.nome}"?`,
+      'Excluir ferramenta',
+      'Excluir'
+    );
     
     if (confirmDelete) {
       this.toolsService.deleteTool(this.toolId).subscribe({
-        next: () => {
-          alert('Ferramenta excluída com sucesso!');
+        next: async () => {
+          await this.notificationService.success('Ferramenta excluída com sucesso!');
           this.router.navigate(['/admin/tools']);
         },
-        error: (error) => {
+        error: async (error) => {
           console.error('Erro ao excluir ferramenta:', error);
-          alert('Erro ao excluir ferramenta: ' + error.message);
+          await this.notificationService.error('Erro ao excluir ferramenta: ' + error.message);
         }
       });
     }
