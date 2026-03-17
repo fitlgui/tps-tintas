@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ToolsService, CreateToolRequest } from 'src/app/services/tools/tools.service';
 import { AuthService } from 'src/app/services/admin/admin.service';
 import { NotificationService } from 'src/app/services/ui/notification.service';
+import { formatCurrencyInput, normalizeCurrencyInput, roundCurrencyValue } from '../../../shareds/price-input.util';
 
 @Component({
   selector: 'app-add-tool',
@@ -14,6 +15,7 @@ export class AddToolComponent {
   toolForm!: FormGroup;
   loading = false;
   error: string | null = null;
+  priceInput = '';
   selectedFile: File | null = null;
   imagePreview: string | null = null;
   compressingImage = false;
@@ -47,9 +49,12 @@ export class AddToolComponent {
       this.loading = true;
       this.error = null;
 
+      const normalizedPrice = roundCurrencyValue(Number(this.toolForm.getRawValue().preco) || 0);
+      this.toolForm.patchValue({ preco: normalizedPrice }, { emitEvent: false });
+
       const toolData: CreateToolRequest = {
         nome: this.toolForm.value.nome.trim(),
-        preco: parseFloat(this.toolForm.value.preco),
+        preco: normalizedPrice,
         descricao: this.toolForm.value.descricao.trim(),
         info_tecnica: this.toolForm.value.info_tecnica.trim(),
         marca: this.toolForm.value.marca?.trim() || undefined,
@@ -132,22 +137,17 @@ export class AddToolComponent {
     return labels[fieldName] || fieldName;
   }
 
-  // Formatação de preço
-  formatPrecoInput(event: any): void {
-    let value = event.target.value;
-    // Remove tudo que não é número ou ponto
-    value = value.replace(/[^0-9.]/g, '');
-    // Garante apenas um ponto decimal
-    const parts = value.split('.');
-    if (parts.length > 2) {
-      value = parts[0] + '.' + parts[1];
-    }
-    // Limita a 2 casas decimais
-    if (parts[1] && parts[1].length > 2) {
-      value = parts[0] + '.' + parts[1].substring(0, 2);
-    }
-    event.target.value = value;
-    this.toolForm.patchValue({ preco: value });
+  onPriceInput(rawValue: string): void {
+    const normalized = normalizeCurrencyInput(rawValue);
+    this.priceInput = normalized.formatted;
+    this.toolForm.patchValue({ preco: normalized.numeric }, { emitEvent: false });
+    this.preco?.markAsDirty();
+    this.preco?.markAsTouched();
+    this.preco?.updateValueAndValidity({ emitEvent: false });
+  }
+
+  getFormattedPricePreview(): string {
+    return this.priceInput || formatCurrencyInput(Number(this.preco?.value) || 0) || '0,00';
   }
 
   // Métodos para manipulação de imagens

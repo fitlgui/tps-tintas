@@ -4,6 +4,7 @@ import { Observable, throwError, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { environment } from 'src/environment/enviroment';
 import { AuthService } from '../admin/admin.service';
+import { roundCurrencyValue } from '../../shareds/price-input.util';
 
 export interface Tool {
   id?: number;
@@ -102,6 +103,8 @@ export class ToolsService {
   // Processar ferramentas vindas da API (converter buffer para string base64 se necessário)
   private processToolsImages(tools: Tool[]): Tool[] {
     return tools.map(tool => {
+      tool.preco = roundCurrencyValue(Number(tool.preco) || 0);
+
       // Se photo é um buffer, converter para string base64
       if (tool.photo && typeof tool.photo === 'object') {
         const dataUrl = this.bufferToDataUrl(tool.photo);
@@ -140,6 +143,8 @@ export class ToolsService {
     return this.http.get<Tool>(`${this.apiUrl}/${id}`).pipe(
       map((tool: Tool) => {
         if (tool) {
+          tool.preco = roundCurrencyValue(Number(tool.preco) || 0);
+
           // Se photo é um buffer, converter para string base64
           if (tool.photo && typeof tool.photo === 'object') {
             const dataUrl = this.bufferToDataUrl(tool.photo);
@@ -181,6 +186,7 @@ export class ToolsService {
 
     // Garantir que photo seja enviado como string base64 (sem prefixo data:image)
     const toolToSend = { ...tool };
+    toolToSend.preco = roundCurrencyValue(Number(toolToSend.preco) || 0);
     if (toolToSend.photo && typeof toolToSend.photo === 'string' && toolToSend.photo.startsWith('data:image/')) {
       // Extrair apenas a parte base64
       toolToSend.photo = toolToSend.photo.split(',')[1];
@@ -202,6 +208,9 @@ export class ToolsService {
 
     // Garantir que photo seja enviado como string base64 (sem prefixo data:image)
     const toolToSend = { ...tool };
+    if (toolToSend.preco !== undefined) {
+      toolToSend.preco = roundCurrencyValue(Number(toolToSend.preco) || 0);
+    }
     if (toolToSend.photo && typeof toolToSend.photo === 'string' && toolToSend.photo.startsWith('data:image/')) {
       // Extrair apenas a parte base64
       toolToSend.photo = toolToSend.photo.split(',')[1];

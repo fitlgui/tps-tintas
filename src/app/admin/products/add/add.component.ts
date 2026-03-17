@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ProductsService, Product } from '../../../services/products/products.service';
 import { NotificationService } from '../../../services/ui/notification.service';
+import { formatCurrencyInput, normalizeCurrencyInput, roundCurrencyValue } from '../../../shareds/price-input.util';
 
 @Component({
   selector: 'app-add',
@@ -68,6 +69,7 @@ export class AddComponent implements OnInit {
     return combined;
   }
   loading = false;
+  priceInput = '';
   errors: any = {};
   selectedFile: File | null = null;
   imagePreview: string | null = null;
@@ -81,6 +83,16 @@ export class AddComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadFormData();
+  }
+
+  onPriceInput(rawValue: string): void {
+    const normalized = normalizeCurrencyInput(rawValue);
+    this.priceInput = normalized.formatted;
+    this.product.preco = normalized.numeric;
+
+    if (this.errors.preco && normalized.numeric >= 0) {
+      delete this.errors.preco;
+    }
   }
 
   loadFormData(): void {
@@ -157,6 +169,8 @@ export class AddComponent implements OnInit {
       sanitized.quantidade_por_fardo = 1;
     }
 
+    sanitized.preco = roundCurrencyValue(Number(sanitized.preco) || 0);
+
     return sanitized;
   }
 
@@ -191,6 +205,10 @@ export class AddComponent implements OnInit {
 
   onCancel(): void {
     this.router.navigate(['/admin/produtos']);
+  }
+
+  getFormattedPricePreview(): string {
+    return this.priceInput || formatCurrencyInput(this.product.preco) || '0,00';
   }
 
   onFileSelected(event: any): void {

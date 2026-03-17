@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable, of, catchError } from 'rxjs';
 import { environment } from 'src/environment/enviroment';
+import { roundCurrencyValue } from '../../shareds/price-input.util';
 
 // Modelo de Produto
 export interface Product {
@@ -243,6 +244,8 @@ export class ProductsService {
     return this.http.get<any>(`${this.environment.apiUrl}/products/${id}`).pipe(
       map((data: any) => {
         if (data) {
+          data.preco = roundCurrencyValue(Number(data.preco) || 0);
+
           // Se photo é um buffer, converter para string base64
           if (data.photo && typeof data.photo === 'object') {
             const dataUrl = this.bufferToDataUrl(data.photo);
@@ -273,6 +276,8 @@ export class ProductsService {
       // Extrair apenas a parte base64
       productToSend.photo = productToSend.photo.split(',')[1];
     }
+
+    productToSend.preco = roundCurrencyValue(Number(productToSend.preco) || 0);
     
     return this.http.post<Product>(`${this.environment.apiUrl}/products`, productToSend);
   }
@@ -281,7 +286,7 @@ export class ProductsService {
   updateProduct(id: number, product: ProductUpdate): Observable<ProductUpdate> {
     // Garantir que photo seja enviado como string base64 (sem prefixo data:image)
     const productToSend = { ...product };
-    productToSend.preco = productToSend.preco - 0.01;
+    productToSend.preco = roundCurrencyValue(Number(productToSend.preco) || 0);
     if (productToSend.photo && typeof productToSend.photo === 'string' && productToSend.photo.startsWith('data:image/')) {
       // Extrair apenas a parte base64
       productToSend.photo = productToSend.photo.split(',')[1];

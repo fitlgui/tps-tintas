@@ -52,9 +52,11 @@
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-2">Faixa de Preço</label>
         <div class="flex space-x-2">
-          <input type="number" [(ngModel)]="priceRange.min" (input)="onPriceRangeChange()" placeholder="Min"
+          <input type="text" [ngModel]="priceRangeInput.min" (ngModelChange)="onMinPriceRangeInput($event)" placeholder="Min"
+            inputmode="numeric" autocomplete="off"
             class="w-1/2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-          <input type="number" [(ngModel)]="priceRange.max" (input)="onPriceRangeChange()" placeholder="Max"
+          <input type="text" [ngModel]="priceRangeInput.max" (ngModelChange)="onMaxPriceRangeInput($event)" placeholder="Max"
+            inputmode="numeric" autocomplete="off"
             class="w-1/2 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
         </div>
       </div>

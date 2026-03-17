@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductsService, Product } from '../../../services/products/products.service';
 import { NotificationService } from '../../../services/ui/notification.service';
+import { formatCurrencyInput, normalizeCurrencyInput, roundCurrencyValue } from '../../../shareds/price-input.util';
 
 @Component({
   selector: 'app-edit',
@@ -53,6 +54,7 @@ export class EditComponent implements OnInit {
 }
 
   originalProduct: Product | null = null;
+  priceInput = '';
   categories: any[] = [];
   colors: any[] = [];
   sizes: any[] = [];
@@ -107,6 +109,7 @@ export class EditComponent implements OnInit {
         if (product) {
           this.product = { ...product };
           this.originalProduct = { ...product };
+          this.syncPriceInput(product.preco);
           this.productNotFound = false;
         } else {
           this.productNotFound = true;
@@ -119,6 +122,16 @@ export class EditComponent implements OnInit {
         this.loadingProduct = false;
       }
     });
+  }
+
+  onPriceInput(rawValue: string): void {
+    const normalized = normalizeCurrencyInput(rawValue);
+    this.priceInput = normalized.formatted;
+    this.product.preco = normalized.numeric;
+
+    if (this.errors.preco && normalized.numeric > 0) {
+      delete this.errors.preco;
+    }
   }
 
   loadFormData(): void {
@@ -206,6 +219,8 @@ export class EditComponent implements OnInit {
       sanitized.quantidade_por_fardo = 1;
     }
 
+    sanitized.preco = roundCurrencyValue(Number(sanitized.preco) || 0);
+
     return sanitized;
   }
 
@@ -240,8 +255,19 @@ export class EditComponent implements OnInit {
   resetForm(): void {
     if (this.originalProduct) {
       this.product = { ...this.originalProduct };
+      this.syncPriceInput(this.originalProduct.preco);
       this.errors = {};
     }
+  }
+
+  getFormattedPricePreview(): string {
+    return this.priceInput || formatCurrencyInput(this.product.preco) || '0,00';
+  }
+
+  private syncPriceInput(preco: number | null | undefined): void {
+    const roundedPrice = roundCurrencyValue(Number(preco) || 0);
+    this.product.preco = roundedPrice;
+    this.priceInput = roundedPrice > 0 ? formatCurrencyInput(roundedPrice) : '';
   }
 
   onFileSelected(event: any): void {

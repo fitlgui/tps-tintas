@@ -3,6 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { ProductsService, Product } from 'src/app/services/products/products.service';
 import { CartService } from 'src/app/services/cart/cart.service';
 import { SeoService } from 'src/app/services/seo/seo.service';
+import { formatCurrencyInput, normalizeCurrencyInput, roundCurrencyValue } from 'src/app/shareds/price-input.util';
 
 @Component({
   selector: 'app-catalog',
@@ -44,6 +45,8 @@ export class CatalogComponent implements OnInit {
   // Filtros de preço
   public minPrice: number = 0;
   public maxPrice: number = 0;
+  public minPriceInput = '';
+  public maxPriceInput = '';
 
   // Paginação
   public indexPage: number = 1;
@@ -102,9 +105,22 @@ export class CatalogComponent implements OnInit {
   private setDefaultPriceRange() {
     if (this.allProducts.length > 0) {
       const prices = this.allProducts.map(product => product.preco);
-      this.minPrice = Math.min(...prices);
-      this.maxPrice = Math.max(...prices);
+      this.minPrice = roundCurrencyValue(Math.min(...prices));
+      this.maxPrice = roundCurrencyValue(Math.max(...prices));
+      this.syncPriceInputs();
     }
+  }
+
+  onMinPriceInput(rawValue: string): void {
+    const normalized = normalizeCurrencyInput(rawValue);
+    this.minPriceInput = normalized.formatted;
+    this.minPrice = normalized.numeric;
+  }
+
+  onMaxPriceInput(rawValue: string): void {
+    const normalized = normalizeCurrencyInput(rawValue);
+    this.maxPriceInput = normalized.formatted;
+    this.maxPrice = normalized.numeric;
   }
 
   private applyFilters() {
@@ -119,6 +135,10 @@ export class CatalogComponent implements OnInit {
       // Trocar valores se mínimo for maior que máximo
       [minPrice, maxPrice] = [maxPrice, minPrice];
     }
+
+    this.minPrice = roundCurrencyValue(minPrice);
+    this.maxPrice = roundCurrencyValue(maxPrice);
+    this.syncPriceInputs();
 
     // Aplicar todos os filtros juntos
     this.applyAllFilters(minPrice, maxPrice);
@@ -179,7 +199,7 @@ export class CatalogComponent implements OnInit {
   // Pegar preço máximo dos produtos
   getMaxPrice(): number {
     if (this.allProducts.length === 0) return 1000;
-    return Math.max(...this.allProducts.map(product => product.preco));
+    return roundCurrencyValue(Math.max(...this.allProducts.map(product => product.preco)));
   }
 
   // Mostrar os produtos por categoria
@@ -304,6 +324,11 @@ export class CatalogComponent implements OnInit {
       url: 'https://tpstintas.com.br/catalog',
       type: 'website'
     });
+  }
+
+  private syncPriceInputs(): void {
+    this.minPriceInput = formatCurrencyInput(this.minPrice);
+    this.maxPriceInput = formatCurrencyInput(this.maxPrice);
   }
 
   // Métodos de Paginação (Simplificados - usando todos os produtos filtrados)

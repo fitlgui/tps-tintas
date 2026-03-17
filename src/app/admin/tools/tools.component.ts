@@ -3,6 +3,7 @@ import { ToolsService, Tool } from 'src/app/services/tools/tools.service';
 import { AuthService } from 'src/app/services/admin/admin.service';
 import { Router } from '@angular/router';
 import { NotificationService } from 'src/app/services/ui/notification.service';
+import { formatCurrencyInput, normalizeCurrencyInput, roundCurrencyValue } from 'src/app/shareds/price-input.util';
 
 @Component({
   selector: 'app-tools',
@@ -28,6 +29,10 @@ export class ToolsComponent implements OnInit {
     min: 0,
     max: 1000
   };
+  priceRangeInput = {
+    min: formatCurrencyInput(0),
+    max: formatCurrencyInput(1000)
+  };
 
   constructor(
     private toolsService: ToolsService,
@@ -51,8 +56,9 @@ export class ToolsComponent implements OnInit {
           nome: tool.nome ?? '',
           descricao: tool.descricao ?? '',
           info_tecnica: tool.info_tecnica ?? '',
-          preco: Number(tool.preco ?? 0)
+          preco: roundCurrencyValue(Number(tool.preco ?? 0))
         }));
+        this.syncPriceRangeInputs();
         this.applyFilters();
         this.loading = false;
       },
@@ -123,7 +129,36 @@ export class ToolsComponent implements OnInit {
   }
 
   onPriceRangeChange(): void {
+    if (this.priceRange.min < 0) {
+      this.priceRange.min = 0;
+    }
+
+    if (this.priceRange.max <= 0) {
+      this.priceRange.max = this.getMaxAvailablePrice();
+    }
+
+    if (this.priceRange.min > this.priceRange.max) {
+      [this.priceRange.min, this.priceRange.max] = [this.priceRange.max, this.priceRange.min];
+    }
+
+    this.priceRange.min = roundCurrencyValue(this.priceRange.min);
+    this.priceRange.max = roundCurrencyValue(this.priceRange.max);
+    this.syncPriceRangeInputs();
     this.applyFilters();
+  }
+
+  onMinPriceRangeInput(rawValue: string): void {
+    const normalized = normalizeCurrencyInput(rawValue);
+    this.priceRangeInput.min = normalized.formatted;
+    this.priceRange.min = normalized.numeric;
+    this.onPriceRangeChange();
+  }
+
+  onMaxPriceRangeInput(rawValue: string): void {
+    const normalized = normalizeCurrencyInput(rawValue);
+    this.priceRangeInput.max = normalized.formatted;
+    this.priceRange.max = normalized.numeric;
+    this.onPriceRangeChange();
   }
 
   getPaginatedTools(): Tool[] {
@@ -235,5 +270,18 @@ export class ToolsComponent implements OnInit {
   // Método para ter acesso ao Math no template
   min(a: number, b: number): number {
     return Math.min(a, b);
+  }
+
+  private getMaxAvailablePrice(): number {
+    if (this.tools.length === 0) {
+      return 1000;
+    }
+
+    return roundCurrencyValue(Math.max(...this.tools.map((tool) => tool.preco || 0)));
+  }
+
+  private syncPriceRangeInputs(): void {
+    this.priceRangeInput.min = formatCurrencyInput(this.priceRange.min);
+    this.priceRangeInput.max = formatCurrencyInput(this.priceRange.max);
   }
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToolsService, Tool } from 'src/app/services/tools/tools.service';
 import { SeoService } from 'src/app/services/seo/seo.service';
+import { formatCurrencyInput, normalizeCurrencyInput, roundCurrencyValue } from 'src/app/shareds/price-input.util';
 
 @Component({
   selector: 'app-tools',
@@ -29,6 +30,8 @@ export class ToolsComponent implements OnInit {
   public selectedCategories: Set<string> = new Set();
   public minPrice: number = 0;
   public maxPrice: number = 0;
+  public minPriceInput = '';
+  public maxPriceInput = '';
 
   // Busca
   public searchTerm: string = '';
@@ -133,9 +136,22 @@ export class ToolsComponent implements OnInit {
   private setDefaultPriceRange() {
     if (this.allTools.length > 0) {
       const prices = this.allTools.map(tool => Number(tool.preco) || 0);
-      this.minPrice = Math.min(...prices);
-      this.maxPrice = Math.max(...prices);
+      this.minPrice = roundCurrencyValue(Math.min(...prices));
+      this.maxPrice = roundCurrencyValue(Math.max(...prices));
+      this.syncPriceInputs();
     }
+  }
+
+  onMinPriceInput(rawValue: string): void {
+    const normalized = normalizeCurrencyInput(rawValue);
+    this.minPriceInput = normalized.formatted;
+    this.minPrice = normalized.numeric;
+  }
+
+  onMaxPriceInput(rawValue: string): void {
+    const normalized = normalizeCurrencyInput(rawValue);
+    this.maxPriceInput = normalized.formatted;
+    this.maxPrice = normalized.numeric;
   }
 
   getToolsByBrand(event: Event, brand: string) {
@@ -164,6 +180,9 @@ export class ToolsComponent implements OnInit {
     if (minPrice > maxPrice) {
       [minPrice, maxPrice] = [maxPrice, minPrice];
     }
+    this.minPrice = roundCurrencyValue(minPrice);
+    this.maxPrice = roundCurrencyValue(maxPrice);
+    this.syncPriceInputs();
     this.applyAllFilters(minPrice, maxPrice);
   }
 
@@ -196,7 +215,7 @@ export class ToolsComponent implements OnInit {
 
   getMaxPrice(): number {
     if (this.allTools.length === 0) return 1000;
-    return Math.max(...this.allTools.map(tool => Number(tool.preco) || 0));
+    return roundCurrencyValue(Math.max(...this.allTools.map(tool => Number(tool.preco) || 0)));
   }
 
   private applyFilters() {
@@ -245,5 +264,10 @@ export class ToolsComponent implements OnInit {
       style: 'currency',
       currency: 'BRL'
     }).format(Number(price) || 0);
+  }
+
+  private syncPriceInputs(): void {
+    this.minPriceInput = formatCurrencyInput(this.minPrice);
+    this.maxPriceInput = formatCurrencyInput(this.maxPrice);
   }
 }

@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ToolsService, Tool, UpdateToolRequest } from 'src/app/services/tools/tools.service';
 import { AuthService } from 'src/app/services/admin/admin.service';
 import { NotificationService } from 'src/app/services/ui/notification.service';
+import { formatCurrencyInput, normalizeCurrencyInput, roundCurrencyValue } from '../../../shareds/price-input.util';
 
 @Component({
   selector: 'app-edit-tool',
@@ -17,6 +18,7 @@ export class EditToolComponent implements OnInit {
   error: string | null = null;
   toolId: number | null = null;
   currentTool: Tool | null = null;
+  priceInput = '';
   selectedFile: File | null = null;
   imagePreview: string | null = null;
   compressingImage = false;
@@ -84,13 +86,14 @@ export class EditToolComponent implements OnInit {
   populateForm(tool: Tool): void {
     this.toolForm.patchValue({
       nome: tool.nome,
-      preco: tool.preco,
+      preco: roundCurrencyValue(tool.preco),
       descricao: tool.descricao,
       info_tecnica: tool.info_tecnica,
       marca: tool.marca || '',
       categoria: tool.categoria || '',
       photo: tool.photo || ''
     });
+    this.syncPriceInput(tool.preco);
 
     // Configurar preview da imagem se existir
     if (tool.photo) {
@@ -103,14 +106,18 @@ export class EditToolComponent implements OnInit {
       this.loading = true;
       this.error = null;
 
+      const normalizedPrice = roundCurrencyValue(Number(this.toolForm.getRawValue().preco) || 0);
+      const currentPrice = roundCurrencyValue(this.currentTool?.preco || 0);
+      this.toolForm.patchValue({ preco: normalizedPrice }, { emitEvent: false });
+
       const updateData: UpdateToolRequest = {};
       
       // Só inclui campos que foram modificados
       if (this.toolForm.value.nome.trim() !== this.currentTool?.nome) {
         updateData.nome = this.toolForm.value.nome.trim();
       }
-      if (parseFloat(this.toolForm.value.preco) !== this.currentTool?.preco) {
-        updateData.preco = parseFloat(this.toolForm.value.preco);
+      if (normalizedPrice !== currentPrice) {
+        updateData.preco = normalizedPrice;
       }
       if (this.toolForm.value.descricao.trim() !== this.currentTool?.descricao) {
         updateData.descricao = this.toolForm.value.descricao.trim();
@@ -188,10 +195,12 @@ export class EditToolComponent implements OnInit {
   // Verificar se houve mudanças
   hasChanges(): boolean {
     if (!this.currentTool) return false;
+    const currentPrice = roundCurrencyValue(this.currentTool.preco);
+    const formPrice = roundCurrencyValue(Number(this.toolForm.value.preco) || 0);
     
     return (
       this.toolForm.value.nome.trim() !== this.currentTool.nome ||
-      parseFloat(this.toolForm.value.preco) !== this.currentTool.preco ||
+      formPrice !== currentPrice ||
       this.toolForm.value.descricao.trim() !== this.currentTool.descricao ||
       this.toolForm.value.info_tecnica.trim() !== this.currentTool.info_tecnica ||
       this.toolForm.value.marca?.trim() !== this.currentTool.marca ||
@@ -248,22 +257,23 @@ export class EditToolComponent implements OnInit {
     return labels[fieldName] || fieldName;
   }
 
-  // Formatação de preço
-  formatPrecoInput(event: any): void {
-    let value = event.target.value;
-    // Remove tudo que não é número ou ponto
-    value = value.replace(/[^0-9.]/g, '');
-    // Garante apenas um ponto decimal
-    const parts = value.split('.');
-    if (parts.length > 2) {
-      value = parts[0] + '.' + parts[1];
-    }
-    // Limita a 2 casas decimais
-    if (parts[1] && parts[1].length > 2) {
-      value = parts[0] + '.' + parts[1].substring(0, 2);
-    }
-    event.target.value = value;
-    this.toolForm.patchValue({ preco: value });
+  onPriceInput(rawValue: string): void {
+    const normalized = normalizeCurrencyInput(rawValue);
+    this.priceInput = normalized.formatted;
+    this.toolForm.patchValue({ preco: normalized.numeric }, { emitEvent: false });
+    this.preco?.markAsDirty();
+    this.preco?.markAsTouched();
+    this.preco?.updateValueAndValidity({ emitEvent: false });
+  }
+
+  getFormattedPricePreview(): string {
+    return this.priceInput || formatCurrencyInput(Number(this.preco?.value) || 0) || '0,00';
+  }
+
+  private syncPriceInput(preco: number | null | undefined): void {
+    const roundedPrice = roundCurrencyValue(Number(preco) || 0);
+    this.priceInput = roundedPrice > 0 ? formatCurrencyInput(roundedPrice) : '';
+    this.toolForm.patchValue({ preco: roundedPrice }, { emitEvent: false });
   }
 
   // Métodos para manipulação de imagens
