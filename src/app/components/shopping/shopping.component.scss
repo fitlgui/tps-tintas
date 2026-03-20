@@ -1,12 +1,12 @@
 /* Animações personalizadas */
 .cart-sidebar {
   box-shadow: -10px 0 30px rgba(0, 0, 0, 0.2);
-  z-index: 9999;
+  z-index: 999;
 }
 
 /* Garantir que o carrinho fique sobre tudo */
 .cart-overlay {
-  z-index: 9998;
+  z-index: 998;
 }
 
 /* Scrollbar personalizada */
@@ -62,6 +62,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -81,9 +82,11 @@
   0% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(1.1);
   }
+
   100% {
     transform: scale(1);
   }
@@ -128,10 +131,21 @@
 
 /* Efeito de shake para erros */
 @keyframes shake {
-  0%, 20%, 40%, 60%, 80%, 100% {
+
+  0%,
+  20%,
+  40%,
+  60%,
+  80%,
+  100% {
     transform: translateX(0);
   }
-  10%, 30%, 50%, 70%, 90% {
+
+  10%,
+  30%,
+  50%,
+  70%,
+  90% {
     transform: translateX(-5px);
   }
 }
@@ -164,7 +178,7 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
   transition: left 0.5s;
 }
 
@@ -178,12 +192,19 @@
 }
 
 @keyframes bounce {
-  0%, 20%, 50%, 80%, 100% {
+
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
     transform: translateY(0);
   }
+
   40% {
     transform: translateY(-3px);
   }
+
   60% {
     transform: translateY(-1px);
   }

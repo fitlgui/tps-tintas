@@ -19,12 +19,9 @@ export class HomeComponent implements OnInit {
 
   // Filtro selecionado
   public selectedFilter: string = 'mais-vendidos';
-  // Opções de filtro
+  // Opções de filtro (inicialmente apenas 'Mais vendidos')
   public filterOptions = [
-    { label: 'Mais vendidos', value: 'mais-vendidos' },
-    { label: 'Tinta Líquida', value: 'tinta-liquida' },
-    { label: 'Tinta Pó', value: 'tinta-po' },
-    { label: 'Diluentes', value: 'diluente' }
+    { label: 'Mais vendidos', value: 'mais-vendidos' }
   ];
 
   constructor(
@@ -32,14 +29,23 @@ export class HomeComponent implements OnInit {
     private readonly router: Router,
     private readonly seoService: SeoService,
     private readonly route: ActivatedRoute
-  ){}
+  ) { }
 
-  ngOnInit(){
+  ngOnInit() {
     // Configurar SEO para página inicial
     this.setupHomeSeo();
     this.loadProductsByFilter(this.selectedFilter);
     // Carregar produtos mais vendidos para a seção "Os Mais Vendidos"
     this.loadBestSellers();
+    // Buscar principais categorias automaticamente
+    this.productsService.getProductsByCategory().subscribe(categories => {
+      // Pega as 4 principais categorias
+      const mainCategories = categories.slice(0, 4);
+      this.filterOptions = [
+        { label: 'Mais vendidos', value: 'mais-vendidos' },
+        ...mainCategories.map(cat => ({ label: cat.category, value: cat.category }))
+      ];
+    });
   }
 
   loadBestSellers() {
@@ -107,5 +113,6 @@ export class HomeComponent implements OnInit {
 
   addToCart(product: Product): void {
     this.cartService.addToCart(product, 1);
+    this.cartService.openCart();
   }
 }

@@ -9,6 +9,7 @@ export class NotificationService {
     heightAuto: false,
     buttonsStyling: false,
     confirmButtonText: 'Ok',
+    target: 'body',
     customClass: {
       popup: 'app-swal-popup',
       title: 'app-swal-title',

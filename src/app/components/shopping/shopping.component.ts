@@ -14,7 +14,7 @@ export class ShoppingComponent {
   notificationService = inject(NotificationService);
 
   // Número do WhatsApp da empresa (substitua pelo número real)
-  private readonly whatsappNumber = '5565993421407';
+  private readonly whatsappNumber = '+5565996689971';
 
   // Atualizar quantidade de um item
   updateQuantity(itemId: number, quantity: number, type: 'product' | 'tool'): void {
@@ -41,7 +41,7 @@ export class ShoppingComponent {
 
   // Obter preço final do item
   getFinalPrice(item: Product | Tool): any {
-    if(item.preco > 0) {
+    if (item.preco > 0) {
       return item.preco;
     } else {
       return 'Falar com Vendedor';

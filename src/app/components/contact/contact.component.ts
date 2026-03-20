@@ -12,7 +12,7 @@ export class ContactComponent implements OnInit {
   submitSuccess = false;
 
   // Número do WhatsApp da empresa
-  private readonly whatsappNumber = '5565996063809';
+  private readonly whatsappNumber = '+5565996689971';
 
   constructor(private formBuilder: FormBuilder) {
     this.contactForm = this.formBuilder.group({
@@ -24,12 +24,12 @@ export class ContactComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   // Máscara para telefone
   onPhoneInput(event: any): void {
     let value = event.target.value.replace(/\D/g, '');
-    
+
     if (value.length <= 11) {
       if (value.length <= 2) {
         value = value.replace(/(\d{0,2})/, '($1');
@@ -41,7 +41,7 @@ export class ContactComponent implements OnInit {
         value = value.replace(/(\d{2})(\d{5})(\d{0,4})/, '($1) $2-$3');
       }
     }
-    
+
     event.target.value = value;
     this.contactForm.patchValue({ phone: value });
   }
@@ -79,19 +79,19 @@ export class ContactComponent implements OnInit {
   // Gerar mensagem formatada para WhatsApp
   private generateWhatsAppMessage(): string {
     const formData = this.contactForm.value;
-    
+
     let message = '*📝 Contato via Site - TPS Tintas*\n\n';
     message += `*Nome:* ${formData.name}\n`;
     message += `*Email:* ${formData.email}\n`;
-    
+
     if (formData.phone) {
       message += `*Telefone:* ${formData.phone}\n`;
     }
-    
+
     message += `*Assunto:* ${this.getSubjectLabel(formData.subject)}\n\n`;
     message += `*Mensagem:*\n${formData.message}\n\n`;
     message += `_Mensagem enviada através do formulário de contato do site._`;
-    
+
     return encodeURIComponent(message);
   }
 
@@ -116,21 +116,21 @@ export class ContactComponent implements OnInit {
       setTimeout(() => {
         // Gerar mensagem e abrir WhatsApp
         const message = this.generateWhatsAppMessage();
-        const whatsappUrl = `https://wa.me/${this.whatsappNumber}?text=${message}`;
-        
+        const whatsappUrl = `https://wa.me/+5565996689971?text=${message}`;
+
         // Abrir WhatsApp em nova aba
         window.open(whatsappUrl, '_blank');
-        
+
         // Mostrar sucesso
         this.submitSuccess = true;
         this.isSubmitting = false;
-        
+
         // Resetar formulário após 3 segundos
         setTimeout(() => {
           this.contactForm.reset();
           this.submitSuccess = false;
         }, 3000);
-        
+
       }, 1000);
     } else {
       // Marcar todos os campos como tocados para mostrar erros
@@ -143,7 +143,7 @@ export class ContactComponent implements OnInit {
   // Contatos diretos
   openWhatsApp(): void {
     const message = encodeURIComponent('Olá! Gostaria de entrar em contato com vocês.');
-    window.open(`https://wa.me/${this.whatsappNumber}?text=${message}`, '_blank');
+    window.open(`https://wa.me/+5565996689971?text=${message}`, '_blank');
   }
 
   openEmail(): void {
@@ -151,7 +151,7 @@ export class ContactComponent implements OnInit {
   }
 
   openPhone(): void {
-    window.location.href = 'tel:+556536443628';
+    window.location.href = 'tel:+5565996689971';
   }
 
   openMaps(): void {

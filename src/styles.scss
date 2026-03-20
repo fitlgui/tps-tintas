@@ -12,7 +12,7 @@
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
   }
-  
+
   .high-quality-image {
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
@@ -27,12 +27,12 @@
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
   }
-  
+
   .image-smooth {
     image-rendering: -webkit-optimize-contrast;
     image-rendering: auto;
   }
-  
+
   .icon-sharp {
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
@@ -47,6 +47,7 @@
   padding: 1.75rem;
   border: 1px solid #dbeafe;
   box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+  z-index: 100000;
 }
 
 .app-swal-title {

@@ -15,7 +15,7 @@
   image-rendering: crisp-edges;
   filter: contrast(1.05) brightness(1.02) saturate(1.1);
   transition: all 0.3s ease;
-  
+
   &:hover {
     filter: contrast(1.1) brightness(1.05) saturate(1.15);
     transform: scale(1.05);
@@ -33,19 +33,49 @@
   image-rendering: crisp-edges;
   filter: contrast(1.1);
   transition: all 0.3s ease;
-  
+
   &:hover {
     filter: contrast(1.2) brightness(1.05);
   }
 }
 
 /* Gradients personalizados */
+/* Gradients institucionais WEG */
 .gradient-hero {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #0057A6 0%, #009FE3 100%);
 }
 
 .gradient-cta {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #0057A6 0%, #009FE3 100%);
+}
+
+/* Azuis institucionais */
+.bg-blue-100 {
+  background-color: #E3F2FD !important;
+}
+
+.bg-blue-500 {
+  background-color: #0057A6 !important;
+}
+
+.hover\:bg-blue-500:hover {
+  background-color: #009FE3 !important;
+}
+
+.text-blue-600 {
+  color: #0057A6 !important;
+}
+
+.border-blue-500 {
+  border-color: #0057A6 !important;
+}
+
+.text-blue-100 {
+  color: #E3F2FD !important;
+}
+
+.text-blue-500 {
+  color: #009FE3 !important;
 }
 
 /* Animações suaves */

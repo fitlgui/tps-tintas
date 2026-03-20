@@ -48,7 +48,7 @@ export class CartService {
   // Adicionar produto ao carrinho
   addToCart(product: Product, quantity: number = 1): void {
     const currentItems = this.cartItems();
-    const existingItemIndex = currentItems.findIndex(item => 
+    const existingItemIndex = currentItems.findIndex(item =>
       item.type === 'product' && item.product?.id === product.id
     );
 
@@ -68,7 +68,7 @@ export class CartService {
   // Adicionar ferramenta ao carrinho
   addToolToCart(tool: Tool, quantity: number = 1): void {
     const currentItems = this.cartItems();
-    const existingItemIndex = currentItems.findIndex(item => 
+    const existingItemIndex = currentItems.findIndex(item =>
       item.type === 'tool' && item.tool?.id === tool.id
     );
 
@@ -186,15 +186,15 @@ export class CartService {
         message += `   • Preço unitário: R$ ${finalPrice}\n`;
         message += `   • Subtotal: R$ ${(finalPrice * item.quantity)}\n\n`;
       }
-      
-      if(itemName && finalPrice <= 0) { 
+
+      if (itemName && finalPrice <= 0) {
         message += `*${index + 1}. ${itemType}: ${itemName}*\n`;
         message += `   • Preço unitário: A negociar\n`;
       }
     });
 
-    if(this.getTotalPrice() > 0){
-    message += `*💰 Total do Pedido: R$ ${this.getTotalPrice()}*\n\n`;
+    if (this.getTotalPrice() > 0) {
+      message += `*💰 Total do Pedido: R$ ${this.getTotalPrice()}*\n\n`;
     }
     message += `Gostaria de finalizar este pedido. Aguardo contato para confirmação! 😊`;
 
@@ -205,7 +205,7 @@ export class CartService {
   sendToWhatsApp(phoneNumber: string = '5565993421407'): void {
     const message = this.generateWhatsAppMessage();
     if (message) {
-      const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+      const whatsappUrl = `https://wa.me/+5565996689971?text=${message}`;
       window.open(whatsappUrl, '_blank');
     }
   }
