@@ -3,41 +3,56 @@
 <!-- Conteudo Home -->
 <main class="w-full flex flex-col items-center justify-center bg-gray-50 min-h-screen">
   <!-- Hero Section -->
-  <section class="w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-8" aria-label="Banner principal com ofertas de tintas">
-    <!-- Banner Principal -->
-    <div style="
-        background-image: url('/assets/images/bannerTpstintas.jpeg');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-      "
-      class="w-full min-h-[300px] lg:h-[400px] flex flex-col space-y-4 items-start justify-center p-6 lg:p-8 rounded-2xl shadow-lg mb-6 relative">
-      <!-- Overlay para melhorar legibilidade do texto -->
-      <div class="absolute inset-0 bg-black bg-opacity-30 backdrop-blur-sm rounded-2xl"></div>
+  <section class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
+    aria-label="Banner principal com ofertas de tintas">
 
-      <!-- Conteúdo do banner com z-index maior -->
-      <div class="relative z-10 flex flex-col space-y-4">
-        <p class="text-blue-100 text-sm lg:text-base uppercase tracking-wide">
-          Tintas WEG em Cuiabá
-        </p>
-        <h1 class="font-bold text-3xl lg:text-5xl text-white leading-tight">
-          Tudo de Tintas<br />
-          <span class="text-yellow-300">em Mato Grosso</span>
-        </h1>
-        <p class="text-blue-100 text-sm lg:text-lg max-w-md">
-          Revenda autorizada WEG com cores personalizadas, ferramentas e
-          abrasivos para indústria e residência
-        </p>
-        <a href="/catalog"
-          class="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold px-6 py-3 flex items-center space-x-2 rounded-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
-          aria-label="Ver catálogo completo de tintas">
-          <span class="text-sm lg:text-base">Ver Catálogo de Tintas</span>
-          <img class="w-6 h-6 icon-enhanced" src="../../../assets/icons/buttonHomeBanner.svg"
-            alt="Ícone seta direita" />
-        </a>
+    <div
+      class="relative w-full min-h-[400px] md:min-h-[500px] lg:min-h-[600px] rounded-2xl shadow-xl mb-6 overflow-hidden bg-gray-900 flex flex-col justify-center group">
+
+      <div class="absolute inset-0 w-full h-full z-0 transition-transform duration-700 group-hover:scale-105" [ngStyle]="{
+           'background-image': 'url(' + (bannerAtivo?.imagem ? getImageSrc(bannerAtivo.imagem) : '/assets/images/bannerTpstintas.jpeg') + ')',
+           'background-size': 'cover',
+           'background-position': 'center',
+           'background-repeat': 'no-repeat'
+         }">
       </div>
-    </div>
 
+      <div class="absolute inset-0 bg-black/50 z-10 pointer-events-none"></div>
+
+      <div class="relative z-20 w-full p-6 sm:p-10 lg:p-16">
+        <div class="flex flex-col space-y-4 lg:space-y-6 max-w-2xl">
+
+          <p class="text-blue-100 text-xs sm:text-sm lg:text-base uppercase tracking-widest font-bold">
+            Tintas WEG em Cuiabá
+          </p>
+
+          <h1 class="font-extrabold text-4xl sm:text-5xl lg:text-7xl text-white leading-tight tracking-tight">
+            Tudo de Tintas<br />
+            <span class="text-yellow-300">em Mato Grosso</span>
+          </h1>
+
+          <p class="text-blue-100 text-base lg:text-xl max-w-lg opacity-90 leading-relaxed">
+            Revenda autorizada WEG com cores personalizadas, ferramentas e
+            abrasivos para indústria e residência. Atendimento desde 2005.
+          </p>
+
+          <div class="pt-4">
+            <a href="/catalog"
+              class="inline-flex items-center space-x-3 bg-yellow-400 hover:bg-yellow-500 text-gray-950 font-bold px-8 py-4 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg w-max group"
+              aria-label="Ver catálogo completo de tintas">
+              <span class="text-base lg:text-lg">Ver Catálogo de Tintas</span>
+              <img class="w-6 h-6 transition-transform group-hover:translate-x-2"
+                src="../../../assets/icons/buttonHomeBanner.svg" alt="Ícone seta direita" />
+            </a>
+          </div>
+
+        </div>
+      </div>
+
+
+
+
+    </div>
     <!-- Cards de Diferenciais -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
       <article
@@ -148,6 +163,9 @@
           <h3 class="font-semibold text-gray-800 mb-2 line-clamp-2">
             {{ item.descricao }}
           </h3>
+          <div class="text-gray-600 text-sm mb-2 line-clamp-3" *ngIf="item.descricao_detalhada">
+            {{ item.descricao_detalhada }}
+          </div>
           <div *ngIf="item.preco > 0" class="flex items-center space-x-2 mb-3">
             <span class="text-lg font-bold text-blue-600">R$ {{ item.preco }}</span>
           </div>

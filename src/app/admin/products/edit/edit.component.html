@@ -71,6 +71,18 @@
             <p *ngIf="errors.descricao" class="text-red-500 text-sm mt-1">{{errors.descricao}}</p>
           </div>
 
+          <!-- Descrição Detalhada -->
+          <div class="md:col-span-2">
+            <label for="descricao_detalhada" class="block text-sm font-medium text-gray-700 mb-2">
+              Descrição Detalhada <span class="text-red-500">*</span>
+            </label>
+            <textarea id="descricao_detalhada" name="descricao_detalhada" [(ngModel)]="product.descricao_detalhada"
+              required placeholder="Insira uma descrição detalhada do produto"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              rows="4" [class.border-red-500]="errors.descricao_detalhada"></textarea>
+            <p *ngIf="errors.descricao_detalhada" class="text-red-500 text-sm mt-1">{{errors.descricao_detalhada}}</p>
+          </div>
+
           <!-- Código do Produto -->
           <div>
             <label for="codigo" class="block text-sm font-medium text-gray-700 mb-2">

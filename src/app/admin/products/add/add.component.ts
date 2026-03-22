@@ -13,6 +13,7 @@ export class AddComponent implements OnInit {
   product: Partial<Product> = {
     codigo: '',
     descricao: '',
+    descricao_detalhada: '',
     preco: 0,
     familia_tintas: '',
     linha_produtos_tintas: '',
@@ -146,7 +147,7 @@ export class AddComponent implements OnInit {
   // Método para converter campos vazios para null
   private sanitizeProduct(product: any): any {
     const sanitized = { ...product };
-    
+
     // Lista de campos string que podem ser null
     const stringFields = [
       'familia_tintas', 'linha_produtos_tintas', 'conteudo_embalagem', 'cor_comercial_tinta', 'cor_tinta',
@@ -196,7 +197,7 @@ export class AddComponent implements OnInit {
         console.error('Mensagem do erro:', error.message);
         console.error('Body do erro:', error.error);
         this.loading = false;
-        
+
         // Mostrar erro para o usuário
         await this.notificationService.error('Erro ao adicionar produto: ' + (error.error?.message || error.message || 'Erro desconhecido'));
       }
@@ -215,7 +216,7 @@ export class AddComponent implements OnInit {
     const file = event.target.files[0];
     if (file) {
       this.selectedFile = file;
-      
+
       // Verificar tamanho do arquivo
       const maxSize = 2 * 1024 * 1024; // 2MB
       if (file.size > maxSize) {
@@ -226,7 +227,7 @@ export class AddComponent implements OnInit {
         // Converter diretamente para base64
         this.convertFileToBuffer(file);
       }
-      
+
       // Criar preview da imagem
       const reader = new FileReader();
       reader.onload = (e: any) => {
@@ -241,10 +242,10 @@ export class AddComponent implements OnInit {
     reader.onload = (e: any) => {
       // Obter o resultado em base64
       const base64String = e.target.result;
-      
+
       // Remover o prefixo "data:image/...;base64," para obter apenas a string base64
       const base64Data = base64String.split(',')[1];
-      
+
       // Salvar como string base64 para envio à API
       this.product.photo = base64Data;
     };
@@ -260,9 +261,9 @@ export class AddComponent implements OnInit {
       // Definir dimensões máximas
       const maxWidth = 800;
       const maxHeight = 600;
-      
+
       let { width, height } = img;
-      
+
       // Calcular novas dimensões mantendo proporção
       if (width > height) {
         if (width > maxWidth) {
@@ -275,14 +276,14 @@ export class AddComponent implements OnInit {
           height = maxHeight;
         }
       }
-      
+
       // Configurar canvas
       canvas.width = width;
       canvas.height = height;
-      
+
       // Desenhar imagem redimensionada
       ctx?.drawImage(img, 0, 0, width, height);
-      
+
       // Converter para base64 com qualidade reduzida
       canvas.toBlob((blob) => {
         if (blob) {

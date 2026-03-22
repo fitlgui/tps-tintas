@@ -6,83 +6,85 @@ import { roundCurrencyValue } from '../../shareds/price-input.util';
 
 // Modelo de Produto
 export interface Product {
-    id: number;
-    codigo: string;
-    descricao: string;
-    cor_tinta: string;
-    acabamento_pintura: string;
-    brilho: string;
-    cor_comercial_tinta: string;
-    escala_cor: string;
-    conteudo_embalagem: string;
-    familia_tintas: string;
-    familia: string;
-    linha_produtos_tintas: string;
-    versao_tinta: string;
-    funcao_tinta: string;
-    relacao_resina: string;
-    cura: string;
-    classificacao_verniz: string;
-    massa_especifica: string;
-    tempo_secagem: string;
-    tempo_cura: string;
-    metodo_aplicacao: string;
-    temperatura_aplicacao: string;
-    ambiente_aplicacao: string;
-    camadas: string;
-    metodo_preparo: string;
-    processo_pintura: string;
-    photo: string; // String base64 da imagem
-    photo_url: string;
-    produto_url: string;
-    embalagem: string;
-    referencia_tinta_liquida: string;
-    sistema_resina: string;
-    quantidade_por_fardo: number;
-    cor: string;
-    diluente_etq: string;
-    preco: number;
-    mais_vendidos: boolean;
-    createdAt: string;
-    updatedAt: string;
+  id: number;
+  codigo: string;
+  descricao: string;
+  descricao_detalhada: string;
+  cor_tinta: string;
+  acabamento_pintura: string;
+  brilho: string;
+  cor_comercial_tinta: string;
+  escala_cor: string;
+  conteudo_embalagem: string;
+  familia_tintas: string;
+  familia: string;
+  linha_produtos_tintas: string;
+  versao_tinta: string;
+  funcao_tinta: string;
+  relacao_resina: string;
+  cura: string;
+  classificacao_verniz: string;
+  massa_especifica: string;
+  tempo_secagem: string;
+  tempo_cura: string;
+  metodo_aplicacao: string;
+  temperatura_aplicacao: string;
+  ambiente_aplicacao: string;
+  camadas: string;
+  metodo_preparo: string;
+  processo_pintura: string;
+  photo: string; // String base64 da imagem
+  photo_url: string;
+  produto_url: string;
+  embalagem: string;
+  referencia_tinta_liquida: string;
+  sistema_resina: string;
+  quantidade_por_fardo: number;
+  cor: string;
+  diluente_etq: string;
+  preco: number;
+  mais_vendidos: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
 export interface ProductUpdate {
-    codigo: string;
-    descricao: string;
-    cor_tinta: string;
-    acabamento_pintura: string;
-    brilho: string;
-    cor_comercial_tinta: string;
-    escala_cor: string;
-    conteudo_embalagem: string;
-    familia_tintas: string;
-    familia: string;
-    linha_produtos_tintas: string;
-    versao_tinta: string;
-    funcao_tinta: string;
-    relacao_resina: string;
-    cura: string;
-    classificacao_verniz: string;
-    massa_especifica: string;
-    tempo_secagem: string;
-    tempo_cura: string;
-    metodo_aplicacao: string;
-    temperatura_aplicacao: string;
-    ambiente_aplicacao: string;
-    camadas: string;
-    metodo_preparo: string;
-    processo_pintura: string;
-    photo: string; // String base64 da imagem
-    photo_url: string;
-    produto_url: string;
-    embalagem: string;
-    referencia_tinta_liquida: string;
-    sistema_resina: string;
-    quantidade_por_fardo: number;
-    cor: string;
-    diluente_etq: string;
-    preco: number;
-    mais_vendidos: boolean;
+  codigo: string;
+  descricao: string;
+  descricao_detalhada: string;
+  cor_tinta: string;
+  acabamento_pintura: string;
+  brilho: string;
+  cor_comercial_tinta: string;
+  escala_cor: string;
+  conteudo_embalagem: string;
+  familia_tintas: string;
+  familia: string;
+  linha_produtos_tintas: string;
+  versao_tinta: string;
+  funcao_tinta: string;
+  relacao_resina: string;
+  cura: string;
+  classificacao_verniz: string;
+  massa_especifica: string;
+  tempo_secagem: string;
+  tempo_cura: string;
+  metodo_aplicacao: string;
+  temperatura_aplicacao: string;
+  ambiente_aplicacao: string;
+  camadas: string;
+  metodo_preparo: string;
+  processo_pintura: string;
+  photo: string; // String base64 da imagem
+  photo_url: string;
+  produto_url: string;
+  embalagem: string;
+  referencia_tinta_liquida: string;
+  sistema_resina: string;
+  quantidade_por_fardo: number;
+  cor: string;
+  diluente_etq: string;
+  preco: number;
+  mais_vendidos: boolean;
 }
 
 
@@ -91,7 +93,7 @@ export interface ProductUpdate {
 })
 
 export class ProductsService {
-  
+
   // Variavel de ambiente
   private environment = environment;
 
@@ -102,11 +104,11 @@ export class ProductsService {
     if (!buffer || !buffer.data || !Array.isArray(buffer.data)) {
       return null;
     }
-    
+
     try {
       // Converter array de bytes para Uint8Array
       const uint8Array = new Uint8Array(buffer.data);
-      
+
       // Converter para base64
       let binary = '';
       const len = uint8Array.byteLength;
@@ -114,7 +116,7 @@ export class ProductsService {
         binary += String.fromCharCode(uint8Array[i]);
       }
       const base64 = btoa(binary);
-      
+
       // Assumir formato JPEG por padrão, pode ser ajustado conforme necessário
       return `data:image/jpeg;base64,${base64}`;
     } catch (error) {
@@ -142,12 +144,12 @@ export class ProductsService {
         return dataUrl;
       }
     }
-    
+
     // Usar photo_url como fallback
     if (product.photo_url) {
       return product.photo_url;
     }
-    
+
     // Imagem padrão se não houver nenhuma
     return 'assets/images/cartShoppingTinta.svg';
   }
@@ -164,14 +166,14 @@ export class ProductsService {
           product.photo = base64Data;
         }
       }
-      
+
       // Garantir que mais_vendidos seja um boolean válido
       if (product.mais_vendidos === undefined || product.mais_vendidos === null) {
         product.mais_vendidos = false;
       } else {
         product.mais_vendidos = Boolean(product.mais_vendidos);
       }
-      
+
       return product;
     });
   }
@@ -182,7 +184,7 @@ export class ProductsService {
       map((data) => {
         // Handle different API response structures
         let products: any[] = [];
-        
+
         if (Array.isArray(data)) {
           products = data;
         } else if (data && Array.isArray(data.items)) {
@@ -195,7 +197,7 @@ export class ProductsService {
           console.warn('API response structure not recognized:', data);
           products = [];
         }
-        
+
         return this.processProductsImages(products);
       }),
       catchError((error: any) => {
@@ -255,7 +257,7 @@ export class ProductsService {
               data.photo = base64Data;
             }
           }
-          
+
           // Se o campo não existe, definir como false
           if (!data.hasOwnProperty('mais_vendidos')) {
             data.mais_vendidos = false;
@@ -268,17 +270,17 @@ export class ProductsService {
 
   // Criar rota de adicionar produto
   addProduct(product: Product): Observable<any> {
-    
+
     // Remover campos que não devem ser enviados na criação e garantir que photo seja string base64
     const { id, createdAt, updatedAt, ...productToSend } = product;
-    
+
     if (productToSend.photo && typeof productToSend.photo === 'string' && productToSend.photo.startsWith('data:image/')) {
       // Extrair apenas a parte base64
       productToSend.photo = productToSend.photo.split(',')[1];
     }
 
     productToSend.preco = roundCurrencyValue(Number(productToSend.preco) || 0);
-    
+
     return this.http.post<Product>(`${this.environment.apiUrl}/products`, productToSend);
   }
 
@@ -308,13 +310,13 @@ export class ProductsService {
       map(products => {
         const categories = products.map(product => product.familia_tintas);
         let allCategories: string[] = []
-        for(let i = 0; i < categories.length; i++) {
+        for (let i = 0; i < categories.length; i++) {
           if (categories[i] && !allCategories.includes(categories[i])) {
-            if(categories[i] !== 'undefined' && categories[i] !== null) {
+            if (categories[i] !== 'undefined' && categories[i] !== null) {
               allCategories.push(categories[i]);
             }
           }
-          
+
         }
         return allCategories;
       })
@@ -327,13 +329,13 @@ export class ProductsService {
       map(products => {
         const sizes = products.map(product => product.conteudo_embalagem);
         let allSizes: string[] = [];
-        for(let i = 0; i < sizes.length; i++) {
+        for (let i = 0; i < sizes.length; i++) {
           if (sizes[i] && !allSizes.includes(sizes[i])) {
-            if(sizes[i] !== 'undefined' && sizes[i] !== null && sizes[i] !== '-' && sizes[i] !== '') {
+            if (sizes[i] !== 'undefined' && sizes[i] !== null && sizes[i] !== '-' && sizes[i] !== '') {
               allSizes.push(sizes[i]);
             }
           }
-          
+
         }
         return allSizes;
       })
@@ -347,34 +349,34 @@ export class ProductsService {
       map(products => {
         const colors = products.map(product => product.cor_comercial_tinta);
         let allColors: string[] = [];
-        for(let i = 0; i < colors.length; i++) {
+        for (let i = 0; i < colors.length; i++) {
           if (colors[i] && !allColors.includes(colors[i])) {
-            if(colors[i] !== 'undefined' && colors[i] !== null) {
+            if (colors[i] !== 'undefined' && colors[i] !== null) {
               allColors.push(colors[i]);
             }
           }
-          
+
         }
         return allColors;
       })
     );
- }
+  }
 
- getCountAllProducts(): Observable<number> {
+  getCountAllProducts(): Observable<number> {
     return this.http.get<number>(`${this.environment.apiUrl}/products/count`);
   }
 
   // Obter estatísticas por categoria
-  getProductsByCategory(): Observable<{category: string, count: number}[]> {
+  getProductsByCategory(): Observable<{ category: string, count: number }[]> {
     return this.getAllProducts().pipe(
       map(products => {
         const categoryMap = new Map<string, number>();
-        
+
         products.forEach(product => {
           const category = product.familia_tintas || 'Não categorizado';
           categoryMap.set(category, (categoryMap.get(category) || 0) + 1);
         });
-        
+
         return Array.from(categoryMap.entries()).map(([category, count]) => ({
           category,
           count
@@ -384,16 +386,16 @@ export class ProductsService {
   }
 
   // Obter estatísticas por marca/linha
-  getProductsByBrand(): Observable<{brand: string, count: number}[]> {
+  getProductsByBrand(): Observable<{ brand: string, count: number }[]> {
     return this.getAllProducts().pipe(
       map(products => {
         const brandMap = new Map<string, number>();
-        
+
         products.forEach(product => {
           const brand = product.linha_produtos_tintas || 'Sem marca';
           brandMap.set(brand, (brandMap.get(brand) || 0) + 1);
         });
-        
+
         return Array.from(brandMap.entries()).map(([brand, count]) => ({
           brand,
           count
@@ -414,7 +416,7 @@ export class ProductsService {
         const categories = new Set(products.map(p => p.familia_tintas).filter(Boolean));
         const brands = new Set(products.map(p => p.linha_produtos_tintas).filter(Boolean));
         const colors = new Set(products.map(p => p.cor_comercial_tinta).filter(Boolean));
-        
+
         return {
           totalProducts: products.length,
           totalCategories: categories.size,
@@ -430,4 +432,5 @@ export class ProductsService {
     return this.getAllProducts().pipe(
       map(products => products.filter(product => product.mais_vendidos === true))
     );
-  }}
+  }
+}

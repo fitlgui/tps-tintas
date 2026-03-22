@@ -15,6 +15,7 @@ export class EditComponent implements OnInit {
     id: 0,
     codigo: '',
     descricao: '',
+    descricao_detalhada: '',
     cor_tinta: '',
     acabamento_pintura: '',
     brilho: '',
@@ -51,7 +52,7 @@ export class EditComponent implements OnInit {
     mais_vendidos: false,
     createdAt: '',
     updatedAt: ''
-}
+  }
 
   originalProduct: Product | null = null;
   priceInput = '';
@@ -197,7 +198,7 @@ export class EditComponent implements OnInit {
   // Método para converter campos vazios para null
   private sanitizeProduct(product: any): any {
     const sanitized = { ...product };
-    
+
     // Lista de campos string que podem ser null
     const stringFields = [
       'linha_produtos_tintas', 'cor_tinta', 'acabamento_pintura', 'brilho', 'escala_cor',
@@ -281,7 +282,7 @@ export class EditComponent implements OnInit {
       }
 
       this.selectedFile = file;
-      
+
       // Criar preview da imagem
       const reader = new FileReader();
       reader.onload = (e: any) => {
@@ -303,9 +304,9 @@ export class EditComponent implements OnInit {
       // Definir tamanho máximo para compressão
       const maxWidth = 800;
       const maxHeight = 600;
-      
+
       let { width, height } = img;
-      
+
       // Calcular novo tamanho mantendo proporção
       if (width > height) {
         if (width > maxWidth) {
@@ -328,7 +329,7 @@ export class EditComponent implements OnInit {
 
       // Converter para base64 com qualidade reduzida
       const compressedBase64 = canvas.toDataURL('image/jpeg', 0.7); // 70% de qualidade
-      
+
       // Remover prefixo e salvar
       const base64Data = compressedBase64.split(',')[1];
       this.product.photo = base64Data;
@@ -371,12 +372,12 @@ export class EditComponent implements OnInit {
         return dataUrl;
       }
     }
-    
+
     // Usar photo_url como fallback
     if (product.photo_url) {
       return product.photo_url;
     }
-    
+
     // Imagem padrão se não houver nenhuma
     return 'assets/images/cartShoppingTinta.svg';
   }
@@ -385,11 +386,11 @@ export class EditComponent implements OnInit {
     if (!buffer || !buffer.data || !Array.isArray(buffer.data)) {
       return null;
     }
-    
+
     try {
       // Converter array de bytes para Uint8Array
       const uint8Array = new Uint8Array(buffer.data);
-      
+
       // Converter para base64
       let binary = '';
       const len = uint8Array.byteLength;
@@ -397,7 +398,7 @@ export class EditComponent implements OnInit {
         binary += String.fromCharCode(uint8Array[i]);
       }
       const base64 = btoa(binary);
-      
+
       // Assumir formato JPEG por padrão, pode ser ajustado conforme necessário
       return `data:image/jpeg;base64,${base64}`;
     } catch (error) {

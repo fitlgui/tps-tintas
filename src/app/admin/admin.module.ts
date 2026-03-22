@@ -12,6 +12,9 @@ import { EditComponent } from './products/edit/edit.component';
 import { UsersComponent } from './users/users.component';
 import { CreateComponent } from './users/create/create.component';
 import { EditComponent as EditUserComponent } from './users/edit/edit.component';
+
+import { BannerListComponent } from './banner/banner-list/banner-list.component';
+import { BannerFormComponent } from './banner/banner-form/banner-form.component';
 import { ToolsModule } from './tools/tools.module';
 
 
@@ -26,6 +29,8 @@ import { ToolsModule } from './tools/tools.module';
     UsersComponent,
     CreateComponent,
     EditUserComponent,
+    BannerListComponent,
+    BannerFormComponent,
   ],
   imports: [
     CommonModule,

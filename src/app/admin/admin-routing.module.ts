@@ -8,6 +8,9 @@ import { AddComponent } from './products/add/add.component';
 import { UsersComponent } from './users/users.component';
 import { CreateComponent } from './users/create/create.component';
 import { EditComponent as EditUserComponent } from './users/edit/edit.component';
+
+import { BannerListComponent } from './banner/banner-list/banner-list.component';
+import { BannerFormComponent } from './banner/banner-form/banner-form.component';
 import { adminEditGuard } from '../core/guards/admin-edit.guard';
 
 const routes: Routes = [
@@ -26,6 +29,21 @@ const routes: Routes = [
       {
         path: 'tools',
         loadChildren: () => import('./tools/tools.module').then(m => m.ToolsModule)
+      },
+      {
+        path: 'banner',
+        component: BannerListComponent,
+        canActivate: [adminEditGuard]
+      },
+      {
+        path: 'banner/add',
+        component: BannerFormComponent,
+        canActivate: [adminEditGuard]
+      },
+      {
+        path: 'banner/edit/:id',
+        component: BannerFormComponent,
+        canActivate: [adminEditGuard]
       },
     ]
   }

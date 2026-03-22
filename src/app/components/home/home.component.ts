@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ProductsService, Product } from 'src/app/services/products/products.service';
+import { BannerService } from 'src/app/services/banner/banner.service';
 import { CartService } from 'src/app/services/cart/cart.service';
 import { SeoService } from 'src/app/services/seo/seo.service';
 
@@ -11,11 +12,15 @@ import { SeoService } from 'src/app/services/seo/seo.service';
 })
 export class HomeComponent implements OnInit {
 
+  // Banner ativo
+  public bannerAtivo: any = null;
+
   // Variável para armazenar os produtos
   public produtos: Product[] = []
   // Variável para armazenar produtos mais vendidos (sempre disponível)
   public produtosMaisVendidos: Product[] = []
   cartService = inject(CartService);
+  bannerService = inject(BannerService);
 
   // Filtro selecionado
   public selectedFilter: string = 'mais-vendidos';
@@ -32,6 +37,13 @@ export class HomeComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    // Buscar banner ativo
+    this.bannerService.getBanners().subscribe((banners: any[]) => {
+      console.log('Banner ativo:', banners);
+      // Você encontra o banner ativo...
+      this.bannerAtivo = banners.find(banner => banner.ativo) || null;
+      console.log('Banner encontrado:', this.bannerAtivo);
+    });
     // Configurar SEO para página inicial
     this.setupHomeSeo();
     this.loadProductsByFilter(this.selectedFilter);
@@ -114,5 +126,14 @@ export class HomeComponent implements OnInit {
   addToCart(product: Product): void {
     this.cartService.addToCart(product, 1);
     this.cartService.openCart();
+  }
+
+  getImageSrc(imagem: string): string {
+    if (!imagem) return '';
+    if (imagem.startsWith('data:')) return imagem;
+    if (imagem.startsWith('iVBOR')) return 'data:image/png;base64,' + imagem;
+    if (imagem.startsWith('/9j/')) return 'data:image/jpeg;base64,' + imagem;
+    if (imagem.startsWith('UklGR')) return 'data:image/webp;base64,' + imagem;
+    return 'data:image/png;base64,' + imagem;
   }
 }
